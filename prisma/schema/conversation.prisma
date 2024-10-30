@@ -1,0 +1,7 @@
+// model Conversation {
+//   id           Int        @id @default(autoincrement())
+//   utilisateur  Utilisateur @relation(fields: [utilisateurId], references: [id])
+//   utilisateurId Int
+//   entreprise   Entreprise  @relation(fields: [entrepriseId], references: [id])
+//   entrepriseId Int
+// }

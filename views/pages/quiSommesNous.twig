@@ -1,0 +1,64 @@
+{# qui sommes nous ? #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+{% endblock %}
+{% block tile %}MyEvents - Qui Sommes Nous ?
+{% endblock %}
+
+{% block main %}
+
+	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class="mainSection">
+		<h2>Qui sommes nous ?</h2>
+
+		<div class="biggerTextContainer">
+			<div class='iconeAndText'>
+				<div><img src="assets/images/reflechi.png" alt="logo d'une personne qui réfléchis"></div>
+				<div>
+					<p>
+						MyEvents est né d’un constat simple : l'organisation d'événements, qu'il s'agisse de mariages, d'anniversaires ou de soirées privées, peut rapidement devenir un véritable casse-tête.</p>
+				</div>
+			</div>
+			<div class='iconeAndText'>
+				<div><img src="assets/images/stress.png" alt="logo d'une personne qui se prend la tête à cause du stress"></div>
+				<div>
+					<p>La recherche de prestataires, la gestion des invitations, le suivi des tâches et la comparaison des devis sont souvent source de stress pour les particuliers.
+					</p>
+				</div>
+			</div>
+
+			<div class='iconeAndText'>
+				<div><img src="assets/images/cher.png" alt="logo d'une main qui tient une liasse de billet"></div>
+				<div>
+					<p>Bien sûr, il est toujours possible d'engager un organisateur d’événements pour s'occuper de tout, mais cela entraîne deux inconvénients majeurs : non seulement on perd le contrôle sur les décisions clés, mais cela peut également être très coûteux.
+					</p>
+				</div>
+			</div>
+
+			<div class='iconeAndText'>
+				<div><img src="assets/images/idee.png" alt="logo d'une personne qui a une idée"></div>
+				<div>
+					<p>Face à ces défis, nous avons voulu créer
+						<span class="underline">
+							<strong>une solution qui simplifie le processus de bout en bout
+							</strong>
+						</span>.</p>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<p class='join'>
+				<span class='underline'><a href="/signIn">Rejoignez-nous</a></span> dès aujourd'hui et simplifiez l'organisation de vos événements, du plus petit détail jusqu'au grand jour !</p>
+		</div>
+	</section>
+
+
+{% endblock %}

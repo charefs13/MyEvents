@@ -1,0 +1,8 @@
+// model Avis {
+//   id            Int        @id @default(autoincrement())
+//   contenu       String
+//   prestation    Prestation @relation(fields: [prestationId], references: [id])
+//   prestationId  Int
+//   utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id])
+//   utilisateurId Int
+// }

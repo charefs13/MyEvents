@@ -1,0 +1,9 @@
+// model Message {
+//   id              Int        @id @default(autoincrement())
+//   contenu         String
+//   envoyeur        Utilisateur @relation("EnvoyeurMessages", fields: [envoyeurId], references: [id])
+//   envoyeurId      Int
+//   destinataire    Utilisateur @relation("DestinataireMessages", fields: [destinataireId], references: [id])
+//   destinataireId  Int
+//   createdAt       DateTime @default(now())
+// }

@@ -1,0 +1,8 @@
+// model CommentaireAvis {
+//   id            Int        @id @default(autoincrement())
+//   texte         String
+//   entreprise    Entreprise @relation(fields: [entrepriseId], references: [id])
+//   entrepriseId  Int
+//   avis          Avis       @relation(fields: [avisId], references: [id])
+//   avisId        Int
+// }

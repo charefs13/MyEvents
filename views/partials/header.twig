@@ -1,0 +1,56 @@
+{% if utilisateur.id %}
+	<p>{{utilisateur.id}}</p>
+	<header>
+		<div class="logoContainer">
+			<div>
+				<a href="/"><img class="logo" src="assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+			</div>
+			<div>
+				<a href="/profil">Mon Profil</a>
+			</div>
+			<div>
+				<a href="/evenement">Événement</a>
+			</div>
+			<div>
+				<a href="/planning">Planning</a>
+			</div>
+			<div>
+				<a href="/listes">Listes</a>
+			</div>
+			<div>
+				<a href="/invites">Invités</a>
+			</div>
+		</div>
+
+		<div class='flexContainer'>
+			<div>
+				<a href="/message"><img class='logoMessagerie' src="assets/images/email.png" alt="logo enveloppe"></a>
+			</div>
+			<div>
+				<a href="/logout">Déconnexion</a>
+			</div>
+		</div>
+	</header>
+{% else %}
+	<header>
+		<div class="logoContainer">
+			<div>
+				<a href="/"><img class="logo" src="assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+			</div>
+			<div>
+				<a class='proBtn' href="/pros">Pour les professionnels</a>
+			</div>
+		</div>
+
+		<div class='flexContainer'>
+			<div>
+				<a href="/quiSommesNous">Qui sommes nous</a>
+			</div>
+			<div>
+				<a href="/login">Connexion</a>
+				|
+				<a href="/signIn">Inscription</a>
+			</div>
+		</div>
+	</header>
+{% endif %}

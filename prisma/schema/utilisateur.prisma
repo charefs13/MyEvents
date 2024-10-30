@@ -1,0 +1,17 @@
+model Utilisateur {
+  id           Int          @id @default(autoincrement())
+  nom          String
+  prenom       String
+  email        String       @unique
+  password   String
+  age          Int?
+  adresse      String?
+  ville        String?
+  cp           String?
+  genre        String?
+//   avis         Avis[]
+//   taches       Tache[]
+  evenements   Evenement[]
+  isEntreprise Boolean      @default(false)
+  entreprise   Entreprise?
+}

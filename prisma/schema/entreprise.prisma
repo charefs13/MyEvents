@@ -1,0 +1,13 @@
+model Entreprise {
+  id            Int             @id @default(autoincrement())
+  raisonSociale String
+  siret         String
+  type          String
+  adresse       String
+  ville         String
+  cp            String
+  utilisateur   Utilisateur      @relation(fields: [utilisateurId], references: [id])
+  utilisateurId Int @unique
+//   prestations   Prestation[]
+//   commentaires  CommentaireAvis[]
+}

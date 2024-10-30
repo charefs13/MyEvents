@@ -1,0 +1,6 @@
+model ListeItem {
+  id       Int    @id @default(autoincrement())
+  contenu  String
+  liste    Liste  @relation(fields: [listeId], references: [id])
+  listeId  Int
+}

@@ -1,0 +1,12 @@
+model Evenement {
+  id            Int          @id @default(autoincrement())
+  titre         String
+  description   String?
+  dateDebut     DateTime
+  dateFin       DateTime
+  lieu          String?
+  utilisateur   Utilisateur   @relation(fields: [utilisateurId], references: [id])
+  utilisateurId Int
+  liste  Liste []
+//   taches        Tache[]
+}
