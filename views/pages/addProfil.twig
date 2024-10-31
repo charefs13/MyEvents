@@ -17,11 +17,10 @@
 
 	<section class='mainSection'>
 		<h2>Compléter votre profil pour pouvoir utiliser toutes le fonctionnalités</h2>
-		<p>{{utilisateur.id}}</p>
 
 
 		<div class='formSignIn'>
-			<form action="/addProfil" method='POST'>
+			<form action="/addProfil/{{utilisateur.id}}" method='POST'>
 				<div class="form-group">
 					<label for="genre">Genre</label>
 					<select id="genre" name="genre" required>
@@ -36,23 +35,23 @@
 
 				<div class="form-group">
 					<label for="age">Age</label>
-					<input id='age' type="number" name="age">
+					<input id='age' type="number" name="age" required>
 				</div>
 
 				<div class="form-group">
 					<label for="adresse">Adresse</label>
-					<input id='adresse' type="adresse" name="adresse" placeholder='1 rue de la Paix'>
+					<input id='adresse' type="text" name="adresse" placeholder='1 rue de la Paix' required>
 				</div>
 
 				<div class="form-group">
 					<label for="cp">Code Postal</label>
-					<input id='cp' type="number" name="cp" placeholder='13001'>
+					<input id='cp' type="number" name="cp" placeholder='13001' required>
 
 				</div>
 
 				<div class="form-group">
 					<label for="ville">Ville</label>
-					<input id='ville' type="text" name="ville" placeholder='Marseille'>
+					<input id='ville' type="text" name="ville" placeholder='Marseille' required>
 				</div>
 
 

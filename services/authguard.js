@@ -3,7 +3,7 @@ const prisma = new PrismaClient()
 const authguard = async(req,res,next)=>{
     try {
         if(req.session.utilisateur){
-            let company = await prisma.utilisateur.findUnique({
+            let utilisateur = await prisma.utilisateur.findUnique({
                 where:{
                     email: req.session.utilisateur.email
                 }
@@ -16,6 +16,6 @@ const authguard = async(req,res,next)=>{
     } catch (error) {
         res.redirect("/login")
     }
-}
+}  
 
 module.exports = authguard

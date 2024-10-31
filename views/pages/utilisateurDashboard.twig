@@ -14,5 +14,48 @@
 {% block main %}
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>Bienvenue {{utilisateur.prenom}}</h2>
+	<h2>Bienvenue
+		{{utilisateur.prenom}}</h2>
+
+	<section class="mainSection">
+		<h3>
+			<a href="/evenement">Ajouter un événement</a>
+		</h3>
+
+		<div class="formEvenement">
+			<form action="/login" methode="get">
+				<label for="typeEvenement">Type d'événement</label>
+				<select id="typeEvenement" name="typeEvenement">
+					<option value="babyShower">Baby Shower</option>
+					<option value="genderReveal">Gender Reveal</option>
+					<option value="mariage">Mariage</option>
+					<option value="feteReligieuse">Fête religieuse</option>
+					<option value="anniversaire">Anniversaire</option>
+					<option value="bapteme">Baptême</option>
+					<option value="autre">Autre</option>
+				</select>
+
+				<label for="prestation">Slectionner une prestation</label>
+				<select id="prestation" name="prestation">
+					<option value="traiteur">Traiteur</option>
+					<option value="photographe">Photographe</option>
+					<option value="dj">DJ</option>
+					<option value="décoration">Décoration</option>
+					<option value="animationEnfant">Animation pour enfants</option>
+					<option value="serviceNettoyage">Service de nettoyage</option>
+					<option value="locationSalle">Location de salle</option>
+					<option value="estethique">Esthétique</option>
+					<option value="invitation">Invitation/Faire-Part</option>
+					<option value="autre">Autre</option>
+
+				</select>
+
+				<label for="ville">Votre ville
+				</label>
+				<input type="text" id="ville" name="ville" placeholder="Entrez votre ville">
+
+				<button type="submit">Rechercher</button>
+			</form>
+		</div>
+	</section>
 {% endblock %}

@@ -17,7 +17,7 @@ utilisateurRouter.get('/', (req, res) => {
     }
 })
 
-
+  
 // affiche la page qui sommes nous
 utilisateurRouter.get('/quiSommesNous', (req, res) => {
     res.render('pages/quiSommesNous.twig')
@@ -50,7 +50,7 @@ utilisateurRouter.post('/signIn', async (req, res) => {
                     password: req.body.password
                 }
             })
-            res.redirect('/login')
+            res.redirect('/login')   
         }
         else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
     } catch (error) {
@@ -89,14 +89,11 @@ utilisateurRouter.post('/login', async (req, res) => {
                     req.session.utilisateur = utilisateur
                     res.redirect('/')
                 }
-                console.log('Session.utilisateur après connection:')
-                console.log(req.session.utilisateur)
             }
             else throw ({ password: "Mot de passe incorrect" });
         } else throw ({ email: "Cet utilisateur n'est pas inscrit" })
 
     } catch (error) {
-        console.log(error)
         res.render('pages/login.twig', {
             error: error
         })
@@ -107,35 +104,34 @@ utilisateurRouter.post('/login', async (req, res) => {
 // affiche la page pour créer son profil après insciption 
 
 utilisateurRouter.get('/addProfil', (req, res) => {
-    console.log(req.session.utilisateur)
     res.render('pages/addProfil.twig',
         { utilisateur: req.session.utilisateur }
     )
-    console.log(req.session.utilisateur)
 
 })
 
 
 
 
-utilisateurRouter.post('/addProfil', authguard, async (req, res) => {
+utilisateurRouter.post('/addProfil/:id', authguard, async (req, res) => {
     try {
         const updateUtilisateur = await prisma.utilisateur.update({
             where: {
-                id: req.session.utilisateur.id
+                id: parseInt(req.params.id)
             },
             data: {
-                age: req.body.age,
+                age: parseInt(req.body.age),
                 adresse: req.body.adresse,
-                cp: req.body.cp,
+                cp: parseInt(req.body.cp),
                 ville: req.body.ville,
                 genre: req.body.genre
             }
         })
-        req.session.utilisateur = updateUtilisateur
-        res.redirect('/')
-        console.log(req.session.utilisateur)
 
+        req.session.utilisateur = updateUtilisateur
+        console.log(updateUtilisateur)
+        res.redirect('/')
+  
     } catch (error) {
         console.log(error)
         res.render('pages/addProfil.twig', {
@@ -144,13 +140,13 @@ utilisateurRouter.post('/addProfil', authguard, async (req, res) => {
     }
 })
 
-
 // Deconnexion
 utilisateurRouter.get("/logout", authguard, (req, res) => {
+
     req.session.destroy()
-    res.clearCookie('connect.sid')
     res.redirect("/")
 })
 
 
-module.exports = utilisateurRouter   
+
+module.exports = utilisateurRouter    

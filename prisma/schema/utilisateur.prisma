@@ -7,7 +7,7 @@ model Utilisateur {
   age          Int?
   adresse      String?
   ville        String?
-  cp           String?
+  cp           Int?
   genre        String?
 //   avis         Avis[]
 //   taches       Tache[]
