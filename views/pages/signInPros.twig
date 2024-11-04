@@ -1,0 +1,65 @@
+{# sign In  #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+{% endblock %}
+{% block tile %}MyEvents - Inscription
+{% endblock %}
+
+{% block main %}
+
+	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class='mainSection'>
+		<h2>Inscrivez vous et connectez vous pour pouvoir gérer votre événément</h2>
+
+
+		<div class='formSignIn'>
+			<form action="/signInPros" method='POST'>
+				<div class="form-group">
+					<label for="nom">Nom</label>
+					<input id='nom' type="text" name="nom" placeholder='John'>
+				</div>
+
+				<div class="form-group">
+					<label for="prenom">Prénom</label>
+					<input id='prenom' type="text" name="prenom" placeholder='Doe'>
+				</div>
+
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input id='email' type="email" name="email" placeholder='exemple@email.fr'>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Mot de passe</label>
+					<input id='password' type="password" name="password">
+					{% if error %}
+						<p class='error'>{{ error.password }}</p>
+					{% endif %}
+				</div>
+
+				<div class="form-group">
+					<label for="confirmPassword">Confirmez votre mot de passe</label>
+					<input id='confirmPassword' type="password" name="confirmPassword">
+				</div>
+
+				{% if error %}
+					<p class='error'>{{ error.confirmMdp }}</p>
+				{% endif %}
+
+				<div class='form-group'>
+					<button type="submit">Inscription</button>
+				</div>
+			</form>
+		</div>
+
+
+	</section>
+
+{% endblock %}

@@ -5,7 +5,7 @@ model Entreprise {
   type          String
   adresse       String
   ville         String
-  cp            String
+  cp            Int
   utilisateur   Utilisateur      @relation(fields: [utilisateurId], references: [id])
   utilisateurId Int @unique
 //   prestations   Prestation[]

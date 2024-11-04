@@ -9,7 +9,7 @@
 
 {% endblock %}
 
-{% block tile %}MyEvents - Connexion
+{% block tile %}MyEvents - Mot de Passe Oublié
 {% endblock %}
 
 {% block main %}
@@ -17,7 +17,7 @@
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class='mainSection'>
-		<h2>Connectez vous à votre compte personnel</h2>
+		<h2>Vous allez recevoir un email pour réinitialiser votre mot de passe</h2>
 
 
 		<div class='formSignIn'>
@@ -29,23 +29,13 @@
 						<input id='email' type="email" name="email" placeholder='exemple@email.fr'>
 					</div>
 
-					<div class="form-group">
-						<label for="password">Mot de passe</label>
-						<input id='password' type="password" name="password">
-
-						<a href="/mdpOublie">Cliquer pour réinitialiser le mot de passe</a>
-					</div>
 					{% if error.email %}
 
 						<p class='error'>{{ error.email }}</p>
 					{% endif %}
 
-					{% if error.password %}
-						<p class='error'>{{ error.password }}</p>
-					{% endif %}
-
 					<div class='form-group'>
-						<button type="submit">Connexion</button>
+						<button type="submit">Envoyer</button>
 					</div>
 				</form>
 			</div>

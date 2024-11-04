@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const utilisateurRouter = require('./router/UtilisateurRouter');
+const prosRouter = require('./router/ProsRouter');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(session({
 // Servir les fichiers statiques et routes
 app.use(express.static('./public'));
 app.use(utilisateurRouter);
+app.use(prosRouter)
        
 app.listen(3000, () => {
     try {   

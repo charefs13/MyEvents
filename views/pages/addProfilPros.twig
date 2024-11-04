@@ -1,0 +1,79 @@
+{# sign In  #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+{% endblock %}
+{% block tile %}MyEvents - Créer votre Profil
+{% endblock %}
+
+{% block main %}
+	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class='mainSection'>
+		<h2>Compléter votre profil pour trouver de nouveaux clients</h2>
+		<div class='formSignIn'>
+			<form action="/addProfilPros/{{utilisateur.id}}" method='POST'>
+
+				<div class="form-group">
+					<label for="siret">Siret</label>
+					<input id='siret' type="number" name="siret" required>
+				</div>
+
+				<div class="form-group">
+					<label for="raisonSociale">Raison Sociale</label>
+					<input id='raisonSociale' type="text" name="raisonSociale" required>
+				</div>
+
+				<div class='form-group'>
+					<label for="type">Type de prestation</label>
+					<select id="type" name="type">
+						<option value="photographeVideaste">Photographe/Vidéaste</option>
+						<option value="traiteur">Traiteur</option>
+						<option value="dj">DJ</option>
+						<option value="decorateur">Décorateur</option>
+						<option value="animateur">Animateur</option>
+						<option value="locationMateriel">Location de matériel</option>
+						<option value="locationSalle">Location de salle/Lieu de réception</option>
+						<option value="fleuriste">Fleuriste</option>
+						<option value="stylistes">Styliste/Costumier</option>
+						<option value="graphiste">Graphiste/Impression de supports</option>
+						<option value="autre">Autre</option>
+					</select>
+				</div>
+
+			</div>
+			<div class="form-group">
+				<label for="adresse">Adresse</label>
+				<input id='adresse' type="text" name="adresse" placeholder='1 rue de la Paix' required>
+			</div>
+
+			<div class="form-group">
+				<label for="cp">Code Postal</label>
+				<input id='cp' type="number" name="cp" placeholder='13001' required>
+
+			</div>
+
+			<div class="form-group">
+				<label for="ville">Ville</label>
+				<input id='ville' type="text" name="ville" placeholder='Marseille' required>
+			</div>
+
+
+			<div class='form-group'>
+				<button type="submit">Enregistrer</button>
+			</div>
+
+			{% if error %}
+				<p class='error'>
+					{{error.error}}
+				</p>
+			{% endif %}
+		</form>
+	</div>
+
+
+</section>{% endblock %}

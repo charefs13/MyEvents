@@ -1,4 +1,5 @@
-{% if utilisateur.id %}
+{% if utilisateur is defined and utilisateur.id or entreprise is defined and entreprise.id %}
+
 	<header>
 		<div class="logoContainer">
 			<div>
@@ -30,6 +31,7 @@
 			</div>
 		</div>
 	</header>
+
 {% else %}
 	<header>
 		<div class="logoContainer">
@@ -40,7 +42,6 @@
 				<a class='proBtn' href="/pros">Pour les professionnels</a>
 			</div>
 		</div>
-
 		<div class='flexContainer'>
 			<div>
 				<a href="/quiSommesNous">Qui sommes nous</a>
