@@ -21,7 +21,7 @@
 
 
 		<div class='formSignIn'>
-			<form action="/login" method='POST'>
+			<form action="/forgot-password" method='POST'>
 				<div class="form-group">
 
 					<div class="form-group">
@@ -29,15 +29,19 @@
 						<input id='email' type="email" name="email" placeholder='exemple@email.fr'>
 					</div>
 
-					{% if error.email %}
+					{% if error %}
 
-						<p class='error'>{{ error.email }}</p>
+						<p class='error'>{{ error }}</p>
 					{% endif %}
+
 
 					<div class='form-group'>
 						<button type="submit">Envoyer</button>
 					</div>
 				</form>
+				{% if message %}
+					<p>{{ message}}</p>
+				{% endif %}
 			</div>
 
 

@@ -4,9 +4,13 @@ const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
+const crypto = require('crypto');
+const { sendResetEmail } = require('../services/sendResetEmail.js');
+
+
 
 // affiche ma main page
-utilisateurRouter.get('/', async (req, res) => {
+utilisateurRouter.get('/', async(req, res) => {
     if (req.session.utilisateur) {
         if (req.session.utilisateur.isEntreprise) {
             const entreprise = await prisma.utilisateur.findFirst({
@@ -26,11 +30,10 @@ utilisateurRouter.get('/', async (req, res) => {
                     utilisateur: req.session.utilisateur
                 })
         }
-
     } else {
         res.render('pages/main.twig')
     }
-})  
+})    
 
 
 // affiche la page qui sommes nous
@@ -123,7 +126,7 @@ utilisateurRouter.post('/login', async (req, res) => {
         })
     }
 })
- 
+
 
 // affiche la page pour créer son profil après insciption 
 utilisateurRouter.get('/addProfil', (req, res) => {
@@ -176,4 +179,117 @@ utilisateurRouter.get('/mdpOublie', (req, res) => {
     res.render('pages/mdpOublie.twig')
 
 })
-module.exports = utilisateurRouter
+
+
+// envoie le lien de réinitialisation du mdp à l'adresse mail 
+utilisateurRouter.post('/forgot-password', async (req, res) => {
+    try {
+        // Cherche l'utilisateur par email
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: { email: req.body.email }
+        });
+        const email = utilisateur.email
+        if (!utilisateur) {
+            return res.render('pages/mdpOublie.twig', { error: "L'utilisateur est introuvable" });
+        }
+
+        // Génère un jeton de réinitialisation sécurisé
+        const token = crypto.randomBytes(32).toString('hex');
+        
+        // Stocke le jeton et sa date d'expiration dans la base de données
+        await prisma.utilisateur.update({
+            where: { email: req.body.email },
+            data: {
+                resetToken: token,
+                resetTokenExpire: new Date(Date.now() + 3600000) // Expire dans 1 heure
+            }
+        });
+
+        // Génère le lien de réinitialisation de mot de passe
+        const resetLink = `http://127.0.0.1:3000/resetPassword/${token}`;
+
+        // Envoie l'email de réinitialisation avec le lien
+        sendResetEmail(email, resetLink);
+
+        // Renvoie un message de succès
+        res.render('pages/mdpOublie.twig', { message: 'Un lien de réinitialisation a été envoyé à votre adresse mail' });
+
+    } catch (error) {
+        console.error(error);
+        res.render('pages/mdpOublie.twig', { error: "Une erreur est survenue. Veuillez réessayer plus tard." });
+    }
+});
+
+
+// affichage de la page du formulaire de réinitialisation
+utilisateurRouter.get('/resetPassword/:token', async (req, res) => {
+    
+const  token  = req.params.token
+    try {
+        // Vérifie si un utilisateur avec le jeton et une expiration valide existe
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: {
+                resetToken: token,
+                resetTokenExpire: {
+                    gte: new Date() // Vérifie que le token n'est pas expiré
+                }
+            }
+        });
+
+        if (!utilisateur) {
+            return res.render('pages/404.twig', { message: "Le lien de réinitialisation est invalide ou expiré." });
+        }
+
+        // Affiche le formulaire de réinitialisation de mot de passe
+        res.render('pages/resetPassword.twig', { utilisateur });
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('resetPassword', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
+    }
+});
+
+// envoie du mdp réinitialisé à la bdd
+utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
+    const { token } = req.params.token;
+    const { password } = req.body.password;
+    const { confirmPassword } = req.body.confirmPassword
+
+    try {
+
+        if (password == confirmPassword) {
+            // Vérifie que le jeton est valide et non expiré
+            const utilisateur = await prisma.utilisateur.findFirst({
+                where: {
+                    resetToken: token,
+                    resetTokenExpire: {
+                        gte: new Date()
+                    }
+                }
+            });
+            if (utilisateur) {
+                return res.status(400).render('resetPassword', { message: "Le lien de réinitialisation est invalide ou expiré." });
+            }
+
+            // Met à jour le mot de passe et efface le token de réinitialisation
+            await prisma.utilisateur.update({
+                where: { id: utilisateur.id },
+                data: {
+                    password: password,
+                    resetToken: null,
+                    resetTokenExpire: null
+                }
+            });
+
+            res.render('pages/resetPassword.twig', { message: "Votre mot de passe a été réinitialisé avec succès." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.render('pages/resetPassword.twig', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
+    }
+});
+
+
+module.exports = utilisateurRouter;
+
+
+

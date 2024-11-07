@@ -403,6 +403,15 @@ button:hover {
     border: 1px solid #ffd90051;
 }
 
+.formSignIn textarea {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f5f3ef7d;
+    border: 1px solid #ffd90051;
+}
+
 .formSignIn select {
     width: 100%;
     text-align: center;

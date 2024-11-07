@@ -1,0 +1,73 @@
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+{% endblock %}
+{% block tile %}MyEvents- dashboard
+{% endblock %}
+
+{% block main %}
+	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+
+	<section>
+		<h2>Gérer vos événements</h2>
+
+		<div class='formSignIn'>
+			<form action="/createEvent" method='POST'>
+
+				<div class='form-group'>
+					<label for="typeEvenement">Type d'événement</label>
+					<select id="typeEvenement" name="typeEvenement">
+						<option value="babyShower">Baby Shower</option>
+						<option value="genderReveal">Gender Reveal</option>
+						<option value="mariage">Mariage</option>
+						<option value="feteReligieuse">Fête religieuse</option>
+						<option value="anniversaire">Anniversaire</option>
+						<option value="bapteme">Baptême</option>
+						<option value="autre">Autre</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="title">Titre</label>
+					<input id='title' type="text" name="title" placeholder="Titre de l'événement">
+				</div>
+
+				<div class="form-group">
+					<label for="description">Description</label>
+					<textarea id='description' name="description"></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="startDate">Date de début</label>
+					<input id='startDate' type="date" name="startDate">
+				</div>
+
+				<div class="form-group">
+					<label for="startTime">Heure de début</label>
+					<input id='startTime' type="time" name="startTime">
+				</div>
+
+				<div class="form-group">
+					<label for="endDate">Date de fin</label>
+					<input id='endDate' type="date" name="endDate">
+				</div>
+
+				<div class="form-group">
+					<label for="endTime">Heure de fin</label>
+					<input id='endTime' type="time" name="endTime">
+				</div>
+
+				<div class='form-group'>
+					<button type="submit">Créer l'événement</button>
+				</div>
+			</form>
+            {% if error %}
+            <p class='error'>{{error}}</p>
+            {% endif %}
+		</div>
+	</section>
+{% endblock %}

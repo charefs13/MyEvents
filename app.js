@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const utilisateurRouter = require('./router/UtilisateurRouter');
 const prosRouter = require('./router/ProsRouter');
+const evenementRouter = require('./router/evenementROuter');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(session({
 app.use(express.static('./public'));
 app.use(utilisateurRouter);
 app.use(prosRouter)
+app.use(evenementRouter)
        
 app.listen(3000, () => {
     try {   
