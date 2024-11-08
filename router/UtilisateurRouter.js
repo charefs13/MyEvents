@@ -10,7 +10,7 @@ const { sendResetEmail } = require('../services/sendResetEmail.js');
 
 
 // affiche ma main page
-utilisateurRouter.get('/', async(req, res) => {
+utilisateurRouter.get('/', async (req, res) => {
     if (req.session.utilisateur) {
         if (req.session.utilisateur.isEntreprise) {
             const entreprise = await prisma.utilisateur.findFirst({
@@ -33,7 +33,7 @@ utilisateurRouter.get('/', async(req, res) => {
     } else {
         res.render('pages/main.twig')
     }
-})    
+})
 
 
 // affiche la page qui sommes nous
@@ -195,7 +195,7 @@ utilisateurRouter.post('/forgot-password', async (req, res) => {
 
         // Génère un jeton de réinitialisation sécurisé
         const token = crypto.randomBytes(32).toString('hex');
-        
+
         // Stocke le jeton et sa date d'expiration dans la base de données
         await prisma.utilisateur.update({
             where: { email: req.body.email },
@@ -223,8 +223,7 @@ utilisateurRouter.post('/forgot-password', async (req, res) => {
 
 // affichage de la page du formulaire de réinitialisation
 utilisateurRouter.get('/resetPassword/:token', async (req, res) => {
-    
-const  token  = req.params.token
+    const token = req.params.token
     try {
         // Vérifie si un utilisateur avec le jeton et une expiration valide existe
         const utilisateur = await prisma.utilisateur.findFirst({
@@ -244,49 +243,53 @@ const  token  = req.params.token
         res.render('pages/resetPassword.twig', { utilisateur });
     } catch (error) {
         console.error(error);
-        res.status(500).render('resetPassword', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
+        res.render('resetPassword', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
     }
 });
 
 // envoie du mdp réinitialisé à la bdd
 utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
-    const { token } = req.params.token;
-    const { password } = req.body.password;
-    const { confirmPassword } = req.body.confirmPassword
-
     try {
 
-        if (password == confirmPassword) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!,%*?&])[A-Za-z\d@$!,%*?&]{8,}$/;
+
+        // Validation du mot de passe avec regex
+        if (!passwordRegex.test(req.body.password) || !passwordRegex.test(req.body.confirmPassword)) {
+            throw { error: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre, et un caractère spécial parmi : @$!,%*?&." };
+        }
+
+        if (req.body.password === req.body.confirmPassword) {
             // Vérifie que le jeton est valide et non expiré
             const utilisateur = await prisma.utilisateur.findFirst({
                 where: {
-                    resetToken: token,
+                    resetToken: req.params.token,
                     resetTokenExpire: {
                         gte: new Date()
                     }
                 }
             });
-            if (utilisateur) {
-                return res.status(400).render('resetPassword', { message: "Le lien de réinitialisation est invalide ou expiré." });
+            if (!utilisateur) {
+                throw ({ error: "Le lien de réinitialisation est invalide ou expiré." });
             }
 
-            // Met à jour le mot de passe et efface le token de réinitialisation
+            const hashPassword = await bcrypt.hash(req.body.password, 10)
             await prisma.utilisateur.update({
                 where: { id: utilisateur.id },
                 data: {
-                    password: password,
+                    password: hashPassword,
                     resetToken: null,
                     resetTokenExpire: null
                 }
             });
-
-            res.render('pages/resetPassword.twig', { message: "Votre mot de passe a été réinitialisé avec succès." });
+            res.redirect('/login')
+        } else {
+            throw ({ error: "Vos mots de passe ne correspondent pas" });
         }
     } catch (error) {
-        console.error(error);
-        res.render('pages/resetPassword.twig', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
+        console.log(error);
+        res.render('pages/resetPassword.twig', { error: error });
     }
-});
+});  
 
 
 module.exports = utilisateurRouter;
