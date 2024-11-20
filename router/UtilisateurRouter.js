@@ -6,12 +6,13 @@ const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
 const { sendResetEmail } = require('../services/sendResetEmail.js');
-
-
-
+  
+ 
+   
 // affiche ma main page
 utilisateurRouter.get('/', async (req, res) => {
     if (req.session.utilisateur) {
+  
         if (req.session.utilisateur.isEntreprise) {
             const entreprise = await prisma.utilisateur.findFirst({
                 where: {
@@ -22,20 +23,28 @@ utilisateurRouter.get('/', async (req, res) => {
             req.session.entreprise = entreprise
             res.render('pages/dashboardPros.twig', {
                 entreprise
-            })
+            }) 
         }
         else {
+            const utilisateur = await prisma.utilisateur.findFirst({
+                where: {
+                    email: req.session.utilisateur.email
+                },
+                include: { evenements: true }
+     
+            })
             res.render('pages/utilisateurDashboard.twig',
                 {
-                    utilisateur: req.session.utilisateur
+                    utilisateur : req.session.utilisateur,
+                    evenements: utilisateur.evenements
                 })
-        }
-    } else {
+        }  
+    } else { 
         res.render('pages/main.twig')
     }
-})
+}) 
 
-
+ 
 // affiche la page qui sommes nous
 utilisateurRouter.get('/quiSommesNous', (req, res) => {
     res.render('pages/quiSommesNous.twig')
@@ -168,7 +177,6 @@ utilisateurRouter.post('/addProfil/:id', authguard, async (req, res) => {
 
 // Deconnexion
 utilisateurRouter.get("/logout", authguard, (req, res) => {
-
     req.session.destroy()
     res.redirect("/")
 })
@@ -279,8 +287,8 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
                     password: hashPassword,
                     resetToken: null,
                     resetTokenExpire: null
-                }
-            });
+                } 
+            }); 
             res.redirect('/login')
         } else {
             throw ({ error: "Vos mots de passe ne correspondent pas" });
@@ -289,9 +297,8 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
         console.log(error);
         res.render('pages/resetPassword.twig', { error: error });
     }
-});  
-
-
+});
+ 
 module.exports = utilisateurRouter;
 
 

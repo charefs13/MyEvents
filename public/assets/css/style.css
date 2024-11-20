@@ -109,7 +109,6 @@ h3 {
 }
 
 .formEvenement {
-    font-size: 20px;
     width: 100%;
     height: 150px;
     border: 1px solid #ffd90051;
@@ -125,21 +124,21 @@ h3 {
 
 .formEvenement select {
     text-align: center;
-    padding: 10px 40px;
+    padding: 10px 30px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
     border: 1px solid #ffd90051;
-    margin-right: 25px;
+    margin-right: 20px;
 
 }
 
 .formEvenement input {
     text-align: center;
-    padding: 10px 40px;
+    padding: 10px 30px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
     border: 1px solid #ffd90051;
-    margin-right: 25px;
+    margin-right: 20px;
 }
 
 button {
@@ -441,4 +440,97 @@ button:hover {
     text-align: center;
     font-size: 15px;
     margin-bottom: 20px;
+}
+
+.updateForm {
+    display: none;
+}
+
+.evenementContainer
+ {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    background-color: #f5f3ef;
+    margin: auto;
+    border: 1px solid #ffd90051;
+    border-radius: 50px;
+    margin-bottom: 50px;
+    padding: 20px 0;
+    text-align: start;
+
+
+}
+
+.evenementContainer h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.evenementContainer p,
+.evenementContainer .link {
+    text-align: start;
+    padding-left: 50px;
+    margin-bottom: 10px;
+
+}
+
+.btnContainer {
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 90%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn {
+    margin-top: 50px;
+    padding: 5px 10px;
+    border-radius: 25px;
+    background-color: #e5dccf;
+    border: 1px solid #e5dccf;
+    text-align: center;
+}
+
+.btn:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 0.3s ease;
+}
+
+.hide {
+    display: none;
+    position: relative;
+}
+
+.add {
+    display: block;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.add:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.close {
+    position: absolute;
+    top: 1%;
+    left: 5%;
+    font-size: 15px;
+}
+
+.add:hover,
+.close:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.updateForm .form-group{
+    width: 80%;
+    text-align: center;
+    margin: auto;
 }

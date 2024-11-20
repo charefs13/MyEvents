@@ -4,70 +4,153 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
-
 {% endblock %}
-{% block tile %}MyEvents- dashboard
+
+{% block tile %}MyEvents - dashboard
 {% endblock %}
 
 {% block main %}
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-
-	<section>
+	<section class="mainSection">
 		<h2>Gérer vos événements</h2>
 
-		<div class='formSignIn'>
-			<form action="/createEvent" method='POST'>
+		{% if utilisateur is defined %}
+			<div>
+				<p class='add'>Ajouter un événement</p>
+			</div>
+			<div class='formSignIn hide'>
+				<form action="/createEvent" method='POST'>
+					<div class='form-group'>
+						<p class='close'>Fermer</p>
+						<label for="typeEvenement">Type d'événement</label>
+						<select id="typeEvenement" name="typeEvenement" required>
+							<option value="babyShower">Baby Shower</option>
+							<option value="genderReveal">Gender Reveal</option>
+							<option value="mariage">Mariage</option>
+							<option value="feteReligieuse">Fête religieuse</option>
+							<option value="anniversaire">Anniversaire</option>
+							<option value="bapteme">Baptême</option>
+							<option value="autre">Autre</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="title">Titre</label>
+						<input id='title' type="text" name="title" placeholder="Titre de l'événement" required>
+					</div>
+					<div class="form-group">
+						<label for="description">Description</label>
+						<textarea id='description' name="description"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="startDate">Date de début</label>
+						<input id='startDate' type="date" name="startDate">
+					</div>
+					<div class="form-group">
+						<label for="startTime">Heure de début</label>
+						<input id='startTime' type="time" name="startTime">
+					</div>
+					<div class="form-group">
+						<label for="endDate">Date de fin</label>
+						<input id='endDate' type="date" name="endDate">
+					</div>
+					<div class="form-group">
+						<label for="endTime">Heure de fin</label>
+						<input id='endTime' type="time" name="endTime">
+					</div>
+					<div class='form-group'>
+						<button class="createEventBtn" type="submit">Créer l'événement</button>
+					</div>
+				</form>
+				{% if error %}
+					<p class='error'>{{ error }}</p>
+				{% endif %}
+			</div>
 
-				<div class='form-group'>
-					<label for="typeEvenement">Type d'événement</label>
-					<select id="typeEvenement" name="typeEvenement">
-						<option value="babyShower">Baby Shower</option>
-						<option value="genderReveal">Gender Reveal</option>
-						<option value="mariage">Mariage</option>
-						<option value="feteReligieuse">Fête religieuse</option>
-						<option value="anniversaire">Anniversaire</option>
-						<option value="bapteme">Baptême</option>
-						<option value="autre">Autre</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="title">Titre</label>
-					<input id='title' type="text" name="title" placeholder="Titre de l'événement">
-				</div>
+			{% if evenements is defined %}
+				{% for evenement in evenements %}
+					<div class='evenementContainer'>
+						<div class='flexEvenement'>
+							<div>
+								<h4>{{ evenement.titre }}</h4>
+								<p>Type d'événement:
+									{{ evenement.type }}</p>
+								<p>{{ evenement.description }}</p>
+								<p>Du
+									<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
+									au
+									<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
+								</p>
+								{% if evenement.lieu %}
+									<p>Lieu :
+										{{ evenement.lieu }}</p>
+								{% else %}
+									<a class='link' href="">Ajouter un lieu pour votre événement</a>
+								{% endif %}
+							</div>
 
-				<div class="form-group">
-					<label for="description">Description</label>
-					<textarea id='description' name="description"></textarea>
-				</div>
+							<div class='btnContainer'>
+								<div>
+									<a class='btn update' data-event-id="{{ evenement.id }}" href="#">Modifier</a>
+								</div>
+								<div>
+									<a class='btn' href="deleteEvent/{{ evenement.id }}">Supprimer</a>
+								</div>
+							</div>
+						</div>
 
-				<div class="form-group">
-					<label for="startDate">Date de début</label>
-					<input id='startDate' type="date" name="startDate">
-				</div>
-
-				<div class="form-group">
-					<label for="startTime">Heure de début</label>
-					<input id='startTime' type="time" name="startTime">
-				</div>
-
-				<div class="form-group">
-					<label for="endDate">Date de fin</label>
-					<input id='endDate' type="date" name="endDate">
-				</div>
-
-				<div class="form-group">
-					<label for="endTime">Heure de fin</label>
-					<input id='endTime' type="time" name="endTime">
-				</div>
-
-				<div class='form-group'>
-					<button type="submit">Créer l'événement</button>
-				</div>
-			</form>
-            {% if error %}
-            <p class='error'>{{error}}</p>
-            {% endif %}
-		</div>
+						{# formulaire de modification #}
+						<form id="form{{ evenement.id }}" class="updateForm" action="updateEvent/{{ evenement.id }}" method="POST" style="display: none;">
+							<h4>Modifier
+								{{ evenement.titre }}</h4>
+							<div class='form-group'>
+								<p class='close'>Fermer</p>
+								<label for="typeEvenement">Type d'événement</label>
+								<select id="typeEvenement-{{ evenement.id }}" name="typeEvenement" required>
+									<option value="babyShower" {% if evenement.type == 'babyShower' %} selected {% endif %}>Baby Shower</option>
+									<option value="genderReveal" {% if evenement.type == 'genderReveal' %} selected {% endif %}>Gender Reveal</option>
+									<option value="mariage" {% if evenement.type == 'mariage' %} selected {% endif %}>Mariage</option>
+									<option value="feteReligieuse" {% if evenement.type == 'feteReligieuse' %} selected {% endif %}>Fête religieuse</option>
+									<option value="anniversaire" {% if evenement.type == 'anniversaire' %} selected {% endif %}>Anniversaire</option>
+									<option value="bapteme" {% if evenement.type == 'bapteme' %} selected {% endif %}>Baptême</option>
+									<option value="autre" {% if evenement.type == 'autre' %} selected {% endif %}>Autre</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="title-{{ evenement.id }}">Titre</label>
+								<input id='title-{{ evenement.id }}' type="text" name="title" value="{{ evenement.titre }}" required>
+							</div>
+							<div class="form-group">
+								<label for="description-{{ evenement.id }}">Description</label>
+								<textarea id='description-{{ evenement.id }}' name="description">{{ evenement.description }}</textarea>
+							</div>
+							<div class="form-group">
+								<label for="startDate-{{ evenement.id }}">Date de début</label>
+								<input id="startDate-{{ evenement.id }}" type="date" name="startDate" value="{{ evenement.dateDebut|date('Y-m-d') }}">
+							</div>
+							<div class="form-group">
+								<label for="startTime-{{ evenement.id }}">Heure de début</label>
+								<input id="startTime-{{ evenement.id }}" type="time" name="startTime">
+							</div>
+							<div class="form-group">
+								<label for="endDate-{{ evenement.id }}">Date de fin</label>
+								<input id="endDate-{{ evenement.id }}" type="date" name="endDate" value="{{ evenement.dateFin|date('Y-m-d') }}">
+							</div>
+							<div class="form-group">
+								<label for="endTime-{{ evenement.id }}">Heure de fin</label>
+								<input id="endTime-{{ evenement.id }}" type="time" name="endTime" >
+							</div>
+							<div class='form-group'>
+								<button class="saveUpdate" type="submit">Modifier l'événement</button>
+							</div>
+						</form>
+					</div>
+				{% endfor %}
+			{% endif %}
+		{% endif %}
 	</section>
+{% endblock %}
+
+{% block script %}
+	<script src="/assets/script/script.js"></script>
 {% endblock %}

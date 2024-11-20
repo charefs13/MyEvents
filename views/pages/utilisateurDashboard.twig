@@ -57,5 +57,39 @@
 				<button type="submit">Rechercher</button>
 			</form>
 		</div>
+
+		<div>
+
+			{% for evenement in evenements %}
+
+				<div class='evenementContainer'>
+					<h4>{{evenement.titre}}</h4>
+
+					<p>
+						Type d'événement:
+						{{evenement.type}}
+					</p>
+					<p>
+						{{evenement.description}}
+					</p>
+					<p>Du
+						<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
+						au
+						<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
+					</p>
+
+
+					{% if evenement.lieu %}
+						<p>Lieu :
+							{{evenement.lieu}}</p>
+
+					{% else %}
+						<a class='link' href="">Ajouter un lieu pour votre événement</a>
+					{% endif %}
+
+				</div>
+			{% endfor %}
+
+		</div>
 	</section>
 {% endblock %}
