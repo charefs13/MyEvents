@@ -278,7 +278,7 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
             });
             if (!utilisateur) {
                 throw ({ error: "Le lien de réinitialisation est invalide ou expiré." });
-            }
+            } 
 
             const hashPassword = await bcrypt.hash(req.body.password, 10)
             await prisma.utilisateur.update({

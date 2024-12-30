@@ -2,7 +2,8 @@ model Invite {
   id        Int     @id @default(autoincrement())
   nom       String
   prenom    String
-  email     String
-  liste     Liste   @relation(fields: [listeId], references: [id])
-  listeId   Int
+  email     String?
+  evenement   Evenement @relation(fields: [evenementId], references: [id])
+  evenementId Int
+
 }

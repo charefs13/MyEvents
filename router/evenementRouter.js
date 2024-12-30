@@ -3,7 +3,7 @@ const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-
+   
 
 //affichage de ma page événement pour ajouter ou modifier des evenements
 evenementRouter.get('/evenement', authguard, async (req, res) => {
@@ -24,7 +24,7 @@ evenementRouter.get('/evenement', authguard, async (req, res) => {
 
 evenementRouter.post('/createEvent', authguard, async (req, res) => {
     try {
-        const { typeEvenement, title, descrtiption, startDate, endDate, startTime, endTime } = req.body
+        const { typeEvenement, title, description, startDate, endDate, startTime, endTime } = req.body
         const evenement = await prisma.evenement.create({
             data: {
                 type: typeEvenement,

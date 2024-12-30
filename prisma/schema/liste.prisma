@@ -1,9 +1,0 @@
-model Liste {
-  id           Int      @id @default(autoincrement())
-  titre        String
-  description  String
-  evenement    Evenement @relation(fields: [evenementId], references: [id])
-  evenementId  Int
-  listeItems   ListeItem[]
-  invites Invite[]
-}

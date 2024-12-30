@@ -8,6 +8,6 @@ model Evenement {
   lieu          String?
   utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id])
   utilisateurId Int
-  liste         Liste[]
+  invites       Invite[]
   //   taches        Tache[]
 }
