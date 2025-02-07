@@ -8,7 +8,9 @@ const prisma = new PrismaClient().$extends(hashPasswordExtension);
 
 //  affichage de la page d'inscription pour une Entreprise
 prosRouter.get('/signInPros', (req, res) => {
-    res.render('pages/signInPros.twig')
+    res.render('pages/signInPros.twig',
+        utilisateur
+    )
 })
 
 // Envoie du formulaire d'inscription à ma BDD
@@ -38,15 +40,31 @@ prosRouter.post('/signInPros', async (req, res) => {
 
 
 
-prosRouter.get('/addProfilPros', (req, res) => {
-    res.render('pages/addProfilPros.twig')
+prosRouter.get('/addProfilPros', async (req, res) => {
+    try {
+        // Récupérer l'utilisateur à partir de la base de données
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: {
+                email: req.session.utilisateur.email
+            }
+        });
+
+        res.render('pages/addProfilPros.twig', {
+            utilisateur: utilisateur
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.render('pages/addProfilPros.twig')
+    }
+});
 
 
-})
+
 
 
 // Envoie de mon formulaire ajout profil pour créer une Entreprise
-prosRouter.post('/addProfilPros', authguard, async (req, res) => {
+prosRouter.post('/addProfilPros/:id', authguard, async (req, res) => {
     try {
         const entreprise = await prisma.entreprise.create({
             data: {
@@ -62,7 +80,7 @@ prosRouter.post('/addProfilPros', authguard, async (req, res) => {
 
         const updatedUtilisateur = await prisma.utilisateur.update({
             where: {
-                email: req.session.utilisateur.email
+                id: parseInt(req.params.id)
             },
             data: {
                 adresse: req.body.adresse,
@@ -78,14 +96,19 @@ prosRouter.post('/addProfilPros', authguard, async (req, res) => {
         res.render('pages/addProfilPros.twig', {
             error: { error: "une erreur est survenue" }
         })
-    }
+    } 
 })
 
 prosRouter.get('/dashboardPros', (req, res) => {
-    const entreprise = req.session.entreprise
-    res.render('pages/dashboardPros.twig', {
-        entreprise
-    })
+    console.log(req.session.utilisateur)
+    res.render('pages/dashboardPros.twig',
+        {
+            utilisateur: req.session.utilisateur,
+            entreprise: req.session.entreprise
+        }
+
+    )
+
 })
 
 

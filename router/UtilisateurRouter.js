@@ -6,45 +6,40 @@ const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
 const { sendResetEmail } = require('../services/sendResetEmail.js');
-  
- 
-   
-// affiche ma main page
-utilisateurRouter.get('/', async (req, res) => {
-    if (req.session.utilisateur) {
-  
-        if (req.session.utilisateur.isEntreprise) {
-            const entreprise = await prisma.utilisateur.findFirst({
-                where: {
-                    email: req.session.utilisateur.email
-                },
-                include: { entreprise: true }
-            })
-            req.session.entreprise = entreprise
-            res.render('pages/dashboardPros.twig', {
-                entreprise
-            }) 
-        }
-        else {
-            const utilisateur = await prisma.utilisateur.findFirst({
-                where: {
-                    email: req.session.utilisateur.email
-                },
-                include: { evenements: true }
-     
-            })
-            res.render('pages/utilisateurDashboard.twig',
-                {
-                    utilisateur : req.session.utilisateur,
-                    evenements: utilisateur.evenements
-                })
-        }  
-    } else { 
-        res.render('pages/main.twig')
-    }
-}) 
 
- 
+
+//affiche ma main page
+utilisateurRouter.get('/', async (req, res) => {
+
+    if (req.session.utilisateur) {
+        // Récupération  l'utilisateur avec ses événements et les infos de son entreprise
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: { email: req.session.utilisateur.email },
+            include: { evenements: true, entreprise: true }
+        });
+
+        req.session.utilisateur = utilisateur; // Mise à jour des données utilisateur en session
+
+        if (utilisateur.isEntreprise && utilisateur.entreprise) {
+            req.session.entreprise = utilisateur.entreprise; // Stocker uniquement l'objet entreprise
+
+            return res.render('pages/dashboardPros.twig', {
+                entreprise: utilisateur.entreprise,
+                utilisateur: utilisateur
+            });
+        }
+
+        return res.render('pages/utilisateurDashboard.twig', {
+            utilisateur: utilisateur,
+            evenements: utilisateur.evenements
+        });
+    } 
+    
+    res.render('pages/main.twig');
+});
+
+
+
 // affiche la page qui sommes nous
 utilisateurRouter.get('/quiSommesNous', (req, res) => {
     res.render('pages/quiSommesNous.twig')
@@ -103,11 +98,11 @@ utilisateurRouter.post('/login', async (req, res) => {
             }
         })
         if (utilisateur) {
-
             if (await bcrypt.compare(req.body.password, utilisateur.password)) {
                 req.session.utilisateur = utilisateur
 
                 if (utilisateur.isEntreprise) {
+
                     if (utilisateur.adresse === null) {
 
                         res.redirect('/addProfilPros')
@@ -278,7 +273,7 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
             });
             if (!utilisateur) {
                 throw ({ error: "Le lien de réinitialisation est invalide ou expiré." });
-            } 
+            }
 
             const hashPassword = await bcrypt.hash(req.body.password, 10)
             await prisma.utilisateur.update({
@@ -287,8 +282,8 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
                     password: hashPassword,
                     resetToken: null,
                     resetTokenExpire: null
-                } 
-            }); 
+                }
+            });
             res.redirect('/login')
         } else {
             throw ({ error: "Vos mots de passe ne correspondent pas" });
@@ -298,7 +293,7 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
         res.render('pages/resetPassword.twig', { error: error });
     }
 });
- 
+
 module.exports = utilisateurRouter;
 
 

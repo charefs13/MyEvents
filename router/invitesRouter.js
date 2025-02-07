@@ -124,7 +124,7 @@ invitesRouter.post('/sendEmail/evenement/:evenementId', authguard, async (req, r
         // Envoi des emails
         for (const invite of selectedInvites) {
             const emailMessage = emailText
-                .replace(/prénom|Prénom|prenom/gi, invite.prenom)
+                .replace(/prénom|Prénom|prenom/gi, "invite.prenom")
                 .replace(/nom|Nom/gi, invite.nom);
 
             await sendInviteEmail(invite.email, emailMessage);

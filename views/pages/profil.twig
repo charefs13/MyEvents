@@ -1,0 +1,91 @@
+{# profil Page #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+{% endblock %}
+{% block tile %}MyEvents- Mon Profil
+{% endblock %}
+
+{% block main %}
+
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+
+	<section class='mainSection'>
+
+		<h2>Gérer votre profil</h2>
+
+        	{% if errorMessage %}
+				<p class='error message'>{{errorMessage}}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{successMessage}}</p>
+			{% endif %}
+
+		<div class='formSignIn'>
+			<form action="/updateUser" method='POST'>
+	
+					<div class="form-group">
+						<label for="nom">Nom</label>
+						<input id='nom' type="text" name="nom" value='{{utilisateur.nom}}'>
+					</div>
+
+					<div class="form-group">
+						<label for="prenom">Prénom</label>
+						<input id='prenom' type="text" name="prenom" value='{{utilisateur.prenom}}'>
+					</div>
+
+					<div class="form-group">
+						<label for="genre">Genre</label>
+						<select id="genre" name="genre" required>
+							<option value="">Sélectionnez votre genre</option>
+							<option value="homme">Homme</option>
+							<option value="femme">Femme</option>
+							<option value="autre">Autre</option>
+							<option value="non_specifie">Ne souhaite pas préciser</option>
+						</select>
+					</div>
+
+
+					<div class="form-group">
+						<label for="age">Age</label>
+						<input id='age' type="number" name="age" value='{{utilisateur.age}}'>
+					</div>
+
+					<div class="form-group">
+						<label for="adresse">Adresse</label>
+						<input id='adresse' type="text" name="adresse" value='{{utilisateur.adresse}}'>
+					</div>
+
+					<div class="form-group">
+						<label for="cp">Code Postal</label>
+						<input id='cp' type="number" name="cp" value='{{utilisateur.cp}}'>
+
+					</div>
+
+					<div class="form-group">
+						<label for="ville">Ville</label>
+						<input id='ville' type="text" name="ville" value='{{utilisateur.ville}}'>
+					</div>
+
+
+					<div class='form-group'>
+						<button type="submit">Enregistrer</button>
+					</div>
+					<div class='form-group'>
+						<a class="btn delete" href="/confirmDelete">Supprimer votre profil</a>
+					</div>
+				</form>
+			</div>
+
+		
+		</section>
+
+
+	{% endblock %}

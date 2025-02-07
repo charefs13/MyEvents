@@ -448,6 +448,15 @@ button:hover {
     display: none;
 }
 
+
+
+
+/* --------------------------------------------------- MAIN PAGE AVEC AFFICHAGE DES EVENTS ------------------------------------------ */
+
+
+
+
+
 .evenementContainer {
     position: relative;
     width: 100%;
@@ -485,6 +494,19 @@ button:hover {
     display: flex;
     justify-content: center;
     gap: 1rem;
+}
+
+.btnContainer .delete {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background-color: white;
+    color: red;
+    border: 1px solid #ffd90051;
+}
+
+.btnContainer .delete:hover{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 0.3s ease;
 }
 
 .btn {
@@ -535,6 +557,14 @@ button:hover {
     text-align: center;
     margin: auto;
 }
+
+
+
+
+/* ---------------------------------------- PAGE INVITE ----------------------------------------------------------------------- */
+
+
+
 
 .inviteContainer {
     /* display: flex;
@@ -678,6 +708,8 @@ button:hover {
     color: red;
 }
 
+
+
 .updateInvite button {
     background-color: white;
 }
@@ -686,4 +718,56 @@ button:hover {
     text-align: center;
     margin: auto;
     margin-bottom: 25px;
+}
+
+ 
+
+
+/* ------------------------------------------- PAGE PROFIL ----------------------------------------------------- */
+
+
+
+
+/* bouton supprimer profil */
+.form-group .delete {
+    background-color: white;
+    color: red;
+}
+.form-group .delete:hover{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+
+.confirmDelete {
+    text-align: center;
+}
+
+.confirmDelete p {
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.confirmDelete form p {
+    font-size: 10px;
+    margin-bottom: 5px;
+    font-weight: lighter;
+
+}
+
+.confirmDelete .btn:hover {
+    text-decoration: none;
+}
+
+.confirmDelete .delete {
+    background-color: white;
+    color: red;
+    font-weight: bold;
+}
+
+.confirmDelete .delete:hover{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 0.3s ease;
 }

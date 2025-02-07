@@ -1,0 +1,87 @@
+{# Profil Pros  #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block tile %}MyEvents - Mon Profil Professionnel
+{% endblock %}
+
+{% block main %}
+
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class='mainSection'>
+
+		<h2>Gérer votre profill</h2>
+
+		{% if errorMessage %}
+			<p class='error message'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+		<div class='formSignIn'>
+			<form action="/updateEntreprise" method='POST'>
+
+				<div class="form-group">
+					<label for="raisonSociale">Raison Sociale</label>
+					<input id='raisonSociale' type="text" name="raisonSociale" value='{{ entreprise.raisonSociale }}'>
+				</div>
+
+				<div class="form-group">
+					<label for="siret">SIRET</label>
+					<input id='siret' type="text" name="siret" value='{{ entreprise.siret }}'>
+				</div>
+
+				<div class='form-group'>
+					<label for="type">Type de prestation</label>
+					<select id="type" name="type">
+						<option value="photographeVideaste" {{ entreprise.type == "photographeVideaste" ? "selected" : "" }}>Photographe/Vidéaste</option>
+						<option value="traiteur" {{ entreprise.type == "traiteur" ? "selected" : "" }}>Traiteur</option>
+						<option value="dj" {{ entreprise.type == "dj" ? "selected" : "" }}>DJ</option>
+						<option value="decorateur" {{ entreprise.type == "decorateur" ? "selected" : "" }}>Décorateur</option>
+						<option value="animateur" {{ entreprise.type == "animateur" ? "selected" : "" }}>Animateur</option>
+						<option value="locationMateriel" {{ entreprise.type == "locationMateriel" ? "selected" : "" }}>Location de matériel</option>
+						<option value="locationSalle" {{ entreprise.type == "locationSalle" ? "selected" : "" }}>Location de salle/Lieu de réception</option>
+						<option value="fleuriste" {{ entreprise.type == "fleuriste" ? "selected" : "" }}>Fleuriste</option>
+						<option value="stylistes" {{ entreprise.type == "stylistes" ? "selected" : "" }}>Styliste/Costumier</option>
+						<option value="graphiste" {{ entreprise.type == "graphiste" ? "selected" : "" }}>Graphiste/Impression de supports</option>
+						<option value="autre" {{ entreprise.type == "autre" ? "selected" : "" }}>Autre</option>
+					</select>
+				</div>
+
+
+				<div class="form-group">
+					<label for="adresse">Adresse</label>
+					<input id='adresse' type="text" name="adresse" value='{{ entreprise.adresse }}'>
+				</div>
+
+				<div class="form-group">
+					<label for="cp">Code Postal</label>
+					<input id='cp' type="number" name="cp" value='{{ entreprise.cp }}'>
+				</div>
+
+				<div class="form-group">
+					<label for="ville">Ville</label>
+					<input id='ville' type="text" name="ville" value='{{ entreprise.ville }}'>
+				</div>
+
+				<div class='form-group'>
+					<button type="submit">Enregistrer</button>
+				</div>
+				<div class='form-group'>
+					<a class="btn delete" href="/confirmDeleteEntreprise">Supprimer votre profil</a>
+				</div>
+			</form>
+		</div>
+
+	</section>
+
+{% endblock %}

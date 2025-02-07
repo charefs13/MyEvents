@@ -2,7 +2,7 @@
 
 {% extends "../layouts/base.twig" %}
 {% block style %}
-	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block main %}
-	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<h2>Bienvenue
 		{{utilisateur.prenom}}</h2>
@@ -23,7 +23,7 @@
 		</h3>
 
 		<div class="formEvenement">
-			<form action="/login" methode="get">
+			<form action="" methode="get">
 				<label for="typeEvenement">Type d'événement</label>
 				<select id="typeEvenement" name="typeEvenement">
 					<option value="babyShower">Baby Shower</option>

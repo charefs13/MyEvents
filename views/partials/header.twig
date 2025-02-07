@@ -1,60 +1,93 @@
 {% if noHeader %}
-    <!-- Si noHeader est vrai, on ne montre pas l'en-tête -->
-    <header></header>
-{% elseif utilisateur is defined and utilisateur.id or entreprise is defined and entreprise.id %}
-    <!-- Si un utilisateur ou une entreprise est défini(e) et a un ID, on affiche l'en-tête utilisateur/entreprise -->
-    <header>
-        <div class="logoContainer">
-            <div>
-                <a href="/"><img class="logo" src="assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
-            </div>
-            <div>
-                <a href="/profil">Mon Profil</a>
-            </div>
-            <div>
-                <a href="/evenement">Événement</a>
-            </div>
-            <div>
-                <a href="/planning">Planning</a>
-            </div>
-            <div>
-                <a href="/invites">Invités</a>
-            </div>
-        </div>
+	<!-- Si noHeader est vrai, on ne montre pas l'en-tête -->
+	<header></header>
+{% elseif utilisateur is defined %}
 
-        <div class='flexContainer'>
-            <div>
-                <a href="/message"><img class='logoMessagerie' src="assets/images/email.png" alt="logo enveloppe"></a>
-            </div>
-            <div>
-                <a href="/logout">Déconnexion</a>
-            </div>
-        </div>
-    </header>
+	{% if utilisateur.isEntreprise %}
+
+		<!-- Si un l'utilisateur est une entreprise j'affiche ce header -->
+		<header>
+			<div class="logoContainer">
+				<div>
+					<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+				</div>
+				<div>
+					<a href="/profilPros">Mon Profil</a>
+				</div>
+				<div>
+					<a href="/evenementPros">Événement</a>
+				</div>
+				<div>
+					<a href="/planningPros">Planning</a>
+				</div>
+				<div>
+					<a href="/prestation">Prestations</a>
+				</div>
+			</div>
+
+			<div class='flexContainer'>
+				<div>
+					<a href="/message"><img class='logoMessagerie' src="/assets/images/email.png" alt="logo enveloppe"></a>
+				</div>
+				<div>
+					<a href="/logout">Déconnexion</a>
+				</div>
+			</div>
+		</header>
+
+	{% else %}
+
+		<header>
+			<div class="logoContainer">
+				<div>
+					<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+				</div>
+				<div>
+					<a href="/profil">Mon Profil</a>
+				</div>
+				<div>
+					<a href="/evenement">Événement</a>
+				</div>
+				<div>
+					<a href="/planning">Planning</a>
+				</div>
+				<div>
+					<a href="/invites">Invités</a>
+				</div>
+			</div>
+
+			<div class='flexContainer'>
+				<div>
+					<a href="/message"><img class='logoMessagerie' src="/assets/images/email.png" alt="logo enveloppe"></a>
+				</div>
+				<div>
+					<a href="/logout">Déconnexion</a>
+				</div>
+			</div>
+		</header>
+
+	{% endif %}
+
 {% else %}
-    <!-- Si l'utilisateur ou l'entreprise n'est pas défini, on affiche l'en-tête générique -->
-    <header>
-        <div class="logoContainer">
-            <div>
-                <a href="/"><img class="logo" src="assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
-            </div>
-            <div>
-                <a class='proBtn' href="/pros">Pour les professionnels</a>
-            </div>
-        </div>
-        <div class='flexContainer'>
-            <div>
-                <a href="/quiSommesNous">Qui sommes nous</a>
-            </div>
-            <div>
-                <a href="/login">Connexion</a>
-                |
-                <a href="/signIn">Inscription</a>
-            </div>
-        </div>
-    </header>
+	<!-- Si l'utilisateur ou l'entreprise n'est pas défini, on affiche l'en-tête générique -->
+	<header>
+		<div class="logoContainer">
+			<div>
+				<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+			</div>
+			<div>
+				<a class='proBtn' href="/pros">Pour les professionnels</a>
+			</div>
+		</div>
+		<div class='flexContainer'>
+			<div>
+				<a href="/quiSommesNous">Qui sommes nous</a>
+			</div>
+			<div>
+				<a href="/login">Connexion</a>
+				|
+				<a href="/signIn">Inscription</a>
+			</div>
+		</div>
+	</header>
 {% endif %}
-
-
-
-

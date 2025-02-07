@@ -4,6 +4,9 @@ const utilisateurRouter = require('./router/UtilisateurRouter');
 const prosRouter = require('./router/ProsRouter');
 const evenementRouter = require('./router/evenementROuter');
 const invitesRouter = require('./router/invitesRouter');
+const profilRouter = require('./router/profilRouter');
+const profilProsRouter = require('./router/profilProsRouter');
+
 
 const app = express();
 
@@ -23,7 +26,10 @@ app.use(express.static('./public'));
 app.use(utilisateurRouter);
 app.use(prosRouter)
 app.use(evenementRouter)
-app.use(invitesRouter)       
+app.use(invitesRouter)  
+app.use(profilRouter)
+app.use(profilProsRouter)    
+
 app.listen(3000, () => {
     try {   
         console.log("Écoute sur le port 3000");
