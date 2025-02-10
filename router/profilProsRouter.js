@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 // Affichage du profil professionnel
 profilProsRouter.get('/profilPros', authguard, async (req, res) => {
-    
     res.render('pages/profilPros.twig', {
         utilisateur: req.session.utilisateur,
         entreprise: req.session.entreprise
@@ -52,19 +51,41 @@ profilProsRouter.get('/confirmDeleteEntreprise', authguard, (req, res) => {
     });
 });
 
-// Suppression du profil professionnel
-profilProsRouter.get('/deleteEntreprise', authguard, async (req, res) => {
+// Suppression de l'etreprise et de l'utilisateur rattaché
+profilProsRouter.post('/deleteEntreprise/:userId', authguard, async (req, res) => {
     try {
-        await prisma.entreprise.delete({
-            where: { utilisateurId: req.session.utilisateur.id }
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: {
+                id: parseInt(req.params.userId)
+            }
+        })
+
+        if (utilisateur.isEntreprise) {
+            await prisma.entreprise.delete({
+                where: {
+                    utilisateurId: parseInt(req.params.userId)
+                }
+            });
+        }
+        // Supprimer l'utilisateur
+        await prisma.utilisateur.delete({
+            where: {
+                id: parseInt(req.params.userId)
+            }
         });
 
-        req.session.destroy();
-        res.redirect("/");
+        req.session.destroy()
+        res.redirect("/")
     } catch (error) {
-        console.log(error);
-        res.redirect('/profilPros');
+        console.log(error)
+        res.render('pages/deleteEntreprise.twig', {
+            utilisateur: req.session.utilisateur
+        }
+        )
     }
-});
+})
 
+
+      
+    
 module.exports = profilProsRouter;

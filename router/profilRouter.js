@@ -52,19 +52,28 @@ profilRouter.post('/updateUser', authguard, async (req, res) => {
 })
 
 profilRouter.get('/confirmDelete', authguard, (req, res) => {
+    console.log(req.session.utilisateur)
     res.render('pages/confirmDelete.twig', {
         utilisateur: req.session.utilisateur
     }
     ) 
 })
 
-profilRouter.get('/deleteUser', authguard, async (req, res) => {
+profilRouter.post('/deleteUser/:userId', authguard, async (req, res) => {
+try {
     deletedUser = await prisma.utilisateur.delete({
         where: {
-            email: req.session.utilisateur.email
+            id: parseInt(req.params.userId)
         }
     })
     req.session.destroy()
     res.redirect("/")
+} catch (error) {
+    console.log(error)
+    res.render('pages/confirmDelete.twig', {
+        utilisateur: req.session.utilisateur
+    }
+    ) }
+
 })
 module.exports = profilRouter       

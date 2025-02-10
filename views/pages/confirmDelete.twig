@@ -20,9 +20,9 @@
 
 		<div class='formSignIn confirmDelete'>
 			<p>Vous êtes sur le point de supprimer définitivement votre compte.</p>
-			<form action="/deleteUser" method='GET'>
+			<form action="/deleteUser/{{utilisateur.id}}" method='POST'>
 				<p>Veuillez confirmer votre choix</p>
-				<a class='btn' href="{{ utilisateur.isEntreprise ? '/profilPros' : '/profile' }}">Annuler</a>
+				<a class='btn' href="{{ utilisateur.isEntreprise ? '/profilPros' : '/profil' }}">Annuler</a>
                 
 
 				<button class='delete'>Supprimer</button>

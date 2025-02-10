@@ -33,8 +33,8 @@ utilisateurRouter.get('/', async (req, res) => {
             utilisateur: utilisateur,
             evenements: utilisateur.evenements
         });
-    } 
-    
+    }
+
     res.render('pages/main.twig');
 });
 
@@ -108,7 +108,13 @@ utilisateurRouter.post('/login', async (req, res) => {
                         res.redirect('/addProfilPros')
                     }
                     else {
+                        const entreprise = await prisma.entreprise.findFirst({
+                            where: {
+                                utilisateurId: req.session.utilisateur.id
+                            }
+                        });
 
+                        req.session.entreprise = entreprise
                         res.redirect('/dashboardPros')
                     }
                 }
@@ -218,7 +224,7 @@ utilisateurRouter.post('/forgot-password', async (req, res) => {
         res.render('pages/mdpOublie.twig', { message: 'Un lien de réinitialisation a été envoyé à votre adresse mail' });
 
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.render('pages/mdpOublie.twig', { error: "Une erreur est survenue. Veuillez réessayer plus tard." });
     }
 });
@@ -245,7 +251,7 @@ utilisateurRouter.get('/resetPassword/:token', async (req, res) => {
         // Affiche le formulaire de réinitialisation de mot de passe
         res.render('pages/resetPassword.twig', { utilisateur });
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.render('resetPassword', { message: "Une erreur est survenue. Veuillez réessayer plus tard." });
     }
 });

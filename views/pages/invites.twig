@@ -12,50 +12,68 @@
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2> Gérer votre liste d'invités</h2>
+	<h2>
+		Gérer votre liste d'invités</h2>
+
+		<div>
+		{% if errorMessage %}
+			<p class='error message'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+		
+		</div>
 
 	<section class="mainSection">
-		<h3>Ajouter un invité</h3>
+		<h3 class='InviteH3'>Ajouter un invité</h3>
 
-		<div class="formEvenement">
+		<div class="addInviteForm">
 			<form action="/addInvite" method="POST">
-				<label for="nom">Nom</label>
-				<input type="text" id="nom" name="nom" required>
 
-				<label for="prenom">Prénom</label>
-				<input type="text" id="prenom" name="prenom" required>
+				<div class="inputRow">
+					<div class='flex'>
+						<label for="nom">Nom</label>
+						<input type="text" id="nom" name="nom" required>
+					</div>
+					<div class='flex'>
+						<label for="prenom">Prénom</label>
+						<input type="text" id="prenom" name="prenom" required>
+					</div>
+					<div class='flex'>
+						<label for="email">Email</label>
+						<input type="text" id="email" name="email">
+					</div>
+				</div>
 
-				<label for="email">Email</label>
-				<input type="text" id="email" name="email">
 
-				<label for="evenement">Événement</label>
-				<select id="evenement" name="evenement" required>
-					<option value="" disabled selected>-- Sélectionnez un événement --</option>
-					{% for evenement in evenements %}
-						<option value="{{ evenement.id }}">{{ evenement.titre }}</option>
-					{% endfor %}
-				</select>
+				<div class='selectEventDiv'>
 
-				<button type="submit">Ajouter</button>
+					<select class="eventSelect" id="evenement" name="evenement" required>
+						<option value="" disabled selected>Sélectionnez un événement</option>
+						{% for evenement in evenements %}
+							<option value="{{ evenement.id }}">{{ evenement.titre }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="buttonContainer">
+					<button type="submit" class="AddInviteBtn">Ajouter</button>
+				</div>
 			</form>
 		</div>
 	</section>
 
 	<section class="mainSection">
-		{% if errorMessage %}
-			<p class='error message'>{{errorMessage}}</p>
-		{% endif %}
-
-		{% if successMessage %}
-			<p class='message'>{{successMessage}}</p>
-		{% endif %}
+	
 
 
 		<form class='selectEventForm' action="/displayInvites" method="GET">
-			<h3>Sélectionner un événement pour afficher ses invités</h3>
+			<h3>Afficher les Invités</h3>
 
 			<select class="evenementSelect" id="evenement" name="evenementId" required>
-				<option value="" disabled selected>-- Sélectionnez un événement --</option>
+				<option value="" disabled selected>Sélectionnez un événement</option>
 				{% for evenement in evenements %}
 					<option value="{{ evenement.id }}" {% if evenement.id == selectedEvenementId %} selected {% endif %}>
 						{{ evenement.titre }}
@@ -147,21 +165,21 @@
 						<label for="emailText">Modèle de l'Email</label>
 						<textarea name="emailText" id="emailText" placeholder='Tapez votre email
 							
-																																																																																																				Par exemple :
+																																																																																																																																						Par exemple :
 							
-																																																																																																				Cher Prénom,
+																																																																																																																																						Cher Prénom,
 							
-																																																																																																				Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
+																																																																																																																																						Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
 							
-																																																																																																				Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
+																																																																																																																																						Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
 							
-																																																																																																				Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
+																																																																																																																																						Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
 							
-																																																																																																				Amicalement,
+																																																																																																																																						Amicalement,
 							
-																																																																																																				Votre Signature.
+																																																																																																																																						Votre Signature.
 							
-																																																																																																				'></textarea>
+																																																																																																																																						'></textarea>
 
 						<p>PS : Les noms et prénoms des invités seront ajustés dynamiquement. Par exemple ici Prénom sera remplacé par le prénom de l'invité.</p>
 

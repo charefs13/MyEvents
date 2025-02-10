@@ -6,7 +6,7 @@ model Evenement {
   dateDebut     DateTime
   dateFin       DateTime
   lieu          String?
-  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id])
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   utilisateurId Int
   invites       Invite[]
   //   taches        Tache[]

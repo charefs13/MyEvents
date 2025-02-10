@@ -6,7 +6,7 @@ model Entreprise {
   adresse       String
   ville         String
   cp            Int
-  utilisateur   Utilisateur      @relation(fields: [utilisateurId], references: [id])
+  utilisateur   Utilisateur      @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   utilisateurId Int @unique
 //   prestations   Prestation[]
 //   commentaires  CommentaireAvis[]

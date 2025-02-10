@@ -100,15 +100,12 @@ prosRouter.post('/addProfilPros/:id', authguard, async (req, res) => {
 })
 
 prosRouter.get('/dashboardPros', (req, res) => {
-    console.log(req.session.utilisateur)
-    res.render('pages/dashboardPros.twig',
+       res.render('pages/dashboardPros.twig',
         {
             utilisateur: req.session.utilisateur,
             entreprise: req.session.entreprise
         }
-
-    )
-
+    ) 
 })
 
 
