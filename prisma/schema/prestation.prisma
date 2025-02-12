@@ -1,9 +1,11 @@
-// model Prestation {
-//   id            Int        @id @default(autoincrement())
-//   nom           String
-//   prix          Float
-//   entreprise    Entreprise @relation(fields: [entrepriseId], references: [id])
-//   entrepriseId  Int
-//   avis          Avis[]
-//   prestationEvenement PrestationEvenement[]
-// }
+model Prestation {
+    id          Int    @id @default(autoincrement())
+    nom         String
+    prix        Float
+    description String @db.Text
+
+    entreprise          Entreprise            @relation(fields: [entrepriseId], references: [id])
+    entrepriseId        Int
+    devis               PrestationDevis[] // Une prestation peut être incluse dans plusieurs devis
+    // PrestationEvenement PrestationEvenement[]
+}

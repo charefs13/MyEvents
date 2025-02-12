@@ -9,5 +9,5 @@ model Evenement {
   utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   utilisateurId Int
   invites       Invite[]
-  //   taches        Tache[]
+  devis         Devis[] // Plusieurs devis peuvent être liés à un événement
 }

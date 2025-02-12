@@ -6,6 +6,7 @@ const evenementRouter = require('./router/evenementROuter');
 const invitesRouter = require('./router/invitesRouter');
 const profilRouter = require('./router/profilRouter');
 const profilProsRouter = require('./router/profilProsRouter');
+const prestationRouter = require('./router/prestationRouter');
 
 
 const app = express();
@@ -28,7 +29,8 @@ app.use(prosRouter)
 app.use(evenementRouter)
 app.use(invitesRouter)  
 app.use(profilRouter)
-app.use(profilProsRouter)    
+app.use(profilProsRouter)
+app.use(prestationRouter)    
 
 app.listen(3000, () => {
     try {   

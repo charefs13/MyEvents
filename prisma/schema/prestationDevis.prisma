@@ -1,0 +1,10 @@
+model PrestationDevis {
+  prestationId  Int
+  devisId       Int
+  quantite      Int        @default(1)
+
+  prestation    Prestation @relation(fields: [prestationId], references: [id], map: "PrestationDevis_Prestation_fkey")
+  devis         Devis      @relation(fields: [devisId], references: [id], map: "PrestationDevis_Devis_fkey")
+
+  @@id([prestationId, devisId]) // Clé primaire composite pour éviter les doublons
+}

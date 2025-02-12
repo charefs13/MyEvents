@@ -504,7 +504,7 @@ button:hover {
     border: 1px solid #ffd90051;
 }
 
-.btnContainer .delete:hover{
+.btnContainer .delete:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
 }
@@ -562,7 +562,7 @@ button:hover {
 
 
 /* ---------------------------------------- PAGE INVITE ----------------------------------------------------------------------- */
-.InviteH3{
+.InviteH3 {
     font-weight: 100;
 }
 
@@ -578,7 +578,7 @@ button:hover {
     margin-bottom: 100px;
     margin-right: 10px;
     margin-left: 10px;
-    
+
 }
 
 .addInviteForm form {
@@ -589,8 +589,8 @@ button:hover {
     gap: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-   
-    
+
+
 }
 
 .addInviteForm input {
@@ -599,26 +599,27 @@ button:hover {
     border-radius: 10px;
     background-color: #f5f3ef7d;
     border: 1px solid #ffd90051;
-    
-  
+
+
 }
 
-.flex{
+.flex {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 5px;
 }
+
 .inputRow {
     display: flex;
     justify-content: space-between;
     width: 80%;
     gap: 10px;
     margin: auto;
-    
+
 }
 
-.selectEventDiv{
+.selectEventDiv {
     width: 45%;
 }
 
@@ -630,7 +631,7 @@ button:hover {
     background-color: white;
     border: 1px solid #ffd90051;
     margin: auto;
-    
+
 }
 
 .buttonContainer {
@@ -800,7 +801,7 @@ button:hover {
     margin-bottom: 25px;
 }
 
- 
+
 
 
 /* ------------------------------------------- PAGE PROFIL ----------------------------------------------------- */
@@ -813,7 +814,8 @@ button:hover {
     background-color: white;
     color: red;
 }
-.form-group .delete:hover{
+
+.form-group .delete:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
     text-decoration: none;
@@ -847,7 +849,85 @@ button:hover {
     font-weight: bold;
 }
 
-.confirmDelete .delete:hover{
+.confirmDelete .delete:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+/* ------------------------------------------- PAGE Prestation ----------------------------------------------------- */
+
+.prestationContainer {
+    position: relative;
+    width: 40%;
+    min-height: 250px;
+    background-color: white;
+    margin: auto;
+    border: 1px solid #ffd90051;
+    border-radius: 25px;
+    margin-bottom: 50px;
+    padding: 20px 0;
+    text-align: start;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    overflow: auto;
+
+}
+
+.prestationContainer h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.prestationContainer p,
+.prestationContainer .link {
+    text-align: start;
+    padding: 10px 25px;
+    margin-bottom: 50px;
+
+}
+
+.AllPrestationsContainer {
+    width: 80%;
+    height: 500px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    overflow: auto;
+}
+
+.AllPrestationsContainer .btnContainer {
+    top: 85%
+}
+
+.AllPrestationsContainer .close {
+
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    font-size: 12px;
+
+
+}
+
+.AllPrestationsContainer label,
+.AllPrestationsContainer input {
+    margin: 5px auto;
+    background-color: #f5f3ef7d;
+}
+
+.prestationDescription{
+    overflow: auto;
 }

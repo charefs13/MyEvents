@@ -5,14 +5,12 @@ const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 
-
+  
 //  affichage de la page d'inscription pour une Entreprise
 prosRouter.get('/signInPros', (req, res) => {
-    res.render('pages/signInPros.twig',
-        utilisateur
-    )
-})
-
+    res.render('pages/signInPros.twig')
+})     
+  
 // Envoie du formulaire d'inscription à ma BDD
 prosRouter.post('/signInPros', async (req, res) => {
     try {
@@ -26,7 +24,7 @@ prosRouter.post('/signInPros', async (req, res) => {
                     isEntreprise: true
                 }
 
-            })
+            }) 
             res.redirect('/login')
         }
         else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })

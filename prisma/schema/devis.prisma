@@ -1,0 +1,10 @@
+model Devis {
+  id            Int        @id @default(autoincrement())
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade) // Le particulier qui crée le devis
+  utilisateurId Int
+  evenement     Evenement @relation(fields: [evenementId], references: [id])
+  evenementId   Int
+  entreprise    Entreprise @relation(fields: [entrepriseId], references: [id]) // L’entreprise qui fournit les prestations
+  entrepriseId  Int
+  prestations   PrestationDevis[] // Liste des prestations incluses dans le devis
+}

@@ -9,9 +9,8 @@ model Utilisateur {
   ville           String?
   cp              Int?
   genre           String?
-// avis            Avis[]
-// taches          Tache[]
   evenements      Evenement[]
+  devis           Devis[] // Un utilisateur peut demander plusieurs devis
   isEntreprise    Boolean      @default(false)
   entreprise      Entreprise?
   resetToken      String?      

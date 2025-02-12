@@ -1,14 +1,13 @@
 model Entreprise {
-  id            Int             @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
   raisonSociale String
   siret         String
   type          String
   adresse       String
   ville         String
   cp            Int
-  utilisateur   Utilisateur      @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  utilisateur   Utilisateur  @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   utilisateurId Int @unique
-//   prestations   Prestation[]
-//   commentaires  CommentaireAvis[]
+  prestations   Prestation[]
+  devis         Devis[]  // Une entreprise peut avoir plusieurs devis via ses prestations
 }
- 

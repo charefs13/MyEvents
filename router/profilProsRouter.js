@@ -86,6 +86,5 @@ profilProsRouter.post('/deleteEntreprise/:userId', authguard, async (req, res) =
 })
 
 
-      
-    
+
 module.exports = profilProsRouter;
