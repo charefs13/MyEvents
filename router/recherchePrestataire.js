@@ -111,7 +111,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
 
         // Calcul du total en additionnant tous les prix des prestations sélectionnées
         const total = selectedPrestations.reduce((acc, prestation) => acc + prestation.prix, 0);
- 
+
 
         // Création du devis en base de données
         const devis = await prisma.devis.create({
@@ -122,21 +122,21 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
                 dateDebut: event.dateDebut,
                 dateFin: event.dateFin,
                 entrepriseId: parseInt(req.query.entreprise),
-                raisonSociale : entreprise.raisonSociale,
-                typeEntreprise : entreprise.type,
+                raisonSociale: entreprise.raisonSociale,
+                typeEntreprise: entreprise.type,
                 prestations: {
                     create: selectedPrestations.map(prestation => ({
                         prestationId: prestation.id,
                         prix: prestation.prix
-                    })) 
+                    }))
                 },
-                total : total,
+                total: total,
                 isValidate: false,
                 payed: false
             },
             include: { prestations: true }
         });
-  
+
         // Génération du PDF
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", "attachment; filename=devisMyEvent.pdf");
@@ -152,15 +152,15 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         doc.moveDown();
 
         // Coordonnées de l'entreprise
-        doc.fontSize(14).text("Coordonnées de l'entreprise :", { underline: true });
-        doc.fontSize(12).text(`Raison Sociale : ${entreprise.raisonSociale}`);
+        doc.fontSize(12).text("Coordonnées de l'entreprise :", { underline: true });
+        doc.fontSize(10).text(`Raison Sociale : ${entreprise.raisonSociale}`);
         doc.text(`Adresse : ${entreprise.adresse},`);
         doc.text(`${entreprise.cp} ${entreprise.ville}`);
         doc.moveDown();
 
         // Coordonnées du client
-        doc.fontSize(14).text("Coordonnées du client :", { underline: true, align: "right" });
-        doc.fontSize(12).text(`Nom : ${utilisateur.nom} ${utilisateur.prenom}`, { align: "right" });
+        doc.fontSize(12).text("Coordonnées du client :", { underline: true, align: "right" });
+        doc.fontSize(10).text(`Nom : ${utilisateur.nom} ${utilisateur.prenom}`, { align: "right" });
         doc.text(`Adresse : ${utilisateur.adresse},`, { align: "right" });
         doc.text(`${utilisateur.cp} ${utilisateur.ville}`, { align: "right" });
         doc.text(`Email : ${utilisateur.email}`, { align: "right" });
@@ -168,12 +168,31 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
 
         doc.text(`Devis N°${devis.id}`, { align: "left" });
         doc.moveDown();
-        doc.fontSize(12).text(`Événement : ${event.type} du ${event.dateDebut} au $${event.dateFin}` );
-      
+        doc.moveDown();
+
+        // Formatage des dates pour qu'elles soient lisibles
+        const dateDebutFormatted = new Date(event.dateDebut).toLocaleDateString('fr-FR', {
+            weekday: 'long', // Jour de la semaine
+            year: 'numeric', // Année complète
+            month: 'long',   // Mois complet
+            day: 'numeric'   // Jour du mois
+        });
+
+        const dateFinFormatted = new Date(event.dateFin).toLocaleDateString('fr-FR', {
+            weekday: 'long', // Jour de la semaine
+            year: 'numeric', // Année complète
+            month: 'long',   // Mois complet
+            day: 'numeric'   // Jour du mois
+        });
+
+        // Ajout du texte avec la date formatée
+        doc.fontSize(10).text(`Événement : ${event.type} du ${dateDebutFormatted} au ${dateFinFormatted}`);
+        doc.moveDown();
+        doc.moveDown();
 
 
         // Liste des prestations sélectionnées
-        doc.fontSize(14).text("Prestations sélectionnées :", { underline: true, align: 'center' });
+        doc.fontSize(12).text("Prestations sélectionnées :", { underline: true, align: 'center' });
         selectedPrestations.forEach(prestation => {
             doc.fontSize(12).text(`${prestation.nom}:`, { align: "left" });
             doc.fontSize(12).text(`  Description : ${prestation.description}`);
@@ -181,19 +200,20 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
             doc.moveDown();
         });
 
+
         // Total HT, TVA et Total TTC
         let totalHT = selectedPrestations.reduce((sum, p) => sum + p.prix, 0);
         const tva = totalHT * 0.2;
         const totalTTC = totalHT + tva;
         doc.moveDown();
-        doc.fontSize(12).text(`Total HT: ${totalHT.toFixed(2)} €`, { align: "right" });
+        doc.fontSize(10).text(`Total HT: ${totalHT.toFixed(2)} €`, { align: "right" });
         doc.text(`TVA (20%): ${tva.toFixed(2)} €`, { align: "right" });
-        doc.fontSize(16).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
+        doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
 
         // Date du devis
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('fr-FR'); // Utilisation du format français
-        doc.fontSize(12).text(`Fait à ${entreprise.ville}, le ${formattedDate}`, { align: "left" });
+        doc.fontSize(10).text(`Fait à ${entreprise.ville}, le ${formattedDate}`, { align: "left" });
         doc.moveDown();
 
 
@@ -202,7 +222,6 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         doc.fontSize(7).text(`Une fois le devis validé par ${entreprise.raisonSociale}, vous pourrez procéder au paiement.`);
         doc.moveDown();
         doc.end();
-        res.redirect('/')
     } catch (error) {
         console.log(error)
     }

@@ -9,13 +9,13 @@ const profilProsRouter = require('./router/profilProsRouter');
 const prestationRouter = require('./router/prestationRouter');
 const recherchePrestataireRouter = require('./router/recherchePrestataire');
            
-                
+                                 
 const app = express();
 
 // Middlewares d'analyse
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-  
+   
 // Gestion de session
 app.use(session({
     secret: 'Sjkydbyjgg@zme;,geoo23323@:!',

@@ -8,35 +8,52 @@ const crypto = require('crypto');
 const { sendResetEmail } = require('../services/sendResetEmail.js');
 
 
-//affiche ma main page
+// Affiche la page principale du dashboard utilisateur
 utilisateurRouter.get('/', async (req, res) => {
-
     if (req.session.utilisateur) {
-        // Récupération  l'utilisateur avec ses événements et les infos de son entreprise
+        // Récupération de l'utilisateur avec ses événements, ses devis et son entreprise
         const utilisateur = await prisma.utilisateur.findFirst({
             where: { email: req.session.utilisateur.email },
-            include: { evenements: true, entreprise: true, devis: true }
+            include: { entreprise: true, devis: true, evenements: true }
         });
 
-        req.session.utilisateur = utilisateur; // Mise à jour des données utilisateur en session
+        // Récupération des événements associés à l'utilisateur
+        const events = await prisma.evenement.findMany({
+            where: {
+                utilisateurId: req.session.utilisateur.id
+            },
+            include: {
+                devis: true // Inclure les devis associés à chaque événement
+            }
+        });
 
+        // Mise à jour des données utilisateur en session
+        req.session.utilisateur = utilisateur;
+
+        // Si l'utilisateur est une entreprise, afficher son dashboard professionnel
         if (utilisateur.isEntreprise && utilisateur.entreprise) {
-            req.session.entreprise = utilisateur.entreprise; // Stocker uniquement l'objet entreprise
+            req.session.entreprise = utilisateur.entreprise; // Stocker l'objet entreprise dans la session
 
             return res.render('pages/dashboardPros.twig', {
                 entreprise: utilisateur.entreprise,
-                utilisateur: utilisateur
+                utilisateur: utilisateur,
+                devis: events.devis, // Passage des devis des événements
+                evenements: events // Passage des événements avec leurs devis associés
             });
         }
 
+        // Sinon, afficher le dashboard utilisateur classique
         return res.render('pages/utilisateurDashboard.twig', {
             utilisateur: utilisateur,
-            evenements: utilisateur.evenements
+            evenements: events, // Passage des événements
+            devis: events.flatMap(event => event.devis) // Extraction des devis de chaque événement
         });
     }
 
+    // Si l'utilisateur n'est pas connecté, afficher la page d'accueil
     res.render('pages/main.twig');
 });
+
 
 
 
@@ -306,4 +323,3 @@ module.exports = utilisateurRouter;
 
 
 
- 

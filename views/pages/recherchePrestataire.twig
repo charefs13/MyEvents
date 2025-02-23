@@ -17,12 +17,14 @@
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>Résultats de votre recherche</h2>
+	
 
 	<section class='mainSection'>
-		<div id="map"></div>
+		
 
-		{% if entreprises is defined %}
+		{% if entreprises|length > 0 %}
+		<h2>Résultats de votre recherche</h2>
+		<div id="map"></div>
 			<script>
 				// Conversion de la variable Twig "entreprises" en JSON pour utilisation en JavaScript
 let entreprises = {{ entreprises | json_encode | raw }};
@@ -31,7 +33,9 @@ let centreVille = entreprises[0] ? entreprises[0].ville : 'Paris'; // Si aucune 
 			</script>
 		{% else %}
 			<!-- Message affiché si aucune entreprise n'est trouvée -->
-			<h3>Aucun Résultat</h3>
+			<h2 style="
+    margin-bottom: 100vh;"
+>Aucun Résultat</h3>
 		{% endif %}
 	</section>
 {% endblock %}
