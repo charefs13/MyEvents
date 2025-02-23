@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Devis` ADD COLUMN `payed` BOOLEAN NOT NULL DEFAULT false;

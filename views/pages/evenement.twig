@@ -22,7 +22,7 @@
 			<div class='formSignIn hide'>
 				<form action="/createEvent" method='POST'>
 					<div class='form-group'>
-						<p class='close'>Fermer</p>
+						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
 						<label for="typeEvenement">Type d'événement</label>
 						<select id="typeEvenement" name="typeEvenement" required>
 							<option value="babyShower">Baby Shower</option>
@@ -104,7 +104,7 @@
 							<h4>Modifier
 								{{ evenement.titre }}</h4>
 							<div class='form-group'>
-								<p class='close'>Fermer</p>
+						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
 								<label for="typeEvenement">Type d'événement</label>
 								<select id="typeEvenement-{{ evenement.id }}" name="typeEvenement" required>
 									<option value="babyShower" {% if evenement.type == 'babyShower' %} selected {% endif %}>Baby Shower</option>

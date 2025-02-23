@@ -30,6 +30,32 @@ strong {
     font-style: normal;
 }
 
+.italianno-regular {
+    font-family: "Italianno", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+.firstFont {
+    font-family: "Italianno", serif;
+    font-size: 30px;
+}
+
+.league-script-regular {
+    font-family: "League Script", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.secondFont {
+    font-family: "League Script", serif;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 5px;
+
+}
+
 
 body {
     background-color: #e5dccf;
@@ -80,8 +106,15 @@ header a:hover {
 
 }
 
-.logoMessagerie {
+.logoMessagerie,
+.logout {
     width: 20px;
+}
+
+.logoMessagerie:hover,
+.logout:hover {
+    width: 25px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 a {
@@ -446,12 +479,27 @@ button:hover {
 
 .updateForm {
     display: none;
+    padding-top: 15px;
+    margin-top: 10px;
+
 }
 
 
 
 
 /* --------------------------------------------------- MAIN PAGE AVEC AFFICHAGE DES EVENTS ------------------------------------------ */
+
+.btn-ajouter {
+    text-align: center;
+    margin: 25px auto;
+    display: block;
+    width: fit-content;
+    /* Ajuste la largeur selon le texte */
+    padding: 10px 20px;
+    background-color: #f5f3ef;
+    text-decoration: none;
+    border-radius: 20px;
+}
 
 
 
@@ -485,6 +533,37 @@ button:hover {
 
 }
 
+.devisContainer {
+    text-align: start;
+    margin: 0;
+    background-color: white;
+    width: 30%;
+    padding: 10px 0;
+    border: 1px solid #ffd90051;
+    border-radius: 10px;
+}
+.devisContainer p {
+    margin: 0;
+    padding: 8px;
+}
+
+.notValidate{
+    color: rgb(249, 35, 35);
+    font-weight: bold;
+}
+
+.validate{
+    color: rgb(32, 129, 255);
+    font-weight: bold;
+}
+.allDevisContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1em;
+}
 .btnContainer {
 
     position: absolute;
@@ -518,7 +597,8 @@ button:hover {
     text-align: center;
 }
 
-.btn:hover {
+.btn:hover,
+.btn-ajouter:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
 }
@@ -541,14 +621,13 @@ button:hover {
 
 .close {
     position: absolute;
-    top: 1%;
-    left: 5%;
+    top: 0%;
+    left: 0%;
     font-size: 15px;
 }
 
 .add:hover,
 .close:hover {
-    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -874,7 +953,8 @@ button:hover {
     border: 1px solid #ffd90051;
     border-radius: 25px;
     margin-bottom: 50px;
-    padding: 20px 0;
+    margin-top: 50px;
+    padding: 25px 0;
     text-align: start;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     overflow: auto;
@@ -928,6 +1008,54 @@ button:hover {
     background-color: #f5f3ef7d;
 }
 
-.prestationDescription{
+.prestationDescription {
     overflow: auto;
+}
+
+
+#map {
+    margin: auto;
+    height: 500px;
+    max-height: 500px;
+    width: 80%;
+    max-width: 100%;
+    border: 1px solid #e5dccf;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 100px;
+
+}
+
+
+
+
+
+
+/* ------------------------------------------- PAGE Devis ----------------------------------------------------- */
+
+
+.selectEventDevis {
+    margin: auto;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.prestationDevis .AllPrestationsContainer {
+    height: 450px;
+}
+
+.prestationDevis .prestationContainer {
+    min-height: 150px;
+}
+
+.prestationContainer:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.total {
+    margin: auto;
+    margin-bottom: 100px;
+    margin-top: 100px;
+    text-align: center;
 }

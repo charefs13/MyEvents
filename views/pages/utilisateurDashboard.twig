@@ -18,78 +18,125 @@
 		{{utilisateur.prenom}}</h2>
 
 	<section class="mainSection">
-		<h3>
-			<a href="/evenement">Ajouter un événement</a>
-		</h3>
+		{% if errorMessage %}
+			<p class='error message'>{{ errorMessage }}</p>
+		{% endif %}
 
-		<div class="formEvenement">
-			<form action="" methode="get">
-				<label for="typeEvenement">Type d'événement</label>
-				<select id="typeEvenement" name="typeEvenement">
-					<option value="babyShower">Baby Shower</option>
-					<option value="genderReveal">Gender Reveal</option>
-					<option value="mariage">Mariage</option>
-					<option value="feteReligieuse">Fête religieuse</option>
-					<option value="anniversaire">Anniversaire</option>
-					<option value="bapteme">Baptême</option>
-					<option value="autre">Autre</option>
-				</select>
-
-			<label for="prestation">Prestataire</label>
-				<select id="prestation" name="prestation">
-					<option value="photographeVideaste">Photographe/Vidéaste</option>
-					<option value="traiteur">Traiteur</option>
-					<option value="dj">DJ</option>
-					<option value="decorateur">Décorateur</option>
-					<option value="animateur">Animateur</option>
-					<option value="locationMateriel">Location de matériel</option>
-					<option value="locationSalle">Location de salle/Lieu de réception</option>
-					<option value="fleuriste">Fleuriste</option>
-					<option value="stylistes">Styliste/Costumier</option>
-					<option value="graphiste">Graphiste/Impression de supports</option>
-					<option value="autre">Autre</option>
-				</select>
-
-				<label for="ville">Votre ville
-				</label>
-				<input type="text" id="ville" name="ville" placeholder="Entrez votre ville">
-
-				<button type="submit">Rechercher</button>
-			</form>
-		</div>
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
 
 		<div>
 
-			{% for evenement in evenements %}
 
-				<div class='evenementContainer'>
-					<h4>{{evenement.titre}}</h4>
+			<h3>Trouver un prestataire 🔎</h3>
+			<div class="formEvenement">
+				<form action="/recherchePrestataire" methode="GET">
+					<label for="typeEvenement">Type d'événement</label>
+					<select id="typeEvenement" name="typeEvenement">
+						<option value="babyShower">Baby Shower</option>
+						<option value="genderReveal">Gender Reveal</option>
+						<option value="mariage">Mariage</option>
+						<option value="feteReligieuse">Fête religieuse</option>
+						<option value="anniversaire">Anniversaire</option>
+						<option value="bapteme">Baptême</option>
+						<option value="autre">Autre</option>
+					</select>
 
-					<p>
-						Type d'événement:
-						{{evenement.type}}
-					</p>
-					<p>
-						{{evenement.description}}
-					</p>
-					<p>Du
-						<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
-						au
-						<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
-					</p>
+					<label for="type">Prestataire</label>
+					<select id="type" name="type">
+						<option value="photographeVideaste">Photographe/Vidéaste</option>
+						<option value="traiteur">Traiteur</option>
+						<option value="dj">DJ</option>
+						<option value="decorateur">Décorateur</option>
+						<option value="animateur">Animateur</option>
+						<option value="locationMateriel">Location de matériel</option>
+						<option value="locationSalle">Location de salle/Lieu de réception</option>
+						<option value="fleuriste">Fleuriste</option>
+						<option value="stylistes">Styliste/Costumier</option>
+						<option value="graphiste">Graphiste/Impression de supports</option>
+						<option value="autre">Autre</option>
+					</select>
+
+					<label for="ville">Votre ville
+					</label>
+					<input type="text" id="ville" name="ville" placeholder="Entrez votre ville">
+
+					<button type="submit">Rechercher</button>
+				</form>
+			</div>
+		</section>
+		<section class='mainSection'>
+			<div>
+				<h3>Vos Événement en cours</h3>
+
+				{% for evenement in evenements %}
+
+					<div class='evenementContainer'>
+						<h4>{{evenement.titre}}</h4>
+
+						<p>
+							Type d'événement:
+							{{evenement.type}}
+						</p>
+						<p>
+							{{evenement.description}}
+						</p>
+						<p>Du
+							<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
+							au
+							<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
+						</p>
 
 
-					{% if evenement.lieu %}
-						<p>Lieu :
-							{{evenement.lieu}}</p>
+						{% if evenement.lieu %}
+							<p>Lieu :
+								{{evenement.lieu}}</p>
 
-					{% else %}
-						<a class='link' href="">Ajouter un lieu pour votre événement</a>
-					{% endif %}
+						{% else %}
+							<a class='link' href="">Rechercher un lieu pour fêter votre événement</a>
+						{% endif %}
 
-				</div>
-			{% endfor %}
 
-		</div>
-	</section>
-{% endblock %}
+						{% if utilisateur.devis|length > 0 %}
+							<h4>Vos Devis</h4>
+							<div class='allDevisContainer'>
+
+								{% for devis in utilisateur.devis %}
+									<div class='devisContainer'>
+										<p>Devis N°{{devis.id}}</p>
+										<p>
+											Prestataire:
+											{{devis.raisonSociale}}</p>
+										<p>
+											Catégorie:
+											{{devis.typeEntreprise}}</p>
+										<p>Total :
+											{{ devis.total }}
+											€</p>
+										{% if devis.isValidate %}
+											<p class='validate'>Devis validé,
+												<a href="/paiement/{{ devis.id }}">Veuillez procéder au paiement pour confirmer la prestation.</a>
+											</p>
+										{% else %}
+											<p class='notValidate'>En attente de validation par le prestataire.</p>
+										{% endif %}
+									</div>
+								{% endfor %}
+
+							</div>
+						{% endif %}
+
+
+					</div>
+
+
+				{% endfor %}
+
+			</div>
+			<div>
+				<a href="/evenement" class="btn-ajouter">Ajouter un événement</a>
+			</div>
+		</section>
+
+	{% endblock %}

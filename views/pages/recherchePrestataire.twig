@@ -1,0 +1,75 @@
+{# Recherche Prestatire avec map #}
+
+{% extends "../layouts/base.twig" %}
+
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+{% endblock %}
+
+{% block tile %}MyEvents- Votre Recherche de Prestataire
+{% endblock %}
+
+{% block main %}
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<h2>Résultats de votre recherche</h2>
+
+	<section class='mainSection'>
+		<div id="map"></div>
+
+		{% if entreprises is defined %}
+			<script>
+				// Conversion de la variable Twig "entreprises" en JSON pour utilisation en JavaScript
+let entreprises = {{ entreprises | json_encode | raw }};
+// On récupère la ville de la première entreprise, si elle existe
+let centreVille = entreprises[0] ? entreprises[0].ville : 'Paris'; // Si aucune entreprise, centrer sur Paris
+			</script>
+		{% else %}
+			<!-- Message affiché si aucune entreprise n'est trouvée -->
+			<h3>Aucun Résultat</h3>
+		{% endif %}
+	</section>
+{% endblock %}
+
+{% block script %}
+	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+	<script src="/assets/script/map.js"></script>
+{% endblock %}
+
+
+
+{# <section class='mainSection'>
+				{% if entreprises is defined %}
+		
+					{% for entreprise in entreprises %}
+						<div class='evenementContainer' style='overflow: auto; height: 500px'>
+							<h4>{{entreprise.raisonSociale}}</h4>
+							<p>
+								Adresse :
+								{{entreprise.adresse}} {{entreprise.cp }} {{entreprise.ville}}
+							</p>
+		                    
+		
+							{% for prestation in entreprise.prestations %}
+								<div class='prestationContainer'>
+									<p>Titre :
+										{{prestation.nom}}</p>
+									<p>Description :
+										{{prestation.description}}</p>
+									<p>Prix :
+										{{prestation.prix}}$ TTC</p>
+								</div>
+							{% endfor %}
+		
+						</div>
+					{% endfor %}
+		
+				{% else %}
+					<h3>Aucun Résultat</h3>
+				{% endif %}
+			</section> #}

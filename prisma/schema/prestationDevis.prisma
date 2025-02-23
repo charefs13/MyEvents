@@ -1,10 +1,13 @@
+// table pivot gère relation many-to-many les prestations et les devis // permet de suivre quelles prestations sont incluses dans un devis
+
 model PrestationDevis {
   prestationId  Int
   devisId       Int
   quantite      Int        @default(1)
+  prix          Float      // Prix au moment du devis (permet de garder l'historique des prix)
 
-  prestation    Prestation @relation(fields: [prestationId], references: [id], map: "PrestationDevis_Prestation_fkey")
-  devis         Devis      @relation(fields: [devisId], references: [id], map: "PrestationDevis_Devis_fkey")
+  prestation    Prestation @relation(fields: [prestationId], references: [id], map: "PrestationDevis_Prestation_fkey", onDelete: Cascade)
+  devis         Devis      @relation(fields: [devisId], references: [id], map: "PrestationDevis_Devis_fkey", onDelete: Cascade)
 
   @@id([prestationId, devisId]) // Clé primaire composite pour éviter les doublons
 }

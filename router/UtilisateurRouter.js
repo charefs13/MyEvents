@@ -15,7 +15,7 @@ utilisateurRouter.get('/', async (req, res) => {
         // Récupération  l'utilisateur avec ses événements et les infos de son entreprise
         const utilisateur = await prisma.utilisateur.findFirst({
             where: { email: req.session.utilisateur.email },
-            include: { evenements: true, entreprise: true }
+            include: { evenements: true, entreprise: true, devis: true }
         });
 
         req.session.utilisateur = utilisateur; // Mise à jour des données utilisateur en session
@@ -300,7 +300,10 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
     }
 });
 
+
+
 module.exports = utilisateurRouter;
 
 
 
+ 
