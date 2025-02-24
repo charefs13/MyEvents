@@ -117,6 +117,10 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         const devis = await prisma.devis.create({
             data: {
                 utilisateurId,
+                clientNom: utilisateur.nom,
+                clientPrenom: utilisateur.prenom,
+                clientMail: utilisateur.email,
+                clientGenre: utilisateur.genre,
                 evenementId: parseInt(req.query.evenement),
                 typeEvenement: event.type,
                 dateDebut: event.dateDebut,
@@ -132,6 +136,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
                 },
                 total: total,
                 isValidate: false,
+                isDecline: false,
                 payed: false
             },
             include: { prestations: true }
@@ -139,7 +144,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
 
         // Génération du PDF
         const doc = new PDFDocument();
-        res.setHeader("Content-Disposition", "attachment; filename=devisMyEvent.pdf");
+        res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
         res.setHeader("Content-Type", "application/pdf");
         doc.pipe(res);
 
@@ -202,13 +207,10 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
 
 
         // Total HT, TVA et Total TTC
-        let totalHT = selectedPrestations.reduce((sum, p) => sum + p.prix, 0);
-        const tva = totalHT * 0.2;
-        const totalTTC = totalHT + tva;
+        let totalTTC = selectedPrestations.reduce((sum, p) => sum + p.prix, 0);
         doc.moveDown();
-        doc.fontSize(10).text(`Total HT: ${totalHT.toFixed(2)} €`, { align: "right" });
-        doc.text(`TVA (20%): ${tva.toFixed(2)} €`, { align: "right" });
         doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
+        doc.moveDown();
 
         // Date du devis
         const currentDate = new Date();
@@ -219,7 +221,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
 
         doc.fontSize(7).text(`Ce devis est valable 30 jours à compter de la date de création.`);
         doc.fontSize(7).text(`Devis réalisé par MyEvents pour le compte de ${entreprise.raisonSociale}. Pour toute information complémentaire, veuillez contacter ${entreprise.raisonSociale}.`);
-        doc.fontSize(7).text(`Une fois le devis validé par ${entreprise.raisonSociale}, vous pourrez procéder au paiement.`);
+        doc.fontSize(7).text(`Sous réserve de validation par ${entreprise.raisonSociale}. Une fois validé, vous pourrez procéder au paiement.`);
         doc.moveDown();
         doc.end();
     } catch (error) {

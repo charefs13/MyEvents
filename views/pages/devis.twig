@@ -10,24 +10,38 @@
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 {% endblock %}
 
-{% block tile %}MyEvents- Demander un devis{% endblock %}
-  
+{% block tile %}MyEvents- Demander un devis
+{% endblock %}
+
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class="mainSection">
 
-	{% if entreprise is defined %}
-	<script>
-		// Récupérer l'ID de l'entreprise depuis le contexte Twig
-		let entrepriseId = {{ entreprise.id }};
-	</script>
-	{% endif %}
+		<div class='messageContainer'>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
 
-		<h2>Prestations de {{ entreprise.raisonSociale }}</h2>
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
 
-		
-		<div class='prestationDevis'>
+		</div>
+
+		{% if entreprise is defined %}
+			<script>
+				// Récupérer l'ID de l'entreprise depuis le contexte Twig
+let entrepriseId = {{ entreprise.id }};
+			</script>
+		{% endif %}
+
+		<h2>Prestations de
+			{{ entreprise.raisonSociale }}</h2>
+
+
+		<div
+			class='prestationDevis'>
 			<!-- Conteneur des prestations -->
 			<div class="AllPrestationsContainer">
 				{% for prestation in prestations %}
@@ -36,7 +50,9 @@
 							<div>
 								<h4>{{ prestation.nom }}</h4>
 								<p class="prestationDescription">{{ prestation.description }}</p>
-								<p>Prix : <strong>{{ prestation.prix }}€ TTC</strong></p>
+								<p>Prix :
+									<strong>{{ prestation.prix }}€ TTC</strong>
+								</p>
 							</div>
 							<div class="btnContainer">
 								<input type="checkbox" id="prestation-{{ prestation.id }}" class="prestation-checkbox" data-prix="{{ prestation.prix }}">
@@ -56,10 +72,11 @@
 				{% endfor %}
 			</select>
 		</div>
-
 		<!-- Affichage du prix total -->
 		<div class='total'>
-			<p>Total : <span id="total">0</span> €</p>
+			<p>Total :
+				<span id="total">0</span>
+				€</p>
 			<!-- Bouton pour générer le devis -->
 			<button id="genererDevis">Générer le devis</button>
 		</div>
@@ -68,42 +85,48 @@
 
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
-			const checkboxes = document.querySelectorAll(".prestation-checkbox");
-			const totalSpan = document.getElementById("total");
-			let total = 0;
+const checkboxes = document.querySelectorAll(".prestation-checkbox");
+const totalSpan = document.getElementById("total");
+let total = 0;
 
-			// Mise à jour du prix total en fonction des prestations cochées
-			checkboxes.forEach(checkbox => {
-				checkbox.addEventListener("change", function () {
-					const prix = parseFloat(this.getAttribute("data-prix"));
-					if (this.checked) {
-						total += prix;
-					} else {
-						total -= prix;
-					}
-					totalSpan.textContent = total.toFixed(2);
-				});
-			});
+// Mise à jour du prix total en fonction des prestations cochées
+checkboxes.forEach(checkbox => {
+checkbox.addEventListener("change", function () {
+const prix = parseFloat(this.getAttribute("data-prix"));
+if (this.checked) {
+total += prix;
+} else {
+total -= prix;
+} totalSpan.textContent = total.toFixed(2);
+});
+});
 
-			// Gestion de la génération du devis
-			document.getElementById("genererDevis").addEventListener("click", function () {
-				const selectedEvenement = document.getElementById("evenement").value;
-				const selectedPrestations = Array.from(document.querySelectorAll(".prestation-checkbox:checked")).map(cb => cb.id.split("-")[1]);
+// Gestion de la génération du devis
+document.getElementById("genererDevis").addEventListener("click", function () {
+const selectedEvenement = document.getElementById("evenement").value;
+const selectedPrestations = Array.from(document.querySelectorAll(".prestation-checkbox:checked")).map(cb => cb.id.split("-")[1]);
+const messageContainer = document.querySelector('.messageContainer')
 
-				// Vérification si un événement et des prestations sont sélectionnés
-				if (!selectedEvenement) {
-					alert("Veuillez sélectionner un événement.");
-					return;
-				}
+// Vérification si un événement et des prestations sont sélectionnés
+if (! selectedEvenement) { // alert("Veuillez sélectionner un événement.");
+let errorMessage = document.createElement("p");
+errorMessage.innerHTML = 'Veuillez sélectionner un événement';
+errorMessage.classList.add('error');
+messageContainer.appendChild(errorMessage);
 
-				if (selectedPrestations.length === 0) {
-					alert("Veuillez sélectionner au moins une prestation.");
-					return;
-				}
+return;
+}
 
-				// Génération de l'URL pour la génération du devis en PDF
-				window.location.href = `/devis/pdf?evenement=${selectedEvenement}&prestations=${selectedPrestations.join(",")}&entreprise=${entrepriseId}`;
-			});
-		});
+if (selectedPrestations.length === 0) {
+alert("Veuillez sélectionner au moins une prestation.");
+return;
+}
+
+// Génération de l'URL pour la génération du devis en PDF
+window.location.href = `/devis/pdf?evenement=${selectedEvenement}&prestations=${
+selectedPrestations.join(",")
+}&entreprise=${entrepriseId}`;
+});
+});
 	</script>
 {% endblock %}

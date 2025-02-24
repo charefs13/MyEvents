@@ -5,12 +5,12 @@ const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 
-  
+
 //  affichage de la page d'inscription pour une Entreprise
 prosRouter.get('/signInPros', (req, res) => {
     res.render('pages/signInPros.twig')
-})     
-  
+})
+
 // Envoie du formulaire d'inscription à ma BDD
 prosRouter.post('/signInPros', async (req, res) => {
     try {
@@ -24,7 +24,7 @@ prosRouter.post('/signInPros', async (req, res) => {
                     isEntreprise: true
                 }
 
-            }) 
+            })
             res.redirect('/login')
         }
         else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
@@ -94,17 +94,34 @@ prosRouter.post('/addProfilPros/:id', authguard, async (req, res) => {
         res.render('pages/addProfilPros.twig', {
             error: { error: "une erreur est survenue" }
         })
-    } 
+    }
 })
 
-prosRouter.get('/dashboardPros', (req, res) => {
-       res.render('pages/dashboardPros.twig',
-        {
-            utilisateur: req.session.utilisateur,
-            entreprise: req.session.entreprise
-        }
-    ) 
-})
+prosRouter.get('/dashboardPros', async (req, res) => {
+    try {
+        const utilisateur = await prisma.utilisateur.findFirst({
+            where: { email: req.session.utilisateur.email },
+            include: { entreprise: true, devis: true, evenements: true }
+        });
+        entreprise = await prisma.entreprise.findFirst({
+            where: { utilisateurId: utilisateur.id },
+            include: { devis: true }
+        });
 
+        res.render('pages/dashboardPros.twig', {
+            entreprise: utilisateur.entreprise,
+            utilisateur: utilisateur,
+            evenements: utilisateur.evenements,
+            devisEntreprise: entreprise.devis,
+        })
+    } catch (error) {
+        console.log(error)
+        res.render('/', {
+            errorMessage: "Une erreur est survenue. Veuillez réessayer plus tard"
+        })
+    }
+
+
+})
 
 module.exports = prosRouter

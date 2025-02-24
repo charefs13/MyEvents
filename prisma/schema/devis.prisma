@@ -2,6 +2,10 @@ model Devis {
   id             Int               @id @default(autoincrement())
   utilisateur    Utilisateur       @relation(fields: [utilisateurId], references: [id], onDelete: Cascade) // Le particulier qui crée le devis
   utilisateurId  Int
+  clientNom      String
+  clientPrenom   String
+  clientMail     String
+  clientGenre    String
   evenement      Evenement         @relation(fields: [evenementId], references: [id], onDelete: Cascade)
   evenementId    Int
   typeEvenement  String
@@ -14,6 +18,8 @@ model Devis {
   prestations    PrestationDevis[] // Liste des prestations incluses dans le devis
   total          Int
   isValidate     Boolean           @default(false)
+  isDecline      Boolean           @default(false)
+  declineMsg     String?
   payed          Boolean           @default(false)
   createdAt      DateTime          @default(now()) // Ajout de la date de création
 }

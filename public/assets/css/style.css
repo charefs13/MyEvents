@@ -520,6 +520,8 @@ button:hover {
 
 }
 
+
+
 .evenementContainer h4 {
     text-align: center;
     margin-bottom: 20px;
@@ -538,25 +540,29 @@ button:hover {
     margin: 0;
     background-color: white;
     width: 30%;
+    max-height: 250px;
     padding: 10px 0;
     border: 1px solid #ffd90051;
     border-radius: 10px;
+    overflow: auto;
 }
+
 .devisContainer p {
     margin: 0;
     padding: 8px;
 }
 
-.notValidate{
+.notValidate {
     color: rgb(249, 35, 35);
     font-weight: bold;
 }
 
-.validate{
-    color: rgb(32, 129, 255);
+.validate {
+    color: rgb(8, 157, 8);
     font-weight: bold;
 }
-.allDevisContainer{
+
+.allDevisContainer {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -564,6 +570,7 @@ button:hover {
     align-items: center;
     gap: 1em;
 }
+
 .btnContainer {
 
     position: absolute;
@@ -598,7 +605,9 @@ button:hover {
 }
 
 .btn:hover,
-.btn-ajouter:hover {
+.btn-ajouter:hover,
+.btnValidate,
+.btnDecline {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
 }
@@ -621,9 +630,13 @@ button:hover {
 
 .close {
     position: absolute;
-    top: 0%;
-    left: 0%;
+    top: 0.5%;
+    left: 0.5%;
     font-size: 15px;
+}
+
+.close img {
+    width: 20px;
 }
 
 .add:hover,
@@ -905,35 +918,38 @@ button:hover {
     text-align: center;
 }
 
-.confirmDelete p {
+.confirmDelete p,
+.confirmDecline p {
     margin-bottom: 15px;
     font-size: 15px;
     font-weight: bold;
 }
 
-.confirmDelete form p {
+.confirmDelete form p,
+.confirmDecline form p {
     font-size: 10px;
     margin-bottom: 5px;
     font-weight: lighter;
 
 }
 
-.confirmDelete .btn:hover {
+.confirmDelete .btn:hover,
+.confirmDecline .btn:hover {
     text-decoration: none;
 }
 
-.confirmDelete .delete {
+.confirmDelete .delete,
+.confirmDecline .delete {
     background-color: white;
     color: red;
     font-weight: bold;
 }
 
-.confirmDelete .delete:hover {
+.confirmDelete .delete:hover,
+.confirmDecline .delete:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
 }
-
-
 
 
 
@@ -948,6 +964,8 @@ button:hover {
     position: relative;
     width: 40%;
     min-height: 250px;
+    max-height: 250px;
+
     background-color: white;
     margin: auto;
     border: 1px solid #ffd90051;
@@ -964,21 +982,22 @@ button:hover {
 .prestationContainer h4 {
     text-align: center;
     margin-bottom: 20px;
-    margin-top: 10px;
+    margin-top: 5px;
     font-weight: bold;
 }
 
 .prestationContainer p,
 .prestationContainer .link {
     text-align: start;
-    padding: 10px 25px;
-    margin-bottom: 50px;
+    padding: 10px 20px;
+    margin-bottom: 15px;
 
 }
 
 .AllPrestationsContainer {
-    width: 80%;
-    height: 500px;
+    width: 100%;
+    height: 100vh;
+    margin-bottom: 50px;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -1038,7 +1057,7 @@ button:hover {
 .selectEventDevis {
     margin: auto;
     text-align: center;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
 
 .prestationDevis .AllPrestationsContainer {
@@ -1056,6 +1075,65 @@ button:hover {
 .total {
     margin: auto;
     margin-bottom: 100px;
-    margin-top: 100px;
+    margin-top: 25px;
     text-align: center;
+}
+
+
+
+/* -------------------------------------------------- Dashboard PRO --------------------------------------------------------------------- */
+.btnValidate {
+    padding: 5px 8px;
+    border-radius: 25px;
+    background-color: white;
+    border: 1px solid #e5dccf;
+    text-align: center;
+    color: rgb(8, 157, 8);
+    font-weight: bold;
+
+}
+
+.btnDecline {
+    padding: 5px 8px;
+    border-radius: 25px;
+    background-color: white;
+    border: 1px solid #e5dccf;
+    text-align: center;
+    color: rgb(249, 35, 35);
+}
+
+.dowloadDevis,
+.validate a {
+    color: rgb(59, 93, 247);
+
+}
+
+.dowloadDevis:hover,
+.validate a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+
+
+/* La modale confirmDecline */
+.confirmDecline {
+    margin: auto;
+    margin-bottom: 150px;
+
+    padding: 20px;
+    box-shadow: rgba(255, 255, 255, 0.475) 0px 22px 70px 4px;
+}
+
+.confirmDecline form {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmDecline form label {
+    font-size: 12px;
 }

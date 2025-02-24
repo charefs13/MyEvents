@@ -8,14 +8,15 @@ const profilRouter = require('./router/profilRouter');
 const profilProsRouter = require('./router/profilProsRouter');
 const prestationRouter = require('./router/prestationRouter');
 const recherchePrestataireRouter = require('./router/recherchePrestataire');
-           
-                                 
+const devisRouter = require('./router/devisRouter');
+                                                   
+                                    
 const app = express();
 
-// Middlewares d'analyse
+// Middlewares d'analyse    
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-   
+     
 // Gestion de session
 app.use(session({
     secret: 'Sjkydbyjgg@zme;,geoo23323@:!',
@@ -33,6 +34,7 @@ app.use(profilRouter)
 app.use(profilProsRouter)
 app.use(prestationRouter)    
 app.use(recherchePrestataireRouter)
+app.use(devisRouter)
 
 app.listen(3000, () => {
     try {   
@@ -41,4 +43,4 @@ app.listen(3000, () => {
         console.log("La connection au port 3000 a échoué");
     }
 }); 
-     
+               

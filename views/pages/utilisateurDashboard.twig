@@ -2,112 +2,131 @@
 
 {% extends "../layouts/base.twig" %}
 {% block style %}
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 {% endblock %}
 
-{% block tile %}MyEvents - Dashboard{% endblock %}
+{% block tile %}MyEvents - Dashboard
+{% endblock %}
 
 {% block main %}
-    <h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-    <h2>Bienvenue {{ utilisateur.prenom }}</h2>
+	<h2>Bienvenue
+		{{ utilisateur.prenom }}</h2>
 
-    <section class="mainSection">
-        {% if errorMessage %}
-            <p class="error message">{{ errorMessage }}</p>
-        {% endif %}
+	<section class="mainSection">
 
-        {% if successMessage %}
-            <p class="message">{{ successMessage }}</p>
-        {% endif %}
+	<div>
+		{% if errorMessage %}
+			<p class='error message'>{{ errorMessage }}</p>
+		{% endif %}
 
-        <div>
-            <h3>Trouver un prestataire 🔎</h3>
-            <div class="formEvenement">
-                <form action="/recherchePrestataire" method="GET">
-                    <label for="typeEvenement">Type d'événement</label>
-                    <select id="typeEvenement" name="typeEvenement">
-                        <option value="babyShower">Baby Shower</option>
-                        <option value="genderReveal">Gender Reveal</option>
-                        <option value="mariage">Mariage</option>
-                        <option value="feteReligieuse">Fête religieuse</option>
-                        <option value="anniversaire">Anniversaire</option>
-                        <option value="bapteme">Baptême</option>
-                        <option value="autre">Autre</option>
-                    </select>
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+		
+		</div>
 
-                    <label for="type">Prestataire</label>
-                    <select id="type" name="type">
-                        <option value="photographeVideaste">Photographe/Vidéaste</option>
-                        <option value="traiteur">Traiteur</option>
-                        <option value="dj">DJ</option>
-                        <option value="decorateur">Décorateur</option>
-                        <option value="animateur">Animateur</option>
-                        <option value="locationMateriel">Location de matériel</option>
-                        <option value="locationSalle">Location de salle/Lieu de réception</option>
-                        <option value="fleuriste">Fleuriste</option>
-                        <option value="stylistes">Styliste/Costumier</option>
-                        <option value="graphiste">Graphiste/Impression de supports</option>
-                        <option value="autre">Autre</option>
-                    </select>
+		<div>
+			<h3>Trouver un prestataire 🔎</h3>
+			<div class="formEvenement">
+				<form action="/recherchePrestataire" method="GET">
+					<label for="type">Prestataire</label>
+					<select id="type" name="type">
+						<option value="photographeVideaste">Photographe/Vidéaste</option>
+						<option value="traiteur">Traiteur</option>
+						<option value="dj">DJ</option>
+						<option value="decorateur">Décorateur</option>
+						<option value="animateur">Animateur</option>
+						<option value="locationMateriel">Location de matériel</option>
+						<option value="locationSalle">Location de salle/Lieu de réception</option>
+						<option value="fleuriste">Fleuriste</option>
+						<option value="stylistes">Styliste/Costumier</option>
+						<option value="graphiste">Graphiste/Impression de supports</option>
+						<option value="autre">Autre</option>
+					</select>
 
-                    <label for="ville">Votre ville</label>
-                    <input type="text" id="ville" name="ville" placeholder="Entrez votre ville">
+					<label for="ville">Votre ville</label>
+					<input type="text" id="ville" name="ville" placeholder="Entrez votre ville" required>
 
-                    <button type="submit">Rechercher</button>
-                </form>
-            </div>
-        </section>
+					<button type="submit">Rechercher</button>
+				</form>
+			</div>
+		</section>
 
-        <section class="mainSection">
-            <div>
-                <h3>Vos événements en cours</h3>
+		<section class="mainSection">
+			<div>
+				<h3>Vos événements en cours</h3>
 
-                {% for evenement in evenements %}
-                    <div class="evenementContainer">
-                        <h4>{{ evenement.titre }}</h4>
+				{% for evenement in evenements %}
+					<div class="evenementContainer">
+						<h4>{{ evenement.titre }}</h4>
 
-                        <p>Type d'événement : {{ evenement.type }}</p>
-                        <p>{{ evenement.description }}</p>
-                        <p>Du <strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong> au <strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong></p>
+						<p>Type d'événement :
+							{{ evenement.type }}</p>
+						<p>{{ evenement.description }}</p>
+						<p>Du
+							<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
+							au
+							<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
+						</p>
 
-                        {% if evenement.lieu %}
-                            <p>Lieu : {{ evenement.lieu }}</p>
-                        {% else %}
-                            <a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
-                        {% endif %}
+						{% if evenement.lieu %}
+							<p>Lieu :
+								{{ evenement.lieu }}</p>
+						{% else %}
+							<a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
+						{% endif %}
 
-                        {# Vérifier la présence de devis pour l'événement #}
-                        {% if evenement.devis|length > 0 %}
-                            <h4>Vos Devis</h4>
-                            <div class="allDevisContainer">
-                                {% for devis in evenement.devis %}
-                                    <div class="devisContainer">
-                                        <p>Devis N°{{ devis.id }}</p>
-                                        <p>Prestataire : {{ devis.raisonSociale }}</p>
-                                        <p>Catégorie : {{ devis.typeEntreprise }}</p>
-                                        <p>Total : {{ devis.total }}€</p>
-                                        {% if devis.isValidate %}
-                                            <p class="validate">
-                                                Devis validé, <a href="/paiement/{{ devis.id }}">Veuillez procéder au paiement pour confirmer la prestation.</a>
-                                            </p>
-                                        {% else %}
-                                            <p class="notValidate">En attente de validation par le prestataire.</p>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p>Aucun devis pour cet événement.</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            <div>
-                <a href="/evenement" class="btn-ajouter">Ajouter un événement</a>
-            </div>
-        </section>
-    {% endblock %}
+						{# Vérifier la présence de devis pour l'événement #}
+						{% if evenement.devis|length > 0 %}
+							<h4>Vos Devis</h4>
+							<div class="allDevisContainer">
+								{% for devis in evenement.devis %}
+									<div class="devisContainer">
+										<p>Devis N°{{ devis.id }}</p>
+										<p>Prestataire :
+											{{ devis.raisonSociale }}</p>
+										<p>Catégorie :
+											{{ devis.typeEntreprise }}</p>
+										<p>Total :
+											{{ devis.total }}€</p>
+										{% if devis.isValidate %}
+											<p class="validate">
+												Devis validé
+												<a href="/paiement/{{devis.id}}">
+													<br>Procéder au paiement.</a>
+											</p>
+										{% elseif devis.isDecline  %}
+											<p class="notValidate">Devis refusé par
+												{{ devis.raisonSociale }}</p>
+											<p>Motif:
+												{{devis.declineMsg}}</p>
+
+
+										{% else %}
+											<p class="notValidate">En attente de validation par le prestataire.</p>
+										{% endif %}
+										<p>
+											<a class='btnDecline' href="/deleteDevis/{{devis.id}}">Supprimer</a>
+										</p>
+									</div>
+								{% endfor %}
+							</div>
+						{% else %}
+							<p>Aucun devis pour cet événement.
+								<br>
+								<a href="/">Générer des devis pour comparer les prestations</a>.
+							</p>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+			<div>
+				<a href="/evenement" class="btn-ajouter">Ajouter un événement</a>
+			</div>
+		</section>
+	{% endblock %}

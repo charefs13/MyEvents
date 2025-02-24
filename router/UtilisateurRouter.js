@@ -26,6 +26,10 @@ utilisateurRouter.get('/', async (req, res) => {
                 devis: true // Inclure les devis associés à chaque événement
             }
         });
+        entreprise = await prisma.entreprise.findFirst({
+            where: { utilisateurId: utilisateur.id },
+            include: { devis: true }
+        });
 
         // Mise à jour des données utilisateur en session
         req.session.utilisateur = utilisateur;
@@ -37,8 +41,7 @@ utilisateurRouter.get('/', async (req, res) => {
             return res.render('pages/dashboardPros.twig', {
                 entreprise: utilisateur.entreprise,
                 utilisateur: utilisateur,
-                devis: events.devis, // Passage des devis des événements
-                evenements: events // Passage des événements avec leurs devis associés
+                devisEntreprise: entreprise.devis
             });
         }
 
