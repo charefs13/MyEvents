@@ -19,6 +19,17 @@
 		<h2>Compléter votre profil pour pouvoir utiliser toutes le fonctionnalités</h2>
 
 
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
+
 		<div class='formSignIn'>
 			<form action="/addProfil/{{utilisateur.id}}" method='POST'>
 				<div class="form-group">

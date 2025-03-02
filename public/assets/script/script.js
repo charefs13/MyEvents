@@ -36,7 +36,7 @@ updateBtns.forEach(btn => {
         evenementContainer.querySelector('.flexEvenement').style.display = 'none'; // Cacher la section des détails
 
         // Afficher le formulaire de modification
-        form.style.display = 'block'; // Afficher le formulaire de modification
+        form.style.display = 'flex'; // Afficher le formulaire de modification
     });
 }); 
 

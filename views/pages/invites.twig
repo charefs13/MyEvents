@@ -12,10 +12,10 @@
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>
-		Gérer votre liste d'invités</h2>
+	<h2>Ajouter et modifier
+	</h2>
 
-		<div>
+	<div>
 		{% if errorMessage %}
 			<p class='error message'>{{ errorMessage }}</p>
 		{% endif %}
@@ -23,11 +23,11 @@
 		{% if successMessage %}
 			<p class='message'>{{ successMessage }}</p>
 		{% endif %}
-		
-		</div>
+
+	</div>
 
 	<section class="mainSection">
-		<h3 class='InviteH3'>Ajouter un invité</h3>
+		<h3 class='InviteH3'>Ajouter un invité à votre événement</h3>
 
 		<div class="addInviteForm">
 			<form action="/addInvite" method="POST">
@@ -66,11 +66,10 @@
 	</section>
 
 	<section class="mainSection">
-	
 
 
 		<form class='selectEventForm' action="/displayInvites" method="GET">
-			<h3>Afficher les Invités</h3>
+			<h3>Afficher la liste des invités de l'événement selectionné, vous pourrez modifier ou supprimer l'invité depuis cette section</h3>
 
 			<select class="evenementSelect" id="evenement" name="evenementId" required>
 				<option value="" disabled selected>Sélectionnez un événement</option>
@@ -90,7 +89,7 @@
 				{% if selectedInvite is defined%}
 					<div>
 
-						<h4>Modifier les informations de
+						<h4 style='font-size: 13px;'>Modifier les informations de
 							{{selectedInvite.nom}}
 							{{selectedInvite.prenom}}</h4>
 
@@ -104,9 +103,9 @@
 
 								<label for="email">Email</label>
 								<input type="text" id="email" name="email" value="{{selectedInvite.email}}">
-								<button type="submit">Modifier</button>
+								<button class='btn' type="submit">Modifier</button>
 
-								<a class="btn" href="/deleteInvite/{{selectedInvite.id}}">Supprimer</a>
+								<a class="delete" href="/deleteInvite/{{selectedInvite.id}}">Supprimer</a>
 
 							</form>
 						</div>
@@ -132,7 +131,7 @@
 						</div>
 						<div>
 							<form class='selectInviteForm' action="/selectInvite" method='GET'>
-								<label for="selectedInvite">Choisir un invité pour le Modifier ou le Supprimer</label>
+								<label for="selectedInvite">Choisir un invité pour le contacter, modifier ses informations ou le supprimer de votre événement</label>
 								<select id="selectedInvite" name="selectedInvite" required>
 									{% for invite in invites %}
 										<option value="{{invite.id}}">{{ invite.nom }}
@@ -146,10 +145,10 @@
 
 				</div>
 				<div class="evenementInvite">
-					<h4>Envoyer un email à un ou plusieurs invité</h4>
+					<h4>Un changement de dernière minute ? Prévenez facilement vos invités par email 📩 !</h4>
 					<form class='sendEmailForm' action="/sendEmail/evenement/{{evenement.id}}" method="POST">
 
-						<label for="invitesEmail">Choisir parmis la liste (seulement si une adresse mail a été renseignée) :</label>
+						<label style='font-weight: 100;' for="invitesEmail">Choisir parmis la liste (seulement si une adresse mail a été renseignée) :</label>
 						<select id="invitesEmail" name="invites[]" multiple>
 							{% for invite in invites if invite.email is not empty %}
 								<option value="{{ invite.id }}">{{ invite.nom }}
@@ -165,21 +164,21 @@
 						<label for="emailText">Modèle de l'Email</label>
 						<textarea name="emailText" id="emailText" placeholder='Tapez votre email
 							
-																																																																																																																																						Par exemple :
+																																																																																																																																																											Par exemple :
 							
-																																																																																																																																						Cher Prénom,
+																																																																																																																																																											Cher Prénom,
 							
-																																																																																																																																						Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
+																																																																																																																																																											Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
 							
-																																																																																																																																						Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
+																																																																																																																																																											Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
 							
-																																																																																																																																						Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
+																																																																																																																																																											Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
 							
-																																																																																																																																						Amicalement,
+																																																																																																																																																											Amicalement,
 							
-																																																																																																																																						Votre Signature.
+																																																																																																																																																											Votre Signature.
 							
-																																																																																																																																						'></textarea>
+																																																																																																																																																											'></textarea>
 
 						<p>PS : Les noms et prénoms des invités seront ajustés dynamiquement. Par exemple ici Prénom sera remplacé par le prénom de l'invité.</p>
 

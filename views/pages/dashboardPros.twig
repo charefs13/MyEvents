@@ -6,86 +6,90 @@
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 {% endblock %}
 
-{% block tile %}MyEvents- dashboard
-{% endblock %}
+{% block tile %}MyEvents - Dashboard{% endblock %}
 
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>
-		Bienvenue
-		{{ entreprise.raisonSociale }}</h2>
+	<h2>Bienvenue {{ entreprise.raisonSociale }}</h2>
 
-	<section class='mainSection' style="height: 80vh;">
+	<section class='mainSection'>
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+		</div>
+
 		{% if devisEntreprise | length > 0 %}
-			<h3 style='text-align: center; margin: 0;'>Vos Devis</h3>
+			<h3 style='text-align: center; margin: 50px 0;'>Vos Devis</h3>
+			<div class='evenementContainer'>
 			<div class="allDevisContainer" style='margin-top: 50px;'>
 				{% for devis in devisEntreprise %}
-
 					<div class="devisContainer">
-						<p>Devis N°{{ devis.id }}</p>
-						<p>Client :
+						<p>
+							<span class='bold'>Devis N° :</span> {{ devis.id }}
+						</p>
+						<p>
+							<span class='bold'>Client :</span>
 							{% if devis.genre == "homme" or devis.genre == "Homme" %}
-								Mr
-								{{ devis.clientNom }}
-								{{ devis.clientPrenom }}
+								Mr {{ devis.clientNom }} {{ devis.clientPrenom }}
 							{% elseif devis.genre == "femme" or devis.genre == "Femme" %}
-								Mme/Mlle
-								{{ devis.clientNom }}
-								{{ devis.clientPrenom }}
+								Mme/Mlle {{ devis.clientNom }} {{ devis.clientPrenom }}
 							{% else %}
-								{{ devis.clientNom }}
-								{{ devis.clientPrenom }}
+								{{ devis.clientNom }} {{ devis.clientPrenom }}
 							{% endif %}
 						</p>
 
-						<p>Email :
-							{{ devis.clientMail }}</p>
-
 						<p>
-							Type d'Événement:
-							{{devis.typeEvenement}}</p>
-						<p>Du
-							<strong>{{ devis.dateDebut|date("d/m/Y H:i") }}h</strong>
-							au
-							<strong>{{ devis.dateFin|date("d/m/Y H:i") }}h</strong>
-							<br>
-							<span style='font-size: 10px;'>⚠️ Penser à vérifier vos disponibilité avant de valider le devis</span>
+							<span class='bold'>Email :</span> {{ devis.clientMail }}
 						</p>
 
-						<p>Total :
-							{{ devis.total }}€</p>
+						<p>
+							<span class='bold'>Type d'Événement :</span> {{ devis.typeEvenement }}
+						</p>
+
+						<p>
+							Du <strong>{{ devis.dateDebut|date("d/m/Y H:i") }}h</strong>
+							au <strong>{{ devis.dateFin|date("d/m/Y H:i") }}h</strong>
+							<br>
+							<span style='font-size: 10px;'>⚠️ Pensez à vérifier vos disponibilités avant de valider le devis</span>
+						</p>
+
+						<p>
+							<span class='bold'>Total :</span> {{ devis.total }}€
+						</p>
 
 						<p>
 							<a class='dowloadDevis' href="/devis/{{devis.id}}">Télécharger le devis</a>
 						</p>
 
-
 						{% if devis.isDecline %}
 							<p>Devis Refusé.
 								<br>
-								Motif :
-								{{devis.declineMsg}}
+								Motif : {{ devis.declineMsg }}
 								<br>
-								En attente de suppresion par le client</p>
+								En attente de suppression par le client
+							</p>
 						{% elseif devis.isValidate == false %}
 							<div class='flex' style='justify-content: center;'>
-								<a href="/validate/{{devis.id}}" class='btnValidate'>Valider le devis</a>
-								<a href="/confirmDeclineDevis/{{devis.id}}" class='btnDecline'>Refuser le devis</a>
-
-							{% elseif devis.payed == false %}
-								<p class="notPayed">En attente de paiement ⏳</p>
-							{% else %}
-								<p class='payed'>Devis Payé</p>
-							{% endif %}
-						</div>
-
-					{% endfor %}
-				</div>
-			{% else %}
-				<h3>Patience, vous aurez bientot des devis ⏳</h3>
-			{% endif %}
-		</section>
-
-
-	{% endblock %}
+								<a href="/validate/{{ devis.id }}" class='btnValidate'>Valider le devis</a>
+								<a class='isDecline' href="/confirmDeclineDevis/{{ devis.id }}" class='btnDecline'>Refuser le devis</a>
+							</div> {# ✅ Fermeture correcte du div ici #}
+						{% elseif devis.payed == false %}
+							<p class="notPayed">En attente de paiement ⏳</p>
+						{% else %}
+							<p class='payed'>Devis Payé</p>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+			</div>
+		{% else %}
+			<h3>Patience, vous aurez bientôt des devis ⏳</h3>
+		{% endif %}
+	</section>
+{% endblock %}

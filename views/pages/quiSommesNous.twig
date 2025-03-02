@@ -18,6 +18,16 @@
 	<section class="mainSection">
 		<h2>Qui sommes nous ?</h2>
 
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 		<div class="biggerTextContainer">
 			<div class='iconeAndText'>
 				<div><img src="/assets/images/reflechi.png" alt="logo d'une personne qui réfléchis"></div>
@@ -56,7 +66,10 @@
 
 		<div>
 			<p class='join'>
-				<span class='underline'><a href="/signIn">Rejoignez-nous</a></span> dès aujourd'hui et simplifiez l'organisation de vos événements, du plus petit détail jusqu'au grand jour !</p>
+				<span class='underline'>
+					<a href="/signIn">Rejoignez-nous</a>
+				</span>
+				dès aujourd'hui et simplifiez l'organisation de vos événements, du plus petit détail jusqu'au grand jour !</p>
 		</div>
 	</section>
 

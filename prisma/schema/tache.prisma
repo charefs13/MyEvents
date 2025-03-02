@@ -1,0 +1,14 @@
+model Tache {
+    id            String      @id @default(uuid()) // ID unique
+    titre         String      @db.VarChar(255) // Nom de la tâche
+    description   String?     @db.Text // Description facultative
+    debut         DateTime // Date et heure de début
+    fin           DateTime // Date et heure de fin
+    utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+    utilisateurId Int // ID de l'utilisateur qui a créé la tâche
+
+    evenement   Evenement? @relation(fields: [evenementId], references: [id], onDelete: Cascade)
+    evenementId Int? // ID de l'utilisateur qui a créé la tâche
+
+    createdAt DateTime @default(now()) // Date de création
+}

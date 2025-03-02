@@ -14,20 +14,22 @@
 {% block main %}
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>Bienvenue
-		{{ utilisateur.prenom }}</h2>
+	<h2>
+		{{ utilisateur.prenom }}
+		Bienvenue – Organisez vos événements en toute simplicité !</h2>
+
 
 	<section class="mainSection">
 
-	<div>
-		{% if errorMessage %}
-			<p class='error message'>{{ errorMessage }}</p>
-		{% endif %}
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
 
-		{% if successMessage %}
-			<p class='message'>{{ successMessage }}</p>
-		{% endif %}
-		
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
 		</div>
 
 		<div>
@@ -65,9 +67,12 @@
 					<div class="evenementContainer">
 						<h4>{{ evenement.titre }}</h4>
 
-						<p>Type d'événement :
+						<p>
+							<span class='bold'>Type d'événement :</span>
 							{{ evenement.type }}</p>
-						<p>{{ evenement.description }}</p>
+						<p>
+							<span class='bold'>Description :</span>
+							{{ evenement.description }}</p>
 						<p>Du
 							<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
 							au
@@ -75,7 +80,8 @@
 						</p>
 
 						{% if evenement.lieu %}
-							<p>Lieu :
+							<p>
+								<span class='bold'>Lieu :</span>
 								{{ evenement.lieu }}</p>
 						{% else %}
 							<a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
@@ -83,16 +89,23 @@
 
 						{# Vérifier la présence de devis pour l'événement #}
 						{% if evenement.devis|length > 0 %}
-							<h4>Vos Devis</h4>
+							<h3>Vos Devis</h4>
 							<div class="allDevisContainer">
 								{% for devis in evenement.devis %}
 									<div class="devisContainer">
-										<p>Devis N°{{ devis.id }}</p>
-										<p>Prestataire :
+										<p>
+											<span class='bold'>Devis N°:</span>
+											{{ devis.id }}
+										</p>
+										<p>
+											<span class='bold'>Prestataire :</span>
+
 											{{ devis.raisonSociale }}</p>
-										<p>Catégorie :
+										<p>
+											<span class='bold'>Catégorie :</span>
 											{{ devis.typeEntreprise }}</p>
-										<p>Total :
+										<p>
+											<span class='bold'>Total :</span>
 											{{ devis.total }}€</p>
 										{% if devis.isValidate %}
 											<p class="validate">

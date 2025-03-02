@@ -13,18 +13,18 @@
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class="mainSection">
-		<h2>Gérer vos événements</h2>
+		<h2>Ajouter, Modifier ou Supprimer un événement simplement</h2>
 
 
 		<div class='messageContainer'>
-		{% if errorMessage %}
-			<p class='error message'>{{ errorMessage }}</p>
-		{% endif %}
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
 
-		{% if successMessage %}
-			<p class='message'>{{ successMessage }}</p>
-		{% endif %}
-		
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
 		</div>
 
 		{% if utilisateur is defined %}
@@ -97,7 +97,7 @@
 									<p>Lieu :
 										{{ evenement.lieu }}</p>
 								{% else %}
-									<a class='link' href="">Ajouter un lieu pour votre événement</a>
+									<a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
 								{% endif %}
 							</div>
 
@@ -116,7 +116,7 @@
 							<h4>Modifier
 								{{ evenement.titre }}</h4>
 							<div class='form-group'>
-						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
+								<p class='close'><img style='top 1%; right: 1%;' src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
 								<label for="typeEvenement">Type d'événement</label>
 								<select id="typeEvenement-{{ evenement.id }}" name="typeEvenement" required>
 									<option value="babyShower" {% if evenement.type == 'babyShower' %} selected {% endif %}>Baby Shower</option>
@@ -150,10 +150,10 @@
 							</div>
 							<div class="form-group">
 								<label for="endTime-{{ evenement.id }}">Heure de fin</label>
-								<input id="endTime-{{ evenement.id }}" type="time" name="endTime" >
+								<input id="endTime-{{ evenement.id }}" type="time" name="endTime">
 							</div>
 							<div class='form-group'>
-								<button class="saveUpdate" type="submit">Modifier l'événement</button>
+								<button style='background-color: white;' class="saveUpdate btn" type="submit">Modifier l'événement</button>
 							</div>
 						</form>
 					</div>

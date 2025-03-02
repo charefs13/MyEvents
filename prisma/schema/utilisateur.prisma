@@ -1,18 +1,19 @@
 model Utilisateur {
-  id              Int          @id @default(autoincrement())
-  nom             String
-  prenom          String
-  email           String       @unique
-  password        String
-  age             Int?
-  adresse         String?
-  ville           String?
-  cp              Int?
-  genre           String?
-  evenements      Evenement[]
-  devis           Devis[] // Un utilisateur peut demander plusieurs devis
-  isEntreprise    Boolean      @default(false)
-  entreprise      Entreprise?
-  resetToken      String?      
-  resetTokenExpire DateTime?  
+  id               Int         @id @default(autoincrement())
+  nom              String
+  prenom           String
+  email            String      @unique
+  password         String
+  age              Int?
+  adresse          String?
+  ville            String?
+  cp               Int?
+  genre            String?
+  evenements       Evenement[]
+  devis            Devis[] // Un utilisateur peut demander plusieurs devis
+  isEntreprise     Boolean     @default(false)
+  entreprise       Entreprise?
+  resetToken       String?
+  resetTokenExpire DateTime?
+  taches           Tache[]
 }

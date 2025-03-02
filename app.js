@@ -9,6 +9,7 @@ const profilProsRouter = require('./router/profilProsRouter');
 const prestationRouter = require('./router/prestationRouter');
 const recherchePrestataireRouter = require('./router/recherchePrestataire');
 const devisRouter = require('./router/devisRouter');
+const planningRouter = require('./router/planningRouter');
                                                    
                                     
 const app = express();
@@ -35,12 +36,13 @@ app.use(profilProsRouter)
 app.use(prestationRouter)    
 app.use(recherchePrestataireRouter)
 app.use(devisRouter)
+app.use(planningRouter)   
 
-app.listen(3000, () => {
+app.listen(3000, () => {            
     try {   
         console.log("Écoute sur le port 3000");
     } catch (error) {
         console.log("La connection au port 3000 a échoué");
     }
-}); 
-               
+});                        
+                 

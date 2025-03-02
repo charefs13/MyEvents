@@ -1,12 +1,10 @@
 {% extends "../layouts/base.twig" %}
 {% block style %}
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
+	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 {% endblock %}
 
 {% block tile %}MyEvents- Prestation
@@ -14,96 +12,99 @@
 {% endblock %}
 
 {% block main %}
-    <h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-    <section class="mainSection">
-        <h2>Gérer vos prestations</h2>
+	<section class="mainSection">
+		<h2>Gérer vos prestations</h2>
 
-        {% if entreprise is defined %}
-            <div>
-                <p class='add'>Ajouter une prestation</p>
-            </div>
+		{% if entreprise is defined %}
+			<div>
+				<p class='add'>Ajouter une prestation</p>
+			</div>
 
-            <div>
-                {% if errorMessage %}
-                    <p class='error message'>{{ errorMessage }}</p>
-                {% endif %}
+			<div>
+				{% if errorMessage %}
+					<p class='error message'>{{ errorMessage }}</p>
+				{% endif %}
 
-                {% if successMessage %}
-                    <p class='message'>{{ successMessage }}</p>
-                {% endif %}
-            </div>
+				{% if successMessage %}
+					<p class='message'>{{ successMessage }}</p>
+				{% endif %}
+			</div>
 
-            <div class='formSignIn hide'>
-                <form action="/createPrestation" method='POST'>
-                    <div class='form-group'>
+			<div class='formSignIn hide'>
+				<form style='padding: 20px;' action="/createPrestation" method='POST'>
+					<div class='form-group'>
 						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
-                        <label for="nom">Nom de la prestation</label>
-                        <input id='nom' type="text" name="nom" placeholder="Nom de la prestation" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea id='description' name="description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="prix">Prix TTC</label>
-                        <input id='prix' type="number" name="prix" step="0.01" required>
-                    </div>
-                    <div class='form-group'>
-                        <button class="createPrestationBtn" type="submit">Créer la prestation</button>
-                    </div>
-                </form>
-                {% if error %}
-                    <p class='error'>{{ error }}</p>
-                {% endif %}
-            </div>
+						<label for="nom">Nom de la prestation</label>
+						<input id='nom' type="text" name="nom" placeholder="Nom de la prestation" required>
+					</div>
+					<div class="form-group">
+						<label for="description">Description</label>
+						<textarea id='description' name="description"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="prix">Prix TTC</label>
+						<input id='prix' type="number" name="prix" step="0.01" required>
+					</div>
+					<div class='form-group'>
+						<button class="createPrestationBtn" type="submit">Créer la prestation</button>
+					</div>
+				</form>
+				{% if error %}
+					<p class='error'>{{ error }}</p>
+				{% endif %}
+			</div>
 
-            {% if prestations is defined %}
-                <div class='AllPrestationsContainer'>
-                    {% for prestation in prestations %}
-                        <div class='prestationContainer' style='overflow: hiden'>
-                            <div class='flexPrestation'>
-                                <div>
-                                    <h4>{{ prestation.nom }}</h4>
-                                    <p class='prestationDescription'>{{ prestation.description }}</p>
-                                    <p>Prix : <strong>{{ prestation.prix }}€ TTC</strong></p>
-                                </div>
-                                <div class='btnContainer'>
-                                    <div>
-                                        <a class='btn update' data-prestation-id="{{ prestation.id }}" href="#">Modifier</a>
-                                    </div>
-                                    <div>
-                                        <a class='delete' href="deletePrestation/{{ prestation.id }}">Supprimer</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <form id="form{{ prestation.id }}" class="updateForm" action="/updatePrestation/{{ prestation.id }}" method="POST" style="display: none;">
-                                <h4>Modifier {{ prestation.nom }}</h4>
-                                <div class='form-group'>
-						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
-                                    <label for="nom-{{ prestation.id }}">Nom</label>
-                                    <input id='nom-{{ prestation.id }}' type="text" name="nom" value="{{ prestation.nom }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="description-{{ prestation.id }}">Description</label>
-                                    <textarea id='description-{{ prestation.id }}' name="description">{{ prestation.description }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="prix-{{ prestation.id }}">Prix TTC</label>
-                                    <input id='prix-{{ prestation.id }}' type="number" name="prix" step="0.01" value="{{ prestation.prix }}" required>
-                                </div>
-                                <div class='form-group'>
-                                    <button class="saveUpdate" type="submit">Modifier la prestation</button>
-                                </div>
-                            </form>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endif %}
-    </section>
+			{% if prestations is defined %}
+				<div class='AllPrestationsContainer'>
+					{% for prestation in prestations %}
+						<div class='prestationContainer' style='overflow: hiden'>
+							<div class='flexPrestation'>
+								<div>
+									<h4>{{ prestation.nom }}</h4>
+									<p class='prestationDescription'>{{ prestation.description }}</p>
+									<p>Prix :
+										<strong>{{ prestation.prix }}€ TTC</strong>
+									</p>
+								</div>
+								<div class='btnContainer'>
+									<div>
+										<a class='btn update' data-prestation-id="{{ prestation.id }}" href="#">Modifier</a>
+									</div>
+									<div>
+										<a class='delete' href="deletePrestation/{{ prestation.id }}">Supprimer</a>
+									</div>
+								</div>
+							</div>
+							<form id="form{{ prestation.id }}" class="updateForm" action="/updatePrestation/{{ prestation.id }}" method="POST" style="display: none;">
+								<h4>Modifier
+									{{ prestation.nom }}</h4>
+								<div class='form-group'>
+									<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
+									<label for="nom-{{ prestation.id }}">Nom</label>
+									<input id='nom-{{ prestation.id }}' type="text" name="nom" value="{{ prestation.nom }}" required>
+								</div>
+								<div class="form-group">
+									<label for="description-{{ prestation.id }}">Description</label>
+									<textarea id='description-{{ prestation.id }}' name="description">{{ prestation.description }}</textarea>
+								</div>
+								<div class="form-group">
+									<label for="prix-{{ prestation.id }}">Prix TTC</label>
+									<input id='prix-{{ prestation.id }}' type="number" name="prix" step="0.01" value="{{ prestation.prix }}" required>
+								</div>
+								<div class='form-group'>
+									<button class="saveUpdate" type="submit">Modifier la prestation</button>
+								</div>
+							</form>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% endif %}
+	</section>
 {% endblock %}
 
 {% block script %}
-    <script src="/assets/script/prestation.js"></script>
+	<script src="/assets/script/prestation.js"></script>
 {% endblock %}

@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
-const { sendResetEmail } = require('../services/sendResetEmail.js');
+const { notificationEmail, sendContactEmail } = require('../services/sendResetEmail.js');
 
 
 
@@ -38,9 +38,27 @@ profilRouter.post('/updateUser', authguard, async (req, res) => {
             }
         })
         req.session.utilisateur = updateUser
+
+        const objet = "Mise à jour de votre profil MyEvents – C’est tout bon !";
+
+const message = `Bonjour ${req.body.nom} ${req.body.prenom},
+
+Votre profil MyEvents a été mis à jour avec succès ! ✅
+
+Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement.
+
+Besoin d’aide ? Notre équipe est là pour vous accompagner.
+
+À bientôt sur MyEvents ! 🚀
+
+L’équipe MyEvents  
+📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
+
+notificationEmail(req.body.email, message, objet);
+
         res.render('pages/profil.twig', {
             utilisateur: req.session.utilisateur,
-            successMessage: "Les informations ont été correctement mises à jour !"
+            successMessage: " ✅ Les informations ont été correctement mises à jour !"
         })
 
     } catch (error) {
@@ -66,14 +84,27 @@ try {
             id: parseInt(req.params.userId)
         }
     })
-    req.session.destroy()
-    res.redirect("/")
+
+    const objet = "Votre compte MyEvents a bien été supprimé";
+
+const message = `Bonjour,
+
+Nous confirmons la suppression de votre compte MyEvents. 😢
+
+Si cette action n’a pas été initiée par vous, contactez-nous immédiatement.
+
+Nous espérons vous revoir bientôt ! En attendant, nous vous remercions d’avoir utilisé MyEvents.
+
+L’équipe MyEvents  
+📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
+notificationEmail(req.session.utilisateur.email, message, objet);
+
+req.session.destroy()
+res.redirect("/")
+
 } catch (error) {
     console.log(error)
-    res.render('pages/confirmDelete.twig', {
-        utilisateur: req.session.utilisateur
-    }
-    ) }
+    res.redirect('/') }
 
 })
 module.exports = profilRouter       

@@ -148,7 +148,7 @@ h3 {
     border-radius: 50px;
     background-color: white;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     margin-bottom: 100px;
     margin-right: 10px;
@@ -475,12 +475,17 @@ button:hover {
     text-align: center;
     font-size: 15px;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .updateForm {
     display: none;
     padding-top: 15px;
     margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
 
 }
 
@@ -488,6 +493,10 @@ button:hover {
 
 
 /* --------------------------------------------------- MAIN PAGE AVEC AFFICHAGE DES EVENTS ------------------------------------------ */
+.bold {
+    font-weight: bold;
+}
+
 
 .btn-ajouter {
     text-align: center;
@@ -525,6 +534,8 @@ button:hover {
 .evenementContainer h4 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .evenementContainer p,
@@ -540,11 +551,11 @@ button:hover {
     margin: 0;
     background-color: white;
     width: 30%;
-    max-height: 250px;
+    min-height: 300px;
+   width: 30%;
     padding: 10px 0;
     border: 1px solid #ffd90051;
     border-radius: 10px;
-    overflow: auto;
 }
 
 .devisContainer p {
@@ -569,6 +580,7 @@ button:hover {
     flex-wrap: wrap;
     align-items: center;
     gap: 1em;
+    margin-bottom: 100px;
 }
 
 .btnContainer {
@@ -621,6 +633,7 @@ button:hover {
     display: block;
     text-align: center;
     margin-bottom: 50px;
+    font-weight: bold;
 }
 
 .add:hover {
@@ -629,20 +642,27 @@ button:hover {
 }
 
 .close {
-    position: absolute;
-    top: 0.5%;
-    left: 0.5%;
     font-size: 15px;
+    position: absolute;
+    top: 1%;
+    left: 1.5%;
+    width: 35px;
 }
 
 .close img {
-    width: 20px;
+    position: absolute;
+    top: 1%;
+    left: 1.5%;
+    width: 35px;
 }
 
 .add:hover,
 .close:hover {
     cursor: pointer;
 }
+
+
+
 
 .updateForm .form-group {
     width: 80%;
@@ -691,10 +711,12 @@ button:hover {
     border-radius: 10px;
     background-color: #f5f3ef7d;
     border: 1px solid #ffd90051;
-
-
 }
 
+.addInviteForm select{
+    background-color: #f5f3ef7d;
+
+}
 .flex {
     display: flex;
     flex-direction: row;
@@ -783,8 +805,7 @@ button:hover {
 .evenementInvite {
     position: relative;
     width: 100%;
-    min-height: 300px;
-    background-color: #f5f3ef;
+    background-color: white;
     margin: auto;
     border: 1px solid #ffd90051;
     border-radius: 50px;
@@ -830,6 +851,7 @@ button:hover {
     margin: auto;
     margin-top: 15px;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .sendEmailForm textarea {
@@ -844,7 +866,7 @@ button:hover {
 .selectInviteForm button {
     margin-top: 10px;
     width: 15%;
-    background-color: white;
+    background-color: #f5f3ef;
     margin: auto;
 
 }
@@ -876,24 +898,38 @@ button:hover {
 
 }
 
-.updateInvite .btn {
+.updateInvite .delete {
     background-color: white;
     color: red;
+    font-weight: bold;
 }
 
 
 
 .updateInvite button {
     background-color: white;
+    border: 2px solid rgb(8, 157, 8)
+
 }
 
+.updateInvite button:hover{
+    box-shadow: rgba(0, 0, 0, 0.243) 0px 8px 24px;
+    transition: 0.3s ease;
+
+}
 .message {
     text-align: center;
     margin: auto;
     margin-bottom: 25px;
+    font-weight: bold;
+    color: rgb(8, 157, 8);
+
+
 }
 
-
+.notBold{
+    font-weight: 100;
+}
 
 
 /* ------------------------------------------- PAGE PROFIL ----------------------------------------------------- */
@@ -963,19 +999,14 @@ button:hover {
 .prestationContainer {
     position: relative;
     width: 40%;
-    min-height: 250px;
-    max-height: 250px;
-
+    min-height: 350px;
     background-color: white;
     margin: auto;
     border: 1px solid #ffd90051;
     border-radius: 25px;
-    margin-bottom: 50px;
-    margin-top: 50px;
     padding: 25px 0;
     text-align: start;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    overflow: auto;
 
 }
 
@@ -996,15 +1027,14 @@ button:hover {
 
 .AllPrestationsContainer {
     width: 100%;
-    height: 100vh;
     margin-bottom: 50px;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 30px;
-    overflow: auto;
+    gap: 1em;
+    margin-bottom: 100px;
 }
 
 .AllPrestationsContainer .btnContainer {
@@ -1056,25 +1086,24 @@ button:hover {
 
 .selectEventDevis {
     margin: auto;
+    width: 100%;
     text-align: center;
     margin-bottom: 20px;
 }
 
-.prestationDevis .AllPrestationsContainer {
-    height: 450px;
-}
+    .prestationDevis .prestationContainer {
+        min-height: 250px;
+    }
 
-.prestationDevis .prestationContainer {
-    min-height: 150px;
-}
+
 
 .prestationContainer:hover {
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    box-shadow: rgba(255, 254, 254, 0.694) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .total {
     margin: auto;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     margin-top: 25px;
     text-align: center;
 }
@@ -1137,3 +1166,27 @@ button:hover {
 .confirmDecline form label {
     font-size: 12px;
 }
+
+.isDecline {
+    color: rgb(249, 35, 35);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ------------------------------------------------------------    PLANNING   ------------------------------------------------------------ */
+
+#calendar {
+    margin-bottom: 100px;
+}
+

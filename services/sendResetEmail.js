@@ -17,6 +17,14 @@ function sendResetEmail(email, link) {
         text: `Cliquez sur le lien suivant pour réinitialiser votre mot de passe: ${link}. 
         
         Ce lien ne sera valide qu'une heure, passé ce délais, vous devrez demander un nouveau lien.
+
+
+         Bien Cordialement,
+
+        L'équipe MyEvents.
+
+
+        
         
         Envoyé depuis MyEvents.
         `
@@ -28,7 +36,7 @@ function sendResetEmail(email, link) {
         }
         console.log('Email sent: ' + info.response);
     });
-} 
+}
 
 function sendInviteEmail(email, message) {
     const transporter = nodemailer.createTransport({
@@ -47,6 +55,14 @@ function sendInviteEmail(email, message) {
         text: `${message}
 
 
+
+
+         Bien Cordialement,
+
+        L'équipe MyEvents.
+
+
+        
         Envoyé depuis MyEvents`
     };
 
@@ -58,7 +74,94 @@ function sendInviteEmail(email, message) {
     });
 }
 
+function sendContactEmail(nom, prenom, email, message) {
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+
+            user: 'auto.myevents@gmail.com',
+            pass: 'wgzl nhzw cquw qmhi'
+        }
+    });
+
+    const mailOptions = {
+        from: 'auto.myevents@gmail.com',
+        to: `auto.myevents@gmail.com`,
+        subject: "MyEvents - Un utilisateur souhaite vous contacter",
+        text: `
+
+        Bonjour,
+        
+        Un Utilisateur souhaite vous contacter depuis MyEvents.
+
+        Nom: ${nom} 
+        Prénom: ${prenom} 
+        email: ${email}
+
+        Message : 
+
+        ${message}
+
+
+
+
+ Bien Cordialement,
+
+        L'équipe MyEvents.
+
+
+        
+
+        Envoyé depuis MyEvents.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Email sent: ' + info.response);
+    });
+
+}
+
+function notificationEmail(email, message, objet) {
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+
+            user: 'auto.myevents@gmail.com',
+            pass: 'wgzl nhzw cquw qmhi'
+        }
+    });
+
+    const mailOptions = {
+        from: 'auto.myevents@gmail.com',
+        to: `${email}`,
+        subject: `${objet}`,
+        text: `
+
+
+        ${message}
+
+
+
+
+
+Envoyé depuis MyEvents.`
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Email sent: ' + info.response);
+    });
+}
+
 module.exports = {
     sendResetEmail,
-    sendInviteEmail
+    sendInviteEmail,
+    sendContactEmail,
+    notificationEmail
 }

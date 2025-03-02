@@ -32,7 +32,7 @@ profilProsRouter.post('/updateEntreprise', authguard, async (req, res) => {
         res.render('pages/profilPros.twig', {
             utilisateur: req.session.utilisateur,
             entreprise: updateEntreprise,
-            successMessage: "Les informations ont été correctement mises à jour !"
+            successMessage: " ✅ Les informations ont été correctement mises à jour !"
         });
 
     } catch (error) {

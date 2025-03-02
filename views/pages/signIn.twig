@@ -18,6 +18,16 @@
 	<section class='mainSection'>
 		<h2>Inscrivez vous et connectez vous pour pouvoir gérer votre événément</h2>
 
+<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 
 		<div class='formSignIn'>
 			<form action="/signIn" method='POST'>

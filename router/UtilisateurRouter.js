@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
-const { sendResetEmail } = require('../services/sendResetEmail.js');
+const { sendResetEmail, sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 
 
 // Affiche la page principale du dashboard utilisateur
@@ -91,6 +91,31 @@ utilisateurRouter.post('/signIn', async (req, res) => {
                     password: req.body.password
                 }
             })
+            const objet = "Bienvenue sur MyEvents – Organisez vos événements en toute simplicité !"
+
+            const message = `Bonjour ${req.body.nom} ${req.body.prenom},
+
+            Bienvenue sur MyEvents ! 🎉
+            
+            Nous sommes ravis de vous compter parmi nous.
+
+            Avec MyEvents, vous allez pouvoir organiser vos événements sans stress :
+
+            ✅ Trouvez et contactez des prestataires en quelques clics
+            ✅ Planifiez et suivez vos tâches et rendez-vous facilement
+            ✅ Gérez vos invitations et informez vos invités en un instant
+
+            ✨ Commencez dès maintenant !Accédez à votre espace personnel et commencez à créer votre événement.
+
+            Besoin d’aide ? Notre équipe est là pour vous accompagner !
+
+            À très bientôt ! 🚀
+
+            L’équipe MyEvents 
+            
+            📧 auto.myevents@gmail.com | 🌐 www.myevents.com`
+
+            notificationEmail(req.body.email, message, objet)
             res.redirect('/login')
         }
         else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
@@ -320,6 +345,24 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
     }
 });
 
+
+utilisateurRouter.post('/contact', (req, res) => {
+
+    try {
+        const { nom, prenom, email, message } = req.body
+
+        sendContactEmail(nom, prenom, email, message)
+        successMessage = '✅ Votre message a bien été envoyé.'
+        req.session.successMessage = successMessage
+        res.redirect('/')
+    } catch (error) {
+        console.log(error)
+        errorMessage = "Une erreur est survenue, votre message n'a pas été envoyé. Veuillez réessayer plus tard."
+        req.session.errorMessage = errorMessage
+        res.redirect('/')
+    }
+
+})
 
 
 module.exports = utilisateurRouter;

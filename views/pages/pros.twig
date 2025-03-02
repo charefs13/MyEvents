@@ -18,18 +18,33 @@
 	<section class="mainSection">
 		<h2>Dans un secteur hautement concurrentiel, il est crucial de se démarquer et pérenniser son activité.</h2>
 
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 		<div class="biggerTextContainer">
 			<div class='iconeAndText'>
 				<div><img src="/assets/images/poignee-de-main.png" alt="logo d'une poignée de main avec plusieurs personnes"></div>
 				<div>
-					<p>MyEvents  est votre allié pour <strong>développer</strong> votre activité et surtout pour <strong> trouver de nouveaux clients</strong>.
+					<p>MyEvents  est votre allié pour
+						<strong>développer</strong>
+						votre activité et surtout pour
+						<strong>
+							trouver de nouveaux clients</strong>.
 					</p>
 				</div>
 			</div>
 			<div class='iconeAndText'>
 				<div><img src="/assets/images/gerer-les-factures.png" alt="logo d'une facture avec une roue cranté"></div>
 				<div>
-					<p>Créez un profil professionnel, recevez des demandes de <strong>devis personnalisées</strong>, et gérez facilement vos prestations avec notre interface intuitive.
+					<p>Créez un profil professionnel, recevez des demandes de
+						<strong>devis personnalisées</strong>, et gérez facilement vos prestations avec notre interface intuitive.
 					</p>
 				</div>
 			</div>
@@ -37,17 +52,22 @@
 			<div class='iconeAndText'>
 				<div><img src="/assets/images/avis-positif.png" alt="logo d'un pouce levé avec 3 étoiles au dessus"></div>
 				<div>
-					<p>MyEvents  vous aide à <strong>gagner en visibilité</strong> , à structurer vos interactions avec vos clients, et à renforcer votre crédibilité grâce à notre système de notation.
+					<p>MyEvents  vous aide à
+						<strong>gagner en visibilité</strong>
+						, à structurer vos interactions avec vos clients, et à renforcer votre crédibilité grâce à notre système de notation.
 					</p>
 				</div>
 			</div>
 
-			
+
 		</div>
 
 		<div>
 			<p class='join'>
-				<span class='underline'><a href="/signInPros">Rejoignez-nous</a></span> pour optimiser votre temps, élargir votre clientèle, et offrir des services sur-mesure aux particuliers en quête d’experts qualifiés.</p>
+				<span class='underline'>
+					<a href="/signInPros">Rejoignez-nous</a>
+				</span>
+				pour optimiser votre temps, élargir votre clientèle, et offrir des services sur-mesure aux particuliers en quête d’experts qualifiés.</p>
 		</div>
 	</section>
 

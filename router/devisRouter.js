@@ -4,6 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const PDFDocument = require("pdfkit");
 const prisma = new PrismaClient();
 const path = require('path');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 
 
 devisRouter.get('/devis/:id', authguard, async (req, res) => {
@@ -12,8 +13,28 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
 
         const devis = await prisma.devis.findUnique({
             where: { id: devisId },
-            include: { prestations: { include: { prestation: true } }, entreprise: true, evenement: true, utilisateur: true }
+            include: {
+                prestations: { include: { prestation: true } },
+                entreprise: {
+                    include: {
+                        utilisateur: true  // Inclure l'utilisateur lié à l'entreprise (pour récupérer son email)
+                    }
+                },
+                evenement: true,           // événement du user particulier
+                utilisateur: true         // utilisateur particulier qui génère le devis
+            }
         });
+
+        const entreprise = await prisma.entreprise.findFirst({
+            where: {
+                id: parseInt(devisId)
+            },
+            include: { utilisateur: true }
+        })
+
+
+
+
 
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
@@ -52,7 +73,7 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
             doc.fontSize(10).text(`  Description : ${prestation.description}`);
             doc.fontSize(10).text(`  Prix : ${prestation.prix.toFixed(2)}€ TTC`, { align: "right" });
             doc.moveDown();
-        });
+        }); 
 
         let totalHT = devis.prestations.reduce((sum, p) => sum + p.prestation.prix, 0);
         const tva = totalHT * 0.2;
@@ -63,12 +84,13 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
         doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
 
         const formattedDate = new Date(devis.createdAt).toLocaleDateString('fr-FR');
-        doc.fontSize(10).text(`Fait à ${entreprise.ville}, le ${formattedDate}`, { align: "left" });
+        doc.fontSize(10).text(`Fait à ${devis.utilisateur.ville}, le ${formattedDate}`, { align: "left" });
 
         doc.moveDown();
 
         doc.fontSize(7).text(`Ce devis est valable 30 jours.`);
         doc.end();
+
     } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la génération du devis.");
@@ -78,7 +100,11 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
 
 devisRouter.get('/validate/:id', authguard, async (req, res) => {
     try {
-        const devis = await prisma.devis.update({
+        const devis = await prisma.devis.findFirst({
+            where: { id: parseInt(req.params.id) },
+            include: { prestations: { include: { prestation: true } }, entreprise: true, evenement: true, utilisateur: true }
+        });
+        const updateDevis = await prisma.devis.update({
             where: {
                 id: parseInt(req.params.id)
             },
@@ -86,8 +112,36 @@ devisRouter.get('/validate/:id', authguard, async (req, res) => {
                 isValidate: true
             }
         })
-        console.log(devis + 'est modifier')
+
+           // Création de la tâche
+           const tache = await prisma.tache.create({
+            data: {
+                titre: devis.evenement.titre, 
+                description: devis.typeEvenement, 
+                debut: devis.dateDebut, 
+                fin: devis.dateFin, 
+                utilisateurId: devis.utilisateurId, 
+                evenementId: devis.evenement.id 
+            }
+        })
         res.redirect('/dashboardPros')
+        const objet = "Votre devis a été accepté ! 🎉";
+
+        const message = `Bonjour,
+
+Bonne nouvelle ! ✅ Un devis a été accepté par ${devis.entreprise.raisonSociale}.
+
+📄 Devis N° ${devis.id}
+💳 Montant validé : ${devis.total}€  
+📅 Événement : ${devis.evenement.titre} 
+
+👉  Connectez-vous à MyEvents pour procéder au paiement et valider la prestation .
+
+L’équipe MyEvents  
+📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
+
+        notificationEmail(devis.utilisateur.email, message, objet);
+
     } catch (error) {
         console.log(error)
         res.redirect('/dashboardPros')
@@ -111,11 +165,16 @@ devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
                 entreprise: true
             }
         })
+
+
         res.render('pages/confirmDeclineDevis.twig', {
             devis: devis,
             utilisateur: req.session.utilisateur,
             entreprise: utilisateur.entreprise
         })
+
+
+
     } catch (error) {
         console.log(error)
         res.redirect('/dashboardPros')
@@ -125,18 +184,34 @@ devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
 devisRouter.post('/decline/:id', authguard, async (req, res) => {
     try {
         const devis = await prisma.devis.update({
-            where: {
-                id: parseInt(req.params.id)
-            },
+            where: { id: parseInt(req.params.id) },
+            include: { prestations: { include: { prestation: true } }, entreprise: true, evenement: true, utilisateur: true },
+
             data: {
                 isDecline: true,
                 declineMsg: req.body.declineMsg
             }
         })
+
+        const objet = "Votre devis n’a pas été accepté 😢";
+
+        const message = `Bonjour ${devis.utilisateur.nom} ${devis.utilisateur.prenom},
+        
+        Nous sommes désolés 😞, mais ${devis.entreprise.raisonSociale} a décliné votre demande pour le devis ${devis.id}.
+        
+        👉 Vous pouvez consulter le motif de refus sur votre espace MyEvents.
+        
+        N’hésitez pas à explorer d’autres prestataires sur MyEvents !
+        
+        
+        L’équipe MyEvents  
+        📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
+
+        notificationEmail(devis.utilisateur.email, message, objet);
         res.redirect('/dashboardPros')
 
     } catch (error) {
-        console.log(error)
+        console.log(error)          
         res.render("pages/confirmDeclineDevis.twig", {
             errorMessage: "Une erreur est survenue. Veuillez réessayer plus tard"
         })
@@ -152,8 +227,8 @@ devisRouter.get('/deleteDevis/:id', authguard, async (req, res) => {
             }
         })
 
-         // Récupération de l'utilisateur avec ses événements, ses devis et son entreprise
-         const utilisateur = await prisma.utilisateur.findFirst({
+        // Récupération de l'utilisateur avec ses événements, ses devis et son entreprise
+        const utilisateur = await prisma.utilisateur.findFirst({
             where: { email: req.session.utilisateur.email },
             include: { entreprise: true, devis: true, evenements: true }
         });
@@ -168,7 +243,7 @@ devisRouter.get('/deleteDevis/:id', authguard, async (req, res) => {
             }
         });
         res.render('pages/utilisateurDashboard.twig', {
-            successMessage: "Devis Supprimé.",
+            successMessage: " ✅ Devis Supprimé.",
             utilisateur: utilisateur,
             evenements: events, // Passage des événements
             devis: events.flatMap(event => event.devis) // Extraction des devis de chaque événement
@@ -177,9 +252,7 @@ devisRouter.get('/deleteDevis/:id', authguard, async (req, res) => {
         console.log(error)
         res.render('pages/utilisateurDashboard.twig', {
             errorMessage: "Une erreur est survenue. Veuillez réessayer plus tard.",
-            utilisateur: utilisateur,
-            evenements: events, // Passage des événements
-            devis: events.flatMap(event => event.devis) // Extraction des devis de chaque événement
+            utilisateur: req.session.utilisateur
         })
     }
 

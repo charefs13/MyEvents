@@ -3,7 +3,7 @@ model Invite {
   nom       String
   prenom    String
   email     String?
-  evenement   Evenement @relation(fields: [evenementId], references: [id])
+  evenement   Evenement @relation(fields: [evenementId], references: [id], onDelete: Cascade)
   evenementId Int
 
 }

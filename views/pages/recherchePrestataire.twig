@@ -21,6 +21,16 @@
 
 	<section class='mainSection'>
 		
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 
 		{% if entreprises|length > 0 %}
 		<h2>Résultats de votre recherche</h2>

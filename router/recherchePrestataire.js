@@ -5,6 +5,9 @@ const PDFDocument = require("pdfkit");
 const prisma = new PrismaClient();
 const moment = require("moment"); // Pour gérer la date facilement
 
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+    
+
 // Route de recherche des prestataires
 recherchePrestataireRouter.get('/recherchePrestataire', authguard, async (req, res) => {
     try {
@@ -57,9 +60,8 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
             where: {
                 id: parseInt(req.params.id)
             },
-            include: { prestations: true }
+            include: { prestations: true, utilisateur: true }
         });
-        console.log(entreprise.id)
         // Récupération des informations de l'utilisateur
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
@@ -69,8 +71,10 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
                 evenements: true
             }
         });
+        const entrepriseUser = entreprise.utilisateur
 
         req.session.entreprise = entreprise;
+        req.session.entrepriseUser = entrepriseUser
         req.session.utilisateur = utilisateur;
 
         // Affichage de la page de devis avec les prestations de l'entreprise
@@ -79,6 +83,7 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
             evenements: utilisateur.evenements,
             entreprise: entreprise,
             prestations: entreprise.prestations,
+            entrepriseUser: req.session.entrepriseUser
         });
     } catch (error) {
         console.log(error);
@@ -102,8 +107,8 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         // Récupération des données
         const event = await prisma.evenement.findUnique({ where: { id: parseInt(req.query.evenement) } });
         const entreprise = await prisma.entreprise.findUnique({ where: { id: parseInt(req.query.entreprise) } });
+        const entrepriseUser = await prisma.entreprise.findFirst({where : {id : parseInt(req.query.entreprise)}, include : {utilisateur : true} })
         const utilisateur = await prisma.utilisateur.findUnique({ where: { id: utilisateurId } });
-        if (!utilisateur) return res.status(404).send("Utilisateur non trouvé.");
 
         const selectedPrestations = await prisma.prestation.findMany({ where: { id: { in: prestationIds } } });
         if (selectedPrestations.length === 0) return res.status(404).send("Aucune prestation trouvée.");
@@ -142,6 +147,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
             include: { prestations: true }
         });
 
+
         // Génération du PDF
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
@@ -159,6 +165,8 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         // Coordonnées de l'entreprise
         doc.fontSize(12).text("Coordonnées de l'entreprise :", { underline: true });
         doc.fontSize(10).text(`Raison Sociale : ${entreprise.raisonSociale}`);
+        doc.text(`Siret : ${entreprise.siret},`);
+
         doc.text(`Adresse : ${entreprise.adresse},`);
         doc.text(`${entreprise.cp} ${entreprise.ville}`);
         doc.moveDown();
@@ -224,6 +232,26 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         doc.fontSize(7).text(`Sous réserve de validation par ${entreprise.raisonSociale}. Une fois validé, vous pourrez procéder au paiement.`);
         doc.moveDown();
         doc.end();
+
+        const objet = "Nouveau devis reçu sur MyEvents !";
+
+        const message = `Bonjour ${entreprise.raisonSociale},
+
+Bonne nouvelle ! 🎉 Un particulier vient de vous envoyer une demande de devis.
+
+ 
+💰 Montant estimé : ${totalTTC.toFixed(2)} €  
+📅 Événement :  ${event.type} du ${dateDebutFormatted} au ${dateFinFormatted}
+
+👉 Connectez-vous dès maintenant pour consulter les détails et y répondre rapidement !
+
+
+
+L’équipe MyEvents  
+📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
+
+        notificationEmail(entrepriseUser.utilisateur.email, message, objet);
+        // notificationEmail(req.session.entrepriseUser.email, message, objet);
     } catch (error) {
         console.log(error)
     }

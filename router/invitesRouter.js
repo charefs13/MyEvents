@@ -50,7 +50,7 @@ invitesRouter.post('/addInvite', authguard, async (req, res) => {
         })
 
         res.render('pages/invites.twig', {
-            successMessage: `L'invité a bien été ajouté`,
+            successMessage: ` ✅ L'invité a bien été ajouté`,
             utilisateur: req.session.utilisateur,
             evenements: utilisateur.evenements
         })
@@ -150,7 +150,7 @@ invitesRouter.post('/sendEmail/evenement/:evenementId', authguard, async (req, r
         // Envoi des emails
         for (const invite of selectedInvites) {
             const emailMessage = emailText
-                .replace(/prénom|Prénom|prenom/gi, "invite.prenom")
+                .replace(/prénom|Prénom|prenom|Prenom/gi, invite.prenom)
                 .replace(/nom|Nom/gi, invite.nom);
 
             await sendInviteEmail(invite.email, emailMessage);
@@ -158,7 +158,7 @@ invitesRouter.post('/sendEmail/evenement/:evenementId', authguard, async (req, r
         res.render('pages/invites.twig', {
             utilisateur: req.session.utilisateur,
 
-            successMessage: "Les emails ont été envoyés avec succès !",
+            successMessage: "✅ Les emails ont été envoyés avec succès !",
             invites: await prisma.invite.findMany({ where: { email: { not: null } } }),
             evenements: utilisateur.evenements
         });
@@ -229,7 +229,7 @@ invitesRouter.get('/deleteInvite/:id', authguard, async (req, res) => {
         })
         res.render('pages/invites.twig', {
             utilisateur: req.session.utilisateur,
-            successMessage: "L'invité a été supprimé de votre événenement !",
+            successMessage: " ✅ L'invité a été supprimé de votre événenement !",
             utilisateur: req.session.utilisateur,
             evenements: utilisateur.evenements
           
@@ -269,7 +269,7 @@ invitesRouter.post('/updateInvite/:id', authguard, async (req, res) => {
         })
         res.render('pages/invites.twig', {
             utilisateur: req.session.utilisateur,
-            successMessage: "Les informations ont été correctement mises à jour !",
+            successMessage: " ✅ Les informations ont été correctement mises à jour !",
             utilisateur: req.session.utilisateur,
             evenements: utilisateur.evenements
         })

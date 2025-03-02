@@ -10,4 +10,5 @@ model Evenement {
   utilisateurId Int
   invites       Invite[]
   devis         Devis[] // Plusieurs devis peuvent être liés à un événement
+  taches        Tache[]
 }

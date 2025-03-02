@@ -19,7 +19,16 @@
 	<section class='mainSection'>
 		<h2>Vous allez recevoir un email pour réinitialiser votre mot de passe</h2>
 
+<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
 
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 		<div class='formSignIn'>
 			<form action="/forgot-password" method='POST'>
 				<div class="form-group">

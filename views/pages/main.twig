@@ -26,6 +26,16 @@
 	<section class="mainSection">
 		<h3>Planifier un événement n'a jamais été aussi simple !</h3>
 
+<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 		<div class="formEvenement">
 			<form action="/login" methode="get">
 				<label for="typeEvenement">Type d'événement</label>

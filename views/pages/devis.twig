@@ -18,16 +18,15 @@
 
 	<section class="mainSection">
 
-		<div class='messageContainer'>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
 
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
+		{% if errorMessage %}
+			<p class='error message'>{{ errorMessage }}</p>
+		{% endif %}
 
-		</div>
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
 
 		{% if entreprise is defined %}
 			<script>
@@ -80,7 +79,7 @@ let entrepriseId = {{ entreprise.id }};
 			<!-- Bouton pour générer le devis -->
 			<button id="genererDevis">Générer le devis</button>
 		</div>
-
+		<div class='messageContainer'></div>
 	</section>
 
 	<script>

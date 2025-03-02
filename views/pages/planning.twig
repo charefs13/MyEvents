@@ -1,0 +1,151 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+	<link rel="stylesheet" href="/assets/css/style.css">
+{% endblock %}
+
+{% block tile %}MyEvents - Planning{% endblock %}
+
+{% block main %}
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class="mainSection">
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+		</div>
+		
+		<h2>Planning des événements et tâches 🗓️</h2>
+		<div id='calendar'></div>
+	</section>
+{% endblock %}
+
+{% block script %}
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const calendarEl = document.getElementById('calendar');
+
+			// Appliquer le style au calendrier
+			Object.assign(calendarEl.style, {
+				background: "white",
+				border: "1px solid #ffd90051",
+				borderRadius: "8px",
+				padding: "20px",
+				maxHeight: "600px"
+			});
+
+			const calendar = new FullCalendar.Calendar(calendarEl, {
+				initialView: 'dayGridMonth', // Vue par défaut
+				firstDay: 1, // Lundi comme premier jour
+				locale: 'fr',
+				headerToolbar: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay'
+				},
+				dayMaxEvents: true, 
+				slotMinTime: '00:00:01',
+				slotMaxTime: '23:59:59',
+				selectable: true, 
+				editable: true,
+
+				// Appliquer le style aux tâches affichées
+				eventDidMount: function (info) {
+					info.el.classList.add("custom-task-style");
+
+					// Personnalisation des couleurs selon une éventuelle priorité
+					if (info.event.extendedProps.important) {
+						info.el.style.border = "2px solid red";
+						info.el.style.fontWeight = "bold";
+					} else {
+						info.el.style.border = "2px solid #ffd90051";
+					}
+				},
+
+				// Charger les tâches depuis l'API
+				events: '/api/tasks',
+
+				// Ajout d'une nouvelle tâche
+				select: function (info) {
+					let taskTitle = prompt("Entrez un titre pour votre tâche :");
+					if (taskTitle) {
+						let newTask = {
+							title: taskTitle,
+							start: info.startStr,
+							end: info.endStr
+						};
+
+						// Envoi des données au serveur
+						fetch('/api/tasks', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(newTask)
+						})
+						.then(response => response.json())
+						.then(data => {
+							newTask.id = data.id;
+							calendar.addEvent(newTask);
+						})
+						.catch(error => console.error("Erreur lors de l'ajout de la tâche", error));
+					}
+					calendar.unselect();
+				},
+
+				// Déplacement des tâches (mise à jour)
+				eventDrop: function (info) {
+					let updatedTask = {
+						id: info.event.id,
+						start: info.event.startStr,
+						end: info.event.endStr
+					};
+
+					fetch(`/api/tasks/${updatedTask.id}`, {
+						method: 'PUT',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(updatedTask)
+					})
+					.catch(error => console.error("Erreur lors de la mise à jour", error));
+				},
+
+				// Suppression d'une tâche
+				eventClick: function (info) {
+					if (confirm("Voulez-vous supprimer cette tâche ?")) {
+						let taskId = info.event.id;
+
+						fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+						.then(() => {
+							info.event.remove();
+						})
+						.catch(error => console.error("Erreur lors de la suppression", error));
+					}
+				}
+			});
+
+			calendar.render();
+		});
+	</script>
+
+	<style>
+		/* Style des tâches */
+		.custom-task-style {
+			border-radius: 5px;
+			background-color: #f5f3ef;
+			color: black !important;
+
+			font-size: 12px;
+			padding: 2px 5px;
+			text-align: center;
+		}
+		.fc-timeGridWeek-view .fc-event,
+.fc-timeGridDay-view .fc-event {
+    background-color: #f5f3ef; !important; /* Jaune clair pour plus de contraste */
+    color: black !important; /* Assurer que le texte reste noir */
+	</style>
+{% endblock %}

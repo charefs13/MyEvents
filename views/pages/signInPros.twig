@@ -13,11 +13,22 @@
 
 {% block main %}
 
+
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class='mainSection'>
 		<h2>Inscrivez vous et connectez vous pour trouver de nouveaux clients</h2>
 
+		<div>
+			{% if errorMessage %}
+				<p class='error message'>{{ errorMessage }}</p>
+			{% endif %}
+
+			{% if successMessage %}
+				<p class='message'>{{ successMessage }}</p>
+			{% endif %}
+
+		</div>
 
 		<div class='formSignIn'>
 			<form action="/signInPros" method='POST'>
