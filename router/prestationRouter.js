@@ -2,12 +2,15 @@ const prestationRouter = require('express').Router()
 const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { scriptInjectionRegex } = require('../services/regex');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 
 
 
 
 // Affichage de la page prestation pour ajouter ou modifier des prestations
 prestationRouter.get('/prestation', authguard, async (req, res) => {
+
     const entreprise = await prisma.entreprise.findFirst({
         where: {
             utilisateurId: req.session.utilisateur.id
@@ -21,6 +24,7 @@ prestationRouter.get('/prestation', authguard, async (req, res) => {
        utilisateur: req.session.utilisateur,
         entreprise: entreprise,
         prestations: entreprise.prestations,
+        successMessage : req.session.successMessage
     })
 })
 
@@ -74,6 +78,9 @@ prestationRouter.post('/updatePrestation/:id', authguard, async (req, res) => {
                 description : description
             }
         })
+        const successMessage = " ✅ Votre prestation a été modifié avec succès."
+
+        req.session.successMessage = successMessage
         res.redirect('/prestation')
     } catch (error) {
         console.log(error)
@@ -84,11 +91,15 @@ prestationRouter.post('/updatePrestation/:id', authguard, async (req, res) => {
 // Suppression d'une prestation
 prestationRouter.get('/deletePrestation/:id', authguard, async (req, res) => {
     try {
+        if(req.session.successMessage) delete req.successMessage
         await prisma.prestation.delete({
             where: {
                 id: parseInt(req.params.id)
             }
         })
+        const successMessage = "Votre prestation a bien été supprimée. 🗑️"
+
+        req.session.successMessage = successMessage
         res.redirect('/prestation')
     } catch (error) {
         console.log(error)

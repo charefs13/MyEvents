@@ -2,9 +2,8 @@ const invitesRouter = require('express').Router()
 const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { sendInviteEmail } = require('../services/sendResetEmail.js');
-
-
+const { sendContactEmail, notificationEmail, sendInviteEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
 
 
 invitesRouter.get('/invites', authguard, async (req, res) => {

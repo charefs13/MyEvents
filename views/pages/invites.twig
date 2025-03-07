@@ -10,14 +10,10 @@
 {% endblock %}
 
 {% block main %}
-	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
-
-	<h2>Ajouter et modifier
-	</h2>
 
 	<div>
 		{% if errorMessage %}
-			<p class='error message'>{{ errorMessage }}</p>
+			<p class='error'>{{ errorMessage }}</p>
 		{% endif %}
 
 		{% if successMessage %}
@@ -25,6 +21,12 @@
 		{% endif %}
 
 	</div>
+	
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<h2>Ajouter et modifier
+	</h2>
+
 
 	<section class="mainSection">
 		<h3 class='InviteH3'>Ajouter un invité à votre événement</h3>
@@ -188,7 +190,7 @@
 
 
 			{% else %}
-				<p>Aucun invité pour cet événement.</p>
+				<p style='text-align: center;'><span class='bold'>Aucun invité pour cet événement.</span></p>
 			{% endif %}
 
 		{% endif %}

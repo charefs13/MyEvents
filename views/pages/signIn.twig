@@ -12,51 +12,50 @@
 {% endblock %}
 
 {% block main %}
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
 
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class='mainSection'>
 		<h2>Inscrivez vous et connectez vous pour pouvoir gérer votre événément</h2>
 
-<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
 
 		<div class='formSignIn'>
 			<form action="/signIn" method='POST'>
 				<div class="form-group">
-					<label for="nom">Nom</label>
-					<input id='nom' type="text" name="nom" placeholder='John'>
+
+					<input id='nom' type="text" name="nom" placeholder='Nom'>
 				</div>
 
 				<div class="form-group">
-					<label for="prenom">Prénom</label>
-					<input id='prenom' type="text" name="prenom" placeholder='Doe'>
+
+					<input id='prenom' type="text" name="prenom" placeholder='Prénom'>
 				</div>
 
 				<div class="form-group">
-					<label for="email">Email</label>
-					<input id='email' type="email" name="email" placeholder='exemple@email.fr'>
+
+					<input id='email' type="email" name="email" placeholder='Email'>
 				</div>
 
 				<div class="form-group">
-					<label for="password">Mot de passe</label>
-					<input id='password' type="password" name="password">
+
+					<input id='password' type="password" name="password" placeholder="Mot de passe">
 					{% if error %}
 						<p class='error'>{{ error.password }}</p>
 					{% endif %}
 				</div>
 
 				<div class="form-group">
-					<label for="confirmPassword">Confirmez votre mot de passe</label>
-					<input id='confirmPassword' type="password" name="confirmPassword">
+					<input id='confirmPassword' type="password" name="confirmPassword" placeholder="Confirmez votre mot de passe">
 				</div>
 
 				{% if error %}

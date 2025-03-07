@@ -2,6 +2,9 @@ const profilProsRouter = require('express').Router();
 const authguard = require("../services/authguard");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { scriptInjectionRegex } = require('../services/regex');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+
 
 // Affichage du profil professionnel
 profilProsRouter.get('/profilPros', authguard, async (req, res) => {

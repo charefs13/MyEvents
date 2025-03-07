@@ -13,20 +13,18 @@
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class="mainSection">
+		<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
+
 		<h2>Ajouter, Modifier ou Supprimer un événement simplement</h2>
-
-
-		<div class='messageContainer'>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
-
 		{% if utilisateur is defined %}
 			<div>
 				<p class='add'>Ajouter un événement</p>
@@ -85,16 +83,16 @@
 						<div class='flexEvenement'>
 							<div>
 								<h4>{{ evenement.titre }}</h4>
-								<p>Type d'événement:
+								<p><span class='bold'>Type d'événement:</span>Type d'événement:
 									{{ evenement.type }}</p>
-								<p>{{ evenement.description }}</p>
+								<p><span class='bold'>Description:</span>{{ evenement.description }}</p>
 								<p>Du
 									<strong>{{ evenement.dateDebut|date("d/m/Y H:i") }}h</strong>
 									au
 									<strong>{{ evenement.dateFin|date("d/m/Y H:i") }}h</strong>
 								</p>
 								{% if evenement.lieu %}
-									<p>Lieu :
+									<p><span class='bold'>Lieu:</span>
 										{{ evenement.lieu }}</p>
 								{% else %}
 									<a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
@@ -103,7 +101,7 @@
 
 							<div class='btnContainer'>
 								<div>
-									<a class='btn update' data-event-id="{{ evenement.id }}" href="#">Modifier</a>
+									<a class='update' data-event-id="{{ evenement.id }}" href="#">Modifier</a>
 								</div>
 								<div>
 									<a class='delete' href="deleteEvent/{{ evenement.id }}">Supprimer</a>
@@ -142,7 +140,10 @@
 							</div>
 							<div class="form-group">
 								<label for="startTime-{{ evenement.id }}">Heure de début</label>
-								<input id="startTime-{{ evenement.id }}" type="time" name="startTime">
+								<input id="startTime-{{ evenement.id }}" type="time" name="startTime" required>
+														<p>
+														<span style='font-size: 13px;'>⚠️ Vous devez rentrer une heure de début même si elle n'a pas été modifiée</span>
+</p>
 							</div>
 							<div class="form-group">
 								<label for="endDate-{{ evenement.id }}">Date de fin</label>
@@ -150,7 +151,10 @@
 							</div>
 							<div class="form-group">
 								<label for="endTime-{{ evenement.id }}">Heure de fin</label>
-								<input id="endTime-{{ evenement.id }}" type="time" name="endTime">
+								<input id="endTime-{{ evenement.id }}" type="time" name="endTime" required>
+									<p>
+														<span style='font-size: 13px;'>⚠️ Vous devez rentrer une heure de fin même si elle n'a pas été modifiée</span>
+</p>
 							</div>
 							<div class='form-group'>
 								<button style='background-color: white;' class="saveUpdate btn" type="submit">Modifier l'événement</button>

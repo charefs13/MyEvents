@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt')
 const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const hashPasswordExtension = require("../services/hashPasswordExtension");
-const { notificationEmail } = require('../services/sendResetEmail');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
+const { scriptInjectionRegex } = require('../services/regex');
 
 
 //  affichage de la page d'inscription pour une Entreprise
@@ -127,6 +128,7 @@ prosRouter.post('/addProfilPros/:id', authguard, async (req, res) => {
 
 prosRouter.get('/dashboardPros', async (req, res) => {
     try {
+
         const utilisateur = await prisma.utilisateur.findFirst({
             where: { email: req.session.utilisateur.email },
             include: { entreprise: true, devis: true, evenements: true }

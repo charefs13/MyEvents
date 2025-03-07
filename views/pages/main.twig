@@ -8,9 +8,9 @@
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Italianno&family=League+Script&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Italianno&family=League+Script&display=swap" rel="stylesheet">
 
 {% endblock %}
 {% block tile %}MyEvents- Accueil
@@ -18,6 +18,16 @@
 
 
 {% block main %}
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
 
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
@@ -26,20 +36,10 @@
 	<section class="mainSection">
 		<h3>Planifier un événement n'a jamais été aussi simple !</h3>
 
-<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
 
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
-		<div class="formEvenement">
-			<form action="/login" methode="get">
-				<label for="typeEvenement">Type d'événement</label>
-				<select id="typeEvenement" name="typeEvenement">
+		<div class="form-evenement">
+			<form action="/login" method="get" class="form-evenement__form">
+				<select id="typeEvenement" name="typeEvenement" class="form-evenement__select">
 					<option value="babyShower">Baby Shower</option>
 					<option value="genderReveal">Gender Reveal</option>
 					<option value="mariage">Mariage</option>
@@ -49,8 +49,7 @@
 					<option value="autre">Autre</option>
 				</select>
 
-				<label for="prestation">Prestataire</label>
-				<select id="prestation" name="prestation">
+				<select id="prestation" name="prestation" class="form-evenement__select">
 					<option value="photographeVideaste">Photographe/Vidéaste</option>
 					<option value="traiteur">Traiteur</option>
 					<option value="dj">DJ</option>
@@ -64,13 +63,14 @@
 					<option value="autre">Autre</option>
 				</select>
 
-				<label for="ville">Votre ville
-				</label>
-				<input type="text" id="ville" name="ville" placeholder="Entrez votre ville">
+				<input type="text" id="ville" name="ville" placeholder="Votre Ville" class="form-evenement__input">
 
-				<button type="submit">Rechercher</button>
+				<div class="form-button">
+					<button type="submit">Rechercher</button>
+				</div>
 			</form>
 		</div>
+
 
 		<div class="iconeContainer">
 			<div>
@@ -95,7 +95,10 @@
 			<div>
 				{# <img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"> #}
 				<p>
-					<span class='firstFont'>My</span><span class='secondFont'>E</span><span class='firstFont'>vents</span>  est une plateforme tout-en-un qui met en relation les particuliers et les professionnels de l'événementiel pour organiser des mariages, fêtes, conférences, et bien plus encore.
+					<span class='firstFont'>My</span>
+					<span class='secondFont'>E</span>
+					<span class='firstFont'>vents</span>
+					est une plateforme tout-en-un qui met en relation les particuliers et les professionnels de l'événementiel pour organiser des mariages, fêtes, conférences, et bien plus encore.
 				</p>
 
 			</div>
@@ -114,7 +117,10 @@
 				{# <img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"> #}
 
 				<p>
-					<span class='firstFont'>My</span><span class='secondFont'>E</span><span class='firstFont'>vents</span>  vous offre les outils nécessaires pour créer
+					<span class='firstFont'>My</span>
+					<span class='secondFont'>E</span>
+					<span class='firstFont'>vents</span>
+					vous offre les outils nécessaires pour créer
 					<strong class='underline'>des événements mémorables en toute sérénité</strong>.
 				</p>
 

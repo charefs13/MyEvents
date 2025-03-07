@@ -14,6 +14,17 @@
 
 {% block main %}
 
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
+
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class='mainSection'>
@@ -31,16 +42,16 @@
 		</div>
 		<div class='formSignIn'>
 			<form action="/login" method='POST'>
+			<a href=""></a>
 				<div class="form-group">
+			<p>Pas encore de compte ? <a class='link' href="/signIn"> Inscrivez vous</a></p>
 
 					<div class="form-group">
-						<label for="email">Email</label>
-						<input id='email' type="email" name="email" placeholder='exemple@email.fr'>
+						<input id='email' type="email" name="email" placeholder='Email'>
 					</div>
 
 					<div class="form-group">
-						<label for="password">Mot de passe</label>
-						<input id='password' type="password" name="password">
+						<input id='password' type="password" name="password" placeholder='Mot de passe'>
 
 						<a href="/mdpOublie">Cliquer pour réinitialiser le mot de passe</a>
 					</div>

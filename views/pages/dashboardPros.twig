@@ -9,20 +9,22 @@
 {% block tile %}MyEvents - Dashboard{% endblock %}
 
 {% block main %}
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
+	
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<h2>Bienvenue {{ entreprise.raisonSociale }}</h2>
 
-	<section class='mainSection'>
-		<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-		</div>
+<section class='mainSection'>
 
 		{% if devisEntreprise | length > 0 %}
 			<h3 style='text-align: center; margin: 50px 0;'>Vos Devis</h3>
@@ -56,7 +58,7 @@
 							Du <strong>{{ devis.dateDebut|date("d/m/Y H:i") }}h</strong>
 							au <strong>{{ devis.dateFin|date("d/m/Y H:i") }}h</strong>
 							<br>
-							<span style='font-size: 10px;'>⚠️ Pensez à vérifier vos disponibilités avant de valider le devis</span>
+							<span style='font-size: 13px;'>⚠️ Pensez à vérifier vos disponibilités avant de valider le devis</span>
 						</p>
 
 						<p>

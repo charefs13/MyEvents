@@ -12,6 +12,17 @@
 {% endblock %}
 
 {% block main %}
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
+
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<h2>
@@ -21,22 +32,11 @@
 
 	<section class="mainSection">
 
-		<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
 
 		<div>
 			<h3>Trouver un prestataire 🔎</h3>
 			<div class="formEvenement">
 				<form action="/recherchePrestataire" method="GET">
-					<label for="type">Prestataire</label>
 					<select id="type" name="type">
 						<option value="photographeVideaste">Photographe/Vidéaste</option>
 						<option value="traiteur">Traiteur</option>
@@ -51,12 +51,14 @@
 						<option value="autre">Autre</option>
 					</select>
 
-					<label for="ville">Votre ville</label>
-					<input type="text" id="ville" name="ville" placeholder="Entrez votre ville" required>
+					<input type="text" id="ville" name="ville" placeholder="Ville" required>
 
+
+					
 					<button type="submit">Rechercher</button>
 				</form>
 			</div>
+
 		</section>
 
 		<section class="mainSection">

@@ -1,8 +1,9 @@
 const hide = document.querySelector('.hide');
 const add = document.querySelector('.add');
 const close = document.querySelector('.close');
+const updateBtns = document.querySelectorAll('.update'); // Les boutons "Modifier"
+
 const createEventBtn = document.querySelector('.createEventBtn');
-const updateBtns = document.querySelectorAll('.btn.update'); // Les boutons "Modifier"
 const updateForms = document.querySelectorAll('.updateForm'); // Formulaires de modification
 const closeUpdateBtns = document.querySelectorAll('.updateForm .close'); // Boutons "Fermer" dans les formulaires de modification
 const saveUpdateBtns = document.querySelectorAll('.updateForm .saveUpdate'); // Boutons "Modifier" dans les formulaires de modification

@@ -16,7 +16,7 @@ close.addEventListener('click', () => {
 });  
 
 // Afficher le formulaire de modification de prestation lorsque le bouton "Modifier" est cliqué
-const updateBtns = document.querySelectorAll('.btn.update');
+const updateBtns = document.querySelectorAll('.update');
 updateBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const prestationId = e.target.getAttribute('data-prestation-id'); // Récupérer l'ID de la prestation

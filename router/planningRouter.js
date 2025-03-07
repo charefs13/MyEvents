@@ -4,7 +4,8 @@ const authguard = require("../services/authguard.js");
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); // Assure-toi de créer une instance de PrismaClient
 
-const { sendResetEmail, notificationEmail, sendContactEmail } = require('../services/sendResetEmail.js');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
 
 // Route pour afficher la page avec le calendrier
 planningRouter.get('/planning', authguard, async (req, res) => {

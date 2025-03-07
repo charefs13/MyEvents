@@ -9,23 +9,22 @@
 			<div class="footer-form">
 				<form action="/contact" method="POST">
 					<div class="form-group">
-						<label for="nom">Nom :</label>
-						<input type="text" id="nom" name="nom" required>
+						<input type="text" id="nom" name="nom" placeholder="Nom" required>
 					</div>
 					<div class="form-group">
-						<label for="prenom">Prénom :</label>
-						<input type="text" id="prenom" name="prenom" required>
+						<input type="text" id="prenom" name="prenom" placeholder="Prénom" required>
 					</div>
 
 					<div class="form-group">
-						<label for="email">Email :</label>
-						<input type="email" id="email" name="email" required>
+						<input type="email" id="email" name="email" placeholder="Email" required>
 					</div>
 
-					<div class="form-group">
-						<label for="message">Message :</label>
-						<textarea id="message" name="message" rows="4" required></textarea>
-					</div>
+					 <!-- Champ Message : longueur entre 10 et 1000 caractères -->
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="4" required  placeholder="Tapez votre message"
+                                  minlength="10" maxlength="1000" 
+                                  title="Le message doit contenir entre 10 et 1000 caractères."></textarea>
+                    </div>
 
 					<button type="submit" class="btn-submit">Envoyer</button>
 				</form>

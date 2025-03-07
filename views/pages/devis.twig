@@ -14,19 +14,20 @@
 {% endblock %}
 
 {% block main %}
-	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
-
-	<section class="mainSection">
-
-
+	<div>
 		{% if errorMessage %}
-			<p class='error message'>{{ errorMessage }}</p>
+			<p class='error'>{{ errorMessage }}</p>
 		{% endif %}
 
 		{% if successMessage %}
 			<p class='message'>{{ successMessage }}</p>
 		{% endif %}
 
+	</div>
+
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+
+	<section class="mainSection">
 
 		{% if entreprise is defined %}
 			<script>
@@ -109,7 +110,7 @@ const messageContainer = document.querySelector('.messageContainer')
 // Vérification si un événement et des prestations sont sélectionnés
 if (! selectedEvenement) { // alert("Veuillez sélectionner un événement.");
 let errorMessage = document.createElement("p");
-errorMessage.innerHTML = 'Veuillez sélectionner un événement';
+errorMessage.innerHTML = "Veuillez sélectionner un événement. Si vous n'avez pas encore d'événement veuillez d'abord en ajouter un depuis l'onglet Événement du menu";
 errorMessage.classList.add('error');
 messageContainer.appendChild(errorMessage);
 

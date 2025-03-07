@@ -6,6 +6,7 @@ const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
 const { notificationEmail, sendContactEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
 
 
 

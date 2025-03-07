@@ -15,6 +15,16 @@
 	<h1><img src="assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class="mainSection">
+		<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
 		<h2>Gérer vos prestations</h2>
 
 		{% if entreprise is defined %}
@@ -22,15 +32,7 @@
 				<p class='add'>Ajouter une prestation</p>
 			</div>
 
-			<div>
-				{% if errorMessage %}
-					<p class='error message'>{{ errorMessage }}</p>
-				{% endif %}
-
-				{% if successMessage %}
-					<p class='message'>{{ successMessage }}</p>
-				{% endif %}
-			</div>
+		
 
 			<div class='formSignIn hide'>
 				<form style='padding: 20px;' action="/createPrestation" method='POST'>
@@ -70,7 +72,7 @@
 								</div>
 								<div class='btnContainer'>
 									<div>
-										<a class='btn update' data-prestation-id="{{ prestation.id }}" href="#">Modifier</a>
+										<a class='update' data-prestation-id="{{ prestation.id }}" href="#">Modifier</a>
 									</div>
 									<div>
 										<a class='delete' href="deletePrestation/{{ prestation.id }}">Supprimer</a>

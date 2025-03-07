@@ -4,9 +4,9 @@ const { PrismaClient } = require('@prisma/client');
 const PDFDocument = require("pdfkit");
 const prisma = new PrismaClient();
 const moment = require("moment"); // Pour gérer la date facilement
-
+const { scriptInjectionRegex } = require('../services/regex');
 const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
-    
+
 
 // Route de recherche des prestataires
 recherchePrestataireRouter.get('/recherchePrestataire', authguard, async (req, res) => {
@@ -93,30 +93,19 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
     }
 });
 
-// Route pour générer un devis en PDF
+// Route pour générer un devis en PDF après avoir selectionner une ou plusieurs prestations et un événement
 recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
     try {
         const utilisateurId = req.session.utilisateur.id;
-
-        const prestationIds = req.query.prestations.split(",").map(id => parseInt(id));
-        if (prestationIds.length === 0) {
-            prestationIds = [];
-            return res.status(400).send("Aucune prestation sélectionnée.");
-        }
-
+         const prestationIds = req.query.prestations.split(",").map(id => parseInt(id));
         // Récupération des données
         const event = await prisma.evenement.findUnique({ where: { id: parseInt(req.query.evenement) } });
         const entreprise = await prisma.entreprise.findUnique({ where: { id: parseInt(req.query.entreprise) } });
-        const entrepriseUser = await prisma.entreprise.findFirst({where : {id : parseInt(req.query.entreprise)}, include : {utilisateur : true} })
+        const entrepriseUser = await prisma.entreprise.findFirst({ where: { id: parseInt(req.query.entreprise) }, include: { utilisateur: true } })
         const utilisateur = await prisma.utilisateur.findUnique({ where: { id: utilisateurId } });
-
         const selectedPrestations = await prisma.prestation.findMany({ where: { id: { in: prestationIds } } });
-        if (selectedPrestations.length === 0) return res.status(404).send("Aucune prestation trouvée.");
-
-
         // Calcul du total en additionnant tous les prix des prestations sélectionnées
         const total = selectedPrestations.reduce((acc, prestation) => acc + prestation.prix, 0);
-
 
         // Création du devis en base de données
         const devis = await prisma.devis.create({
@@ -144,33 +133,27 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
                 isDecline: false,
                 payed: false
             },
-            include: { prestations: true }
+            include: { prestations: true }  
         });
-
 
         // Génération du PDF
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
         res.setHeader("Content-Type", "application/pdf");
         doc.pipe(res);
-
-
         // En-tête du devis avec l'image
         doc.image(__dirname + '/../public/assets/images/Titre-MyEvents.png', { align: 'center', width: 100 });
         doc.moveDown();
         doc.moveDown();
         doc.moveDown();
         doc.moveDown();
-
         // Coordonnées de l'entreprise
         doc.fontSize(12).text("Coordonnées de l'entreprise :", { underline: true });
         doc.fontSize(10).text(`Raison Sociale : ${entreprise.raisonSociale}`);
         doc.text(`Siret : ${entreprise.siret},`);
-
         doc.text(`Adresse : ${entreprise.adresse},`);
         doc.text(`${entreprise.cp} ${entreprise.ville}`);
         doc.moveDown();
-
         // Coordonnées du client
         doc.fontSize(12).text("Coordonnées du client :", { underline: true, align: "right" });
         doc.fontSize(10).text(`Nom : ${utilisateur.nom} ${utilisateur.prenom}`, { align: "right" });
@@ -178,11 +161,9 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         doc.text(`${utilisateur.cp} ${utilisateur.ville}`, { align: "right" });
         doc.text(`Email : ${utilisateur.email}`, { align: "right" });
         doc.moveDown();
-
         doc.text(`Devis N°${devis.id}`, { align: "left" });
         doc.moveDown();
         doc.moveDown();
-
         // Formatage des dates pour qu'elles soient lisibles
         const dateDebutFormatted = new Date(event.dateDebut).toLocaleDateString('fr-FR', {
             weekday: 'long', // Jour de la semaine
@@ -190,20 +171,17 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
             month: 'long',   // Mois complet
             day: 'numeric'   // Jour du mois
         });
-
+        //Formatage de la date
         const dateFinFormatted = new Date(event.dateFin).toLocaleDateString('fr-FR', {
             weekday: 'long', // Jour de la semaine
             year: 'numeric', // Année complète
             month: 'long',   // Mois complet
             day: 'numeric'   // Jour du mois
         });
-
         // Ajout du texte avec la date formatée
         doc.fontSize(10).text(`Événement : ${event.type} du ${dateDebutFormatted} au ${dateFinFormatted}`);
         doc.moveDown();
         doc.moveDown();
-
-
         // Liste des prestations sélectionnées
         doc.fontSize(12).text("Prestations sélectionnées :", { underline: true, align: 'center' });
         selectedPrestations.forEach(prestation => {
@@ -212,21 +190,17 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
             doc.fontSize(12).text(`  Prix : ${prestation.prix.toFixed(2)}€ TTC`, { align: "right" });
             doc.moveDown();
         });
-
-
         // Total HT, TVA et Total TTC
         let totalTTC = selectedPrestations.reduce((sum, p) => sum + p.prix, 0);
         doc.moveDown();
         doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
-        doc.moveDown();
-
+        doc.moveDown(); 
         // Date du devis
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('fr-FR'); // Utilisation du format français
         doc.fontSize(10).text(`Fait à ${entreprise.ville}, le ${formattedDate}`, { align: "left" });
         doc.moveDown();
-
-
+        // Informations  complémentaires en bas du devis       
         doc.fontSize(7).text(`Ce devis est valable 30 jours à compter de la date de création.`);
         doc.fontSize(7).text(`Devis réalisé par MyEvents pour le compte de ${entreprise.raisonSociale}. Pour toute information complémentaire, veuillez contacter ${entreprise.raisonSociale}.`);
         doc.fontSize(7).text(`Sous réserve de validation par ${entreprise.raisonSociale}. Une fois validé, vous pourrez procéder au paiement.`);
@@ -234,7 +208,6 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         doc.end();
 
         const objet = "Nouveau devis reçu sur MyEvents !";
-
         const message = `Bonjour ${entreprise.raisonSociale},
 
 Bonne nouvelle ! 🎉 Un particulier vient de vous envoyer une demande de devis.

@@ -6,11 +6,15 @@ const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
 const { sendResetEmail, sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
+
 
 
 // Affiche la page principale du dashboard utilisateur
 utilisateurRouter.get('/', async (req, res) => {
+
     if (req.session.utilisateur) {
+
         // Récupération de l'utilisateur avec ses événements, ses devis et son entreprise
         const utilisateur = await prisma.utilisateur.findFirst({
             where: { email: req.session.utilisateur.email },
@@ -37,24 +41,34 @@ utilisateurRouter.get('/', async (req, res) => {
         // Si l'utilisateur est une entreprise, afficher son dashboard professionnel
         if (utilisateur.isEntreprise && utilisateur.entreprise) {
             req.session.entreprise = utilisateur.entreprise; // Stocker l'objet entreprise dans la session
+            if (req.session.successMessage)  delete req.session.successMessage
 
             return res.render('pages/dashboardPros.twig', {
                 entreprise: utilisateur.entreprise,
                 utilisateur: utilisateur,
-                devisEntreprise: entreprise.devis
+                devisEntreprise: entreprise.devis,
+                successMessage: req.session.successMessage,
+                errorMessage: req.session.errorMessage
             });
         }
+        if (req.session.successMessage)  delete req.session.successMessage
 
         // Sinon, afficher le dashboard utilisateur classique
         return res.render('pages/utilisateurDashboard.twig', {
             utilisateur: utilisateur,
             evenements: events, // Passage des événements
-            devis: events.flatMap(event => event.devis) // Extraction des devis de chaque événement
+            devis: events.flatMap(event => event.devis), // Extraction des devis de chaque événement
+            successMessage: req.session.successMessage,
+            errorMessage: req.session.errorMessage
         });
     }
 
     // Si l'utilisateur n'est pas connecté, afficher la page d'accueil
-    res.render('pages/main.twig');
+    res.render('pages/main.twig', {
+        successMessage: req.session.successMessage,
+        errorMessage: req.session.errorMessage
+    }
+    );
 });
 
 
@@ -75,25 +89,60 @@ utilisateurRouter.get('/pros', (req, res) => {
 
 // affiche ma page Inscription
 utilisateurRouter.get('/signIn', (req, res) => {
-    res.render('pages/signIn.twig')
+    res.render('pages/signIn.twig', {
+        successMessage: req.session.successMessage,
+        errorMessage: req.session.errorMessage
+    })
 })
 
 
 // envoie mon formulaire Inscription à ma BDD et redirige vers Connexion
 utilisateurRouter.post('/signIn', async (req, res) => {
     try {
-        if (req.body.password == req.body.confirmPassword) {
-            const utilisateur = await prisma.utilisateur.create({
-                data: {
-                    nom: req.body.nom,
-                    prenom: req.body.prenom,
-                    email: req.body.email,
-                    password: req.body.password
-                }
-            })
-            const objet = "Bienvenue sur MyEvents – Organisez vos événements en toute simplicité !"
+        // Expressions régulières pour valider les champs
+        const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/; // Lettres, espaces, apostrophes et tirets
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format de base pour une adresse email
 
-            const message = `Bonjour ${req.body.nom} ${req.body.prenom},
+        errorMessage = ""
+
+        const utilisateurCheck = await prisma.utilisateur.findFirst(
+            {
+                where: { email: req.body.email }
+            })
+        if (utilisateurCheck) {
+            errorMessage = "Utilisateur déja inscrit. Veuillez vous connecter à votre compte"
+            req.session.errorMessage = errorMessage
+            res.render("pages/signIn.twig", {
+                errorMessage: req.session.errorMessage
+            })
+
+        }
+        else if (!nameRegex.test(req.body.nom) || !nameRegex.test(req.body.prenom)) {
+            errorMessage = "Le nom ou le prénom contient des caractères invalides.";
+            req.session.errorMessage = errorMessage
+            res.render("pages/signIn.twig", {
+                errorMessage: req.session.errorMessage
+            })
+        } 
+        else if (!emailRegex.test(req.body.email)) {
+            errorMessage = "L'adresse email n'est pas valide.";
+            req.session.errorMessage = errorMessage
+            res.render("pages/signIn.twig", {
+                errorMessage: req.session.errorMessage
+            })
+        }
+         else if (req.body.password == req.body.confirmPassword) {
+                const utilisateur = await prisma.utilisateur.create({
+                    data: {
+                        nom: req.body.nom,
+                        prenom: req.body.prenom,
+                        email: req.body.email,
+                        password: req.body.password
+                    }
+                })
+                const objet = "Bienvenue sur MyEvents – Organisez vos événements en toute simplicité !"
+
+                const message = `Bonjour ${req.body.nom} ${req.body.prenom},
 
             Bienvenue sur MyEvents ! 🎉
             
@@ -115,17 +164,17 @@ utilisateurRouter.post('/signIn', async (req, res) => {
             
             📧 auto.myevents@gmail.com | 🌐 www.myevents.com`
 
-            notificationEmail(req.body.email, message, objet)
-            res.redirect('/login')
-        }
-        else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
-    } catch (error) {
+                notificationEmail(req.body.email, message, objet)
+                res.redirect('/login')
+            }
+            else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
+        } catch (error) {
 
-        res.render('pages/signIn.twig', {
-            error: error
-        })
-    }
-})
+            res.render('pages/signIn.twig', {
+                error: error
+            })
+        }
+    })
 
 
 // affiche ma page Connexion
@@ -172,8 +221,8 @@ utilisateurRouter.post('/login', async (req, res) => {
                     res.redirect('/')
                 }
             }
-            else throw ({ password: "Mot de passe incorrect" });
-        } else throw ({ email: "Cet utilisateur n'est pas inscrit" })
+            else throw ({ password: "Utilisateur ou mot de passe incorrect" });
+        } else throw ({ email: "Utilisateur ou mot de passe incorrect" })
 
     } catch (error) {
         res.render('pages/login.twig', {
@@ -347,22 +396,70 @@ utilisateurRouter.post('/resetPassword/:token', async (req, res) => {
 
 
 utilisateurRouter.post('/contact', (req, res) => {
+    // Vérifier si un message de succès existe et le supprimer
+    if (req.session.successMessage) {
+        delete req.session.successMessage; // Supprime le message de succès de la session
+    }
+    // Vérifier si un message d'erreur existe et le supprimer
+    else if (req.session.errorMessage) {
+        delete req.session.errorMessage; // Supprime le message d'erreur de la session
+    }
+    let successMessage = ""
+    let errorMessage = ""
 
     try {
-        const { nom, prenom, email, message } = req.body
+        const { nom, prenom, email, message } = req.body;
 
-        sendContactEmail(nom, prenom, email, message)
-        successMessage = '✅ Votre message a bien été envoyé.'
-        req.session.successMessage = successMessage
-        res.redirect('/')
+        // 1. Validation du nom (doit être alphabétique, avec espaces et tirets autorisés)
+        const nameRegex = /^[a-zA-ZàâéèêîïôùüçÀÂÉÈÊÎÏÔÙÜÇ\s\-]+$/;
+        if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
+            errorMessage = "Le nom et le prénom doivent être valides (lettres uniquement, espaces et tirets autorisés)."
+            req.session.errorMessage = errorMessage
+            return res.redirect("/")
+        }
+
+        // 2. Validation de l'email (doit être sous le format d'une adresse email valide)
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailRegex.test(email)) {
+            errorMessage = "L'email n'est pas valide."
+            req.session.errorMessage = errorMessage
+            return res.redirect("/")
+        }
+
+        // 3. Protection contre les injections de code dans le message
+        // Ce regex filtre les caractères susceptibles de permettre l'injection HTML ou JS.
+        const messageRegex = /<[^>]*>/g; // Cherche toute balise HTML (injection de balises)
+        const scriptRegex = /<script[^>]*>.*<\/script>/g; // Cherche des scripts ou des balises script
+
+        // Si le message contient des balises HTML ou des scripts, on le nettoie
+        if (messageRegex.test(message) || scriptRegex.test(message)) {
+            errorMessage = "Le message contient des caractères non autorisés (HTML, script)."
+            req.session.errorMessage = errorMessage
+            return res.redirect("/")
+        }
+
+        // Si toutes les validations sont passées, on envoie l'email
+        sendContactEmail(nom, prenom, email, message);
+
+        // Message de succès à afficher dans la session (pour informer l'utilisateur)
+        successMessage = '✅ Votre message a bien été envoyé.';
+        req.session.successMessage = successMessage; // Sauvegarde du message de succès dans la session
+
+        // Redirige l'utilisateur vers la page d'accueil avec le message de succès
+        res.redirect('/');
+
     } catch (error) {
-        console.log(error)
-        errorMessage = "Une erreur est survenue, votre message n'a pas été envoyé. Veuillez réessayer plus tard."
-        req.session.errorMessage = errorMessage
-        res.redirect('/')
-    }
+        console.log(error);  // En cas d'erreur, affiche l'erreur dans la console pour déboguer
 
-})
+        // Message d'erreur à afficher dans la session en cas de problème
+        errorMessage = "Une erreur est survenue, votre message n'a pas été envoyé. Veuillez réessayer plus tard.";
+        req.session.errorMessage = errorMessage; // Sauvegarde du message d'erreur dans la session
+
+        // Redirige l'utilisateur vers la page d'accueil avec le message d'erreur
+        res.redirect('/');
+    }
+});
+
 
 
 module.exports = utilisateurRouter;

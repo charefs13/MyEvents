@@ -5,13 +5,13 @@ const PDFDocument = require("pdfkit");
 const prisma = new PrismaClient();
 const path = require('path');
 const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
 
 
 devisRouter.get('/devis/:id', authguard, async (req, res) => {
     try {
         const devisId = parseInt(req.params.id);
-
-        const devis = await prisma.devis.findUnique({
+         const devis = await prisma.devis.findUnique({
             where: { id: devisId },
             include: {
                 prestations: { include: { prestation: true } },
@@ -32,15 +32,10 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
             include: { utilisateur: true }
         })
 
-
-
-
-
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
         res.setHeader("Content-Type", "application/pdf");
         doc.pipe(res);
-
         doc.image(path.join(__dirname, '../public/assets/images/Titre-MyEvents.png'), { align: 'center', width: 100 });
         doc.moveDown(4);
 
@@ -112,7 +107,6 @@ devisRouter.get('/validate/:id', authguard, async (req, res) => {
                 isValidate: true
             }
         })
-
            // Création de la tâche
            const tache = await prisma.tache.create({
             data: {
@@ -125,6 +119,8 @@ devisRouter.get('/validate/:id', authguard, async (req, res) => {
             }
         })
         res.redirect('/dashboardPros')
+
+
         const objet = "Votre devis a été accepté ! 🎉";
 
         const message = `Bonjour,
@@ -177,7 +173,7 @@ devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.redirect('/dashboardPros')
+        res.redirect('/dashboardPros')  
     }
 })
 

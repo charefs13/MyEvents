@@ -2,8 +2,8 @@ const evenementRouter = require('express').Router()
 const authguard = require("../services/authguard")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { sendInviteEmail } = require('../services/sendResetEmail.js');
-const { notificationEmail } = require('../services/sendResetEmail.js');
+const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
+const { scriptInjectionRegex } = require('../services/regex');
 
 
 
@@ -88,7 +88,7 @@ Votre événement ${evenement.titre} a bien été ajouté sur MyEvents ! 🎊
 
 Vous pouvez à tout moment le modifier ou l’annuler depuis votre espace personnel.
 
-Bonne organisation ! 🚀
+Bonne organisation ! 🚀 
 
 L’équipe MyEvents  
 📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
@@ -116,6 +116,7 @@ L’équipe MyEvents
 
 evenementRouter.post('/updateEvent/:id', authguard, async (req, res) => {
     try {
+        
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
                 email: req.session.utilisateur.email

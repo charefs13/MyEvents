@@ -13,21 +13,23 @@
 
 {% block main %}
 
+	<div>
+		{% if errorMessage %}
+			<p class='error'>{{ errorMessage }}</p>
+		{% endif %}
+
+		{% if successMessage %}
+			<p class='message'>{{ successMessage }}</p>
+		{% endif %}
+
+	</div>
+	
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
 	<section class="mainSection">
 		<h2>Dans un secteur hautement concurrentiel, il est crucial de se démarquer et pérenniser son activité.</h2>
 
-		<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
+	
 		<div class="biggerTextContainer">
 			<div class='iconeAndText'>
 				<div><img src="/assets/images/poignee-de-main.png" alt="logo d'une poignée de main avec plusieurs personnes"></div>

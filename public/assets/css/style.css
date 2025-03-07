@@ -69,6 +69,7 @@ header {
     align-items: center;
     width: 80%;
     margin: auto;
+    margin-bottom: 80px;
 
 }
 
@@ -81,6 +82,10 @@ header a:hover {
     align-items: center;
     justify-content: start;
     gap: 1rem;
+}
+
+.iconeAndText {
+    padding: 20px;
 }
 
 .flexContainer {
@@ -102,8 +107,15 @@ header a:hover {
     padding: 10px 40px;
     background-color: white;
     border-radius: 10px;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
 
+}
+.proBtn:hover {
+    text-decoration: none;
+}
+
+.flexContainer .proBtn:hover {
+    text-decoration: none;
 }
 
 .logoMessagerie,
@@ -125,7 +137,13 @@ a {
 h1,
 h2 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
+}
+
+h2 {
+    font-size: 25px;
+    margin: 0;
+    margin-bottom: 50px;
 }
 
 .mainSection {
@@ -138,50 +156,90 @@ h3 {
     text-align: start;
     margin-bottom: 10px;
     margin-left: 45px;
-    margin-top: 100px;
+    margin-top: 80px;
 }
-
-.formEvenement {
-    width: 100%;
-    height: 150px;
-    border: 1px solid #ffd90051;
+/*Contenair formulaire de recherche de prestation*/ 
+.form-evenement, .formEvenement {
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     background-color: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+    width: 100%;
     margin-bottom: 100px;
-    margin-right: 10px;
-    margin-left: 10px;
 }
 
+/*Formulaire de recherche de prestation page main*/
+.form-evenement__form  {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 35px;
+    gap: 30px;
+}
 
-
-.formEvenement select {
+.form-evenement__select,
+.form-evenement__input {
     text-align: center;
     padding: 5px 15px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
-    margin-right: 20px;
-
+    border: 2px solid #ffd90051;
+    width: 30%;
+    margin-bottom: 10px;
 }
 
+.form-evenement__button {
+    width: 20%;
+    font-weight: 450;
+    background-color: #f5f3ef;
+    border: 2px solid #ffd90051;
+}
+
+.form-button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+/*Formulaire de recherche de prestation page UtilisateurDashboard*/
+
+.formEvenement form{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 35px;
+    gap: 30px;
+}
+.formEvenement form button {
+    padding: 5px 15px;
+    margin: 0;
+    text-align: center;
+}
+
+.formEvenement select,
 .formEvenement input {
     text-align: center;
     padding: 5px 15px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
-    margin-right: 20px;
+    border: 2px solid #ffd90051;
+    width: 30%;
 }
+
+
+
+
+
 
 button {
     padding: 5px 10px;
     border-radius: 8px;
+    font-weight: 450;
     background-color: #f5f3ef;
-    border: 1px solid #ffd90051;
-    margin-right: 10px;
+    border: 2px solid #ffd90051;
 }
 
 button:hover {
@@ -221,14 +279,13 @@ button:hover {
 
 .textContainer {
     width: 100%;
-    height: 500px;
     background-color: #f5f3ef;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     margin-bottom: 150px;
 
@@ -313,7 +370,7 @@ textarea {
 
 .btn-submit {
     background-color: #f5f3ef;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     color: black;
     padding: 10px 15px;
     border: none;
@@ -356,7 +413,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     margin: auto;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     margin-bottom: 25px;
     padding: 20px 0;
@@ -398,9 +455,9 @@ button:hover {
 /* Page Sign In  */
 
 .formSignIn {
-    font-size: 20px;
+    font-size: 18px;
     max-width: 65%;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     background-color: white;
     display: flex;
@@ -411,8 +468,13 @@ button:hover {
     padding: 20px;
 }
 
+.formSignIn .link {
+    font-size: 18px;
+}
+
 .formSignIn form {
     width: 75%;
+    padding: 20px 0;
 }
 
 .form-group {
@@ -434,7 +496,8 @@ button:hover {
     padding: 10px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
+    margin-bottom: 15px;
 }
 
 .formSignIn textarea {
@@ -443,7 +506,7 @@ button:hover {
     padding: 10px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
 }
 
 .formSignIn select {
@@ -452,7 +515,7 @@ button:hover {
     padding: 10px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
 }
 
 .formSignIn button {
@@ -473,8 +536,8 @@ button:hover {
 .error {
     color: red;
     text-align: center;
-    font-size: 15px;
-    margin-bottom: 20px;
+    margin: auto;
+    margin-bottom: 25px;
     font-weight: bold;
 }
 
@@ -520,7 +583,7 @@ button:hover {
     min-height: 300px;
     background-color: #f5f3ef;
     margin: auto;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     margin-bottom: 50px;
     padding: 20px 0;
@@ -528,7 +591,11 @@ button:hover {
 
 
 }
-
+.evenementContainer h3 {
+    text-align: center;
+    margin: 25px 0
+    ;
+}
 
 
 .evenementContainer h4 {
@@ -552,9 +619,9 @@ button:hover {
     background-color: white;
     width: 30%;
     min-height: 300px;
-   width: 30%;
+    width: 30%;
     padding: 10px 0;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 10px;
 }
 
@@ -579,7 +646,7 @@ button:hover {
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1em;
+    gap: 2em;
     margin-bottom: 100px;
 }
 
@@ -588,7 +655,7 @@ button:hover {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 90%;
+    top: 85%;
     display: flex;
     justify-content: center;
     gap: 1rem;
@@ -599,20 +666,31 @@ button:hover {
     border-radius: 20px;
     background-color: white;
     color: red;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
 }
 
-.btnContainer .delete:hover {
+.btnContainer .update {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 2px solid #ffd90051;
+    margin: 0;
+    text-align: center;
+    background-color: white;
+}
+
+
+
+
+.btnContainer .delete:hover, .btnContainer .update:hover {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
 }
 
 .btn {
-    margin-top: 50px;
     padding: 5px 10px;
     border-radius: 25px;
-    background-color: #e5dccf;
-    border: 1px solid #e5dccf;
+background-color: #e5dccf;
+    border: 2px solid #e5dccf;
     text-align: center;
 }
 
@@ -622,6 +700,8 @@ button:hover {
 .btnDecline {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     transition: 0.3s ease;
+    border: 3px solid #e5dccf;
+
 }
 
 .hide {
@@ -656,7 +736,7 @@ button:hover {
     width: 35px;
 }
 
-.add:hover,
+.add:hover,    
 .close:hover {
     cursor: pointer;
 }
@@ -670,7 +750,9 @@ button:hover {
     margin: auto;
 }
 
-
+.update {
+    margin: 0;
+}
 
 
 /* ---------------------------------------- PAGE INVITE ----------------------------------------------------------------------- */
@@ -681,7 +763,7 @@ button:hover {
 .addInviteForm {
     width: 100%;
     height: 200px;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     background-color: white;
     display: flex;
@@ -710,13 +792,14 @@ button:hover {
     padding: 5px 15px;
     border-radius: 10px;
     background-color: #f5f3ef7d;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
 }
 
-.addInviteForm select{
+.addInviteForm select {
     background-color: #f5f3ef7d;
 
 }
+
 .flex {
     display: flex;
     flex-direction: row;
@@ -743,7 +826,7 @@ button:hover {
     text-align: center;
     border-radius: 10px;
     background-color: white;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     margin: auto;
 
 }
@@ -776,7 +859,7 @@ button:hover {
     text-align: center;
     border-radius: 10px;
     background-color: white;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     margin: auto;
 }
 
@@ -807,7 +890,7 @@ button:hover {
     width: 100%;
     background-color: white;
     margin: auto;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 50px;
     margin-bottom: 50px;
     padding: 20px 0;
@@ -816,6 +899,8 @@ button:hover {
 
 .evenementInvite h4 {
     font-weight: bold;
+    font-size: 15px;
+    margin: 0 5px ;
     text-align: center;
     margin-bottom: 25px;
 
@@ -832,6 +917,15 @@ button:hover {
     margin: 5px 20px;
     /* Espacement intérieur */
 }
+
+/*CROIX QUI ENLEVE l'INVITÉ*/
+.choices[data-type*=select-multiple] .choices__button,
+.choices[data-type*=text] .choices__button {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==
+);
+background-color: white;
+    border-radius: 50px;
+    }
 
 /* Formulaire d'envoi d'email */
 .sendEmailForm,
@@ -893,7 +987,7 @@ button:hover {
     background-color: white;
     padding: 5px 15px;
     border-radius: 10px;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     margin-right: 1em;
 
 }
@@ -909,14 +1003,15 @@ button:hover {
 .updateInvite button {
     background-color: white;
     border: 2px solid rgb(8, 157, 8)
-
 }
 
-.updateInvite button:hover{
+
+.updateInvite button:hover {
     box-shadow: rgba(0, 0, 0, 0.243) 0px 8px 24px;
     transition: 0.3s ease;
 
 }
+
 .message {
     text-align: center;
     margin: auto;
@@ -927,7 +1022,7 @@ button:hover {
 
 }
 
-.notBold{
+.notBold {
     font-weight: 100;
 }
 
@@ -1002,7 +1097,7 @@ button:hover {
     min-height: 350px;
     background-color: white;
     margin: auto;
-    border: 1px solid #ffd90051;
+    border: 2px solid #ffd90051;
     border-radius: 25px;
     padding: 25px 0;
     text-align: start;
@@ -1038,7 +1133,7 @@ button:hover {
 }
 
 .AllPrestationsContainer .btnContainer {
-    top: 85%
+    top: 80%
 }
 
 .AllPrestationsContainer .close {
@@ -1068,7 +1163,7 @@ button:hover {
     max-height: 500px;
     width: 80%;
     max-width: 100%;
-    border: 1px solid #e5dccf;
+    border: 2px solid #e5dccf;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 15px;
     overflow: hidden;
@@ -1091,9 +1186,9 @@ button:hover {
     margin-bottom: 20px;
 }
 
-    .prestationDevis .prestationContainer {
-        min-height: 250px;
-    }
+.prestationDevis .prestationContainer {
+    min-height: 250px;
+}
 
 
 
@@ -1115,7 +1210,7 @@ button:hover {
     padding: 5px 8px;
     border-radius: 25px;
     background-color: white;
-    border: 1px solid #e5dccf;
+    border: 2px solid #e5dccf;
     text-align: center;
     color: rgb(8, 157, 8);
     font-weight: bold;
@@ -1126,7 +1221,7 @@ button:hover {
     padding: 5px 8px;
     border-radius: 25px;
     background-color: white;
-    border: 1px solid #e5dccf;
+    border: 2px solid #e5dccf;
     text-align: center;
     color: rgb(249, 35, 35);
 }
@@ -1188,5 +1283,127 @@ button:hover {
 
 #calendar {
     margin-bottom: 100px;
+    border: 5px solid #e5dccf;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;   
+
 }
 
+.fc-timegrid-event .fc-event-time,.fc-v-event .fc-event-title {
+    color: black;
+    font-weight: 450;
+}
+
+
+
+
+
+
+
+
+
+
+/* ------------------------------------------------------------    MEDIA QUERY   ------------------------------------------------------------ */
+
+
+
+/* ------------------------------------------------------------    RESPONSIVE PAGE MAIN   ------------------------------------------------------------ */
+
+
+@media (max-width: 800px) {
+
+
+    h2 {
+        font-size: 25px;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    .formEvenement {
+        min-height: 250px;
+        width: 100%;
+        margin: 0;
+        margin-bottom: 100px;
+    }
+
+    .formEvenement form {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 1em;
+
+        justify-content: center;
+        align-items: center;
+    }
+
+    .formEvenement select {
+        text-align: center;
+        padding: 5px 15px;
+        border-radius: 10px;
+        background-color: #f5f3ef7d;
+        border: 2px solid #ffd90051;
+        margin: 0 0 0 0;
+        width: 90%;
+        margin-bottom: 25px;
+
+    }
+
+    .formEvenement input {
+        margin: 0 0 25px 0;
+        width: 90%;
+    }
+
+    .formEvenement button {
+        width: 40%;
+        margin: 0 0 0 0;
+    }
+
+}
+
+@media (max-width: 780px) {
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .iconeContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 55px;
+        flex-wrap: wrap;
+        margin-bottom: 100px;
+    }
+
+
+}
+
+
+/* ------------------------------------------------------------    RESPONSIVE PAGE QUI SOMMES NOUS / Pour les Pros   ------------------------------------------------------------ */
+
+
+@media (max-width: 900px) {
+
+    .iconeAndText {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        margin: 30px 0;
+        padding: 20px;
+    }
+
+    .iconeAndText img {
+
+        margin: 0 0 15px 0;
+    }
+
+}
+
+/* ------------------------------------------------------------       ------------------------------------------------------------ */
+
+@media (max-width: 800px) {}

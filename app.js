@@ -21,10 +21,10 @@ app.use(express.json());
 // Gestion de session
 app.use(session({
     secret: 'Sjkydbyjgg@zme;,geoo23323@:!',
-    resave: true,
-    saveUninitialized: true,
-}));      
-   
+    resave: true, // Resauvegarde la session en BDD même si elle n'a pas été modifiée
+    saveUninitialized: true, // permet de stocker des infos en session même si la session n'est pas initialisée (pour tracking, analytics etc)
+}));       
+      
 // Servir les fichiers statiques et routes
 app.use(express.static('./public'));
 app.use(utilisateurRouter);
@@ -45,4 +45,4 @@ app.listen(3000, () => {
         console.log("La connection au port 3000 a échoué");
     }
 });                        
-                 
+                         
