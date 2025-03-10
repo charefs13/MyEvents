@@ -83,21 +83,47 @@ let entrepriseId = {{ entreprise.id }};
 		<div class='messageContainer'></div>
 	</section>
 
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
 const checkboxes = document.querySelectorAll(".prestation-checkbox");
 const totalSpan = document.getElementById("total");
 let total = 0;
 
-// Mise à jour du prix total en fonction des prestations cochées
+// Fonction pour mettre à jour le total
+function updateTotal() {
+total = Array.from(checkboxes).filter(checkbox => checkbox.checked).reduce((sum, checkbox) => sum + parseFloat(checkbox.getAttribute("data-prix")), 0);
+totalSpan.textContent = total.toFixed(2);
+}
+
+// Fonction pour mettre à jour l'apparence du conteneur
+function updateContainerStyle(checkbox) {
+const container = checkbox.closest(".prestationContainer");
+if (checkbox.checked) {
+container.classList.add("selected");
+} else {
+container.classList.remove("selected");
+}
+}
+
+// Ajout de l'écouteur d'événement sur chaque prestationContainer
+document.querySelectorAll(".prestationContainer").forEach(container => {
+container.addEventListener("click", function (event) { // Si on clique sur l'input directement, ne pas annuler son fonctionnement par défaut
+if (event.target.tagName === "INPUT") 
+return;
+
+
+const checkbox = this.querySelector(".prestation-checkbox");
+checkbox.checked = ! checkbox.checked; // Bascule l'état de la case
+updateContainerStyle(checkbox); // Met à jour le style du conteneur
+updateTotal(); // Met à jour le prix total
+});
+});
+
+// Ajout d'un écouteur sur les checkboxes pour gérer les clics directs
 checkboxes.forEach(checkbox => {
 checkbox.addEventListener("change", function () {
-const prix = parseFloat(this.getAttribute("data-prix"));
-if (this.checked) {
-total += prix;
-} else {
-total -= prix;
-} totalSpan.textContent = total.toFixed(2);
+updateContainerStyle(this);
+updateTotal();
 });
 });
 
@@ -105,15 +131,14 @@ total -= prix;
 document.getElementById("genererDevis").addEventListener("click", function () {
 const selectedEvenement = document.getElementById("evenement").value;
 const selectedPrestations = Array.from(document.querySelectorAll(".prestation-checkbox:checked")).map(cb => cb.id.split("-")[1]);
-const messageContainer = document.querySelector('.messageContainer')
+const messageContainer = document.querySelector('.messageContainer');
 
 // Vérification si un événement et des prestations sont sélectionnés
-if (! selectedEvenement) { // alert("Veuillez sélectionner un événement.");
+if (! selectedEvenement) {
 let errorMessage = document.createElement("p");
-errorMessage.innerHTML = "Veuillez sélectionner un événement. Si vous n'avez pas encore d'événement veuillez d'abord en ajouter un depuis l'onglet Événement du menu";
+errorMessage.innerHTML = "Veuillez sélectionner un événement. Si vous n'avez pas encore d'événement, veuillez d'abord en ajouter un depuis l'onglet Événement du menu.";
 errorMessage.classList.add('error');
 messageContainer.appendChild(errorMessage);
-
 return;
 }
 
@@ -128,5 +153,7 @@ selectedPrestations.join(",")
 }&entreprise=${entrepriseId}`;
 });
 });
-	</script>
+		</script>
+
+
 {% endblock %}

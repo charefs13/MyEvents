@@ -1,88 +1,141 @@
 {% if noHeader %}
-	<!-- Si noHeader est vrai, on ne montre pas l'en-tête -->
-	<header></header>
+    <!-- Si noHeader est vrai, on ne montre pas l'en-tête -->
+    <header></header>
 {% elseif utilisateur is defined %}
+    {% if utilisateur.isEntreprise %}
+        <!-- Header classique pour les entreprises -->
+        <header class="header-entreprise">
+            <div class="logoContainer">
+                <div>
+                    <a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+                </div>
+                <div>
+                    <a href="/profilPros">Mon Profil</a>
+                </div>
+                <div>
+                    <a href="/planning">Planning</a>
+                </div>
+                <div>
+                    <a href="/prestation">Prestations</a>
+                </div>
+            </div>
+            <div class='flexContainer'>
+                <div>
+                    <a href="/logout"><img class='logout' src="/assets/images/logout.png" title="Se Déconnecter" alt="icone de déconnexion"></a>
+                </div>
+            </div>
+        </header>
 
-	{% if utilisateur.isEntreprise %}
+        <!-- Header Burger pour les entreprises -->
+        <header class="header-entreprise-burger">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavEntreprise" aria-controls="navbarNavEntreprise" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavEntreprise">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="/profilPros">Mon Profil</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/prestation">Prestations</a></li>
+                        </ul>
+                        <a href="/logout" class="ml-auto">Déconnexion</a>
+</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    {% else %}
+        <!-- Header classique pour les particuliers -->
+        <header class="header-particulier">
+            <div class="logoContainer">
+                <div>
+                    <a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+                </div>
+                <div>
+                    <a href="/profil">Mon Profil</a>
+                </div>
+                <div>
+                    <a href="/evenement">Événement</a>
+                </div>
+                <div>
+                    <a href="/planning">Planning</a>
+                </div>
+                <div>
+                    <a href="/invites">Invités</a>
+                </div>
+            </div>
+            <div class='flexContainer'>
+                <div>
+                    <a href="/logout"><img class='logout' src="/assets/images/logout.png" title="Se Déconnecter" alt="icone de déconnexion"></a>
+                </div>
+            </div>
+        </header>
 
-		<!-- Si un l'utilisateur est une entreprise j'affiche ce header -->
-		<header>
-			<div class="logoContainer">
-				<div>
-					<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
-				</div>
-				<div>
-					<a href="/profilPros">Mon Profil</a>
-				</div>
-
-				<div>
-					<a href="/planning">Planning</a>
-				</div>
-				<div>
-					<a href="/prestation">Prestations</a>
-				</div>
-			</div>
-
-			<div class='flexContainer'>
-
-				<div>
-					<a href="/logout"><img class='logout' src="/assets/images/logout.png" title="Se Déconnecter" alt="icone de déconnection"></a>
-				</div>
-			</div>
-		</header>
-
-	{% else %}
-
-		<header>
-			<div class="logoContainer">
-				<div>
-					<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
-				</div>
-				<div>
-					<a href="/profil">Mon Profil</a>
-				</div>
-				<div>
-					<a href="/evenement">Événement</a>
-				</div>
-				<div>
-					<a href="/planning">Planning</a>
-				</div>
-				<div>
-					<a href="/invites">Invités</a>
-				</div>
-			</div>
-
-			<div class='flexContainer'>
-
-				<div>
-					<a href="/logout"><img class='logout' src="/assets/images/logout.png" title="Se Déconnecter" alt="icone de déconnection"></a>
-				</div>
-			</div>
-		</header>
-
-	{% endif %}
-
+        <!-- Header Burger pour les particuliers -->
+        <header class="header-particulier-burger">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavParticulier" aria-controls="navbarNavParticulier" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavParticulier">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="/profil">Mon Profil</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/evenement">Événement</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/invites">Invités</a></li>
+                        </ul>
+                        <a href="/logout" class="ml-auto">Déconnexion</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    {% endif %}
 {% else %}
-	<!-- Si l'utilisateur ou l'entreprise n'est pas défini, on affiche l'en-tête générique -->
-	<header>
-		<div class="logoContainer">
-			<div>
-				<a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
-			</div>
-			<div>
-				<a class='proBtn' href="/pros">Pour les professionnels</a>
-			</div>
-		</div>
-		<div class='flexContainer'>
-			<div>
-				<a href="/quiSommesNous">Qui sommes nous</a>
-			</div>
-			<div>
-				<a class='proBtn' href="/login">Connexion</a>
-			</div>
-			<div>
-				<a class='proBtn' href="/signIn">Inscription</a>
-			</div>
-		</div>
-	</header>
+    <!-- Header classique pour les visiteurs -->
+    <header class="header-visiteur">
+        <div class="logoContainer">
+            <div>
+                <a href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+            </div>
+            <div>
+                <a class='proBtn' href="/pros">Pour les professionnels</a>
+            </div>
+        </div>
+        <div class='flexContainer'>
+            <div>
+                <a href="/quiSommesNous">Qui sommes-nous</a>
+            </div>
+            <div>
+                <a class='proBtn' href="/login">Connexion</a>
+            </div>
+            <div>
+                <a class='proBtn' href="/signIn">Inscription</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Header Burger pour les visiteurs -->
+    <header class="header-visiteur-burger">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" href="/"><img class="logo" src="/assets/images/Logo-MyEvents.png" alt="logo du site MyEvents MyE"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavVisiteur" aria-controls="navbarNavVisiteur" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavVisiteur">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/quiSommesNous">Qui sommes-nous</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Connexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/signIn">Inscription</a></li>
+						<li class="nav-item"><a class='nav-link' href="/pros">Pour les professionnels</a></li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
 {% endif %}

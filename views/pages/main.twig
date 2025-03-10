@@ -40,6 +40,7 @@
 		<div class="form-evenement">
 			<form action="/login" method="get" class="form-evenement__form">
 				<select id="typeEvenement" name="typeEvenement" class="form-evenement__select">
+					<option value="" disabled selected>Type d'Événement</option>
 					<option value="babyShower">Baby Shower</option>
 					<option value="genderReveal">Gender Reveal</option>
 					<option value="mariage">Mariage</option>
@@ -50,7 +51,9 @@
 				</select>
 
 				<select id="prestation" name="prestation" class="form-evenement__select">
+					<option value="" disabled selected>Prestataire</option>
 					<option value="photographeVideaste">Photographe/Vidéaste</option>
+
 					<option value="traiteur">Traiteur</option>
 					<option value="dj">DJ</option>
 					<option value="decorateur">Décorateur</option>
@@ -75,19 +78,19 @@
 		<div class="iconeContainer">
 			<div>
 				<img src="/assets/images/search.png" alt="icone de loupe pour imager la recherche de prestataire">
-				<p>TROUVER LE BON PRESTATAIRE</p>
+				<p><strong>TROUVER LE BON PRESTATAIRE</strong></p>
 			</div>
 			<div>
 				<img src="/assets/images/facture.png" alt="icone de plusieurs documents avec le symbole euro pour imager la comparaison des devis">
-				<p>COMPARER LES DEVIS</p>
+				<p><strong>COMPARER LES DEVIS</strong></p>
 			</div>
 			<div>
 				<img src="/assets/images/liste.png" alt="icone de document avec une liste">
-				<p>GÉRER VOS INVITÉ</p>
+				<p><strong>GÉRER VOS INVITÉ</strong></p>
 			</div>
 			<div>
 				<img src="/assets/images/agenda.png" alt="icone de calendrier">
-				<p>GÉRER VOTRE AGENDA</p>
+				<p><strong>GÉRER VOTRE AGENDA</strong></p>
 			</div>
 		</div>
 
