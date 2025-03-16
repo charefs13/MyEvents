@@ -50,11 +50,7 @@
 						<option value="graphiste">Graphiste/Impression de supports</option>
 						<option value="autre">Autre</option>
 					</select>
-
 					<input type="text" id="ville" name="ville" placeholder="Ville" required>
-
-
-					
 					<button type="submit">Rechercher</button>
 				</form>
 			</div>
@@ -66,7 +62,7 @@
 				<h3>Vos événements en cours</h3>
 
 				{% for evenement in evenements %}
-					<div class="evenementContainer">
+					<div class="evenementContainer evenementContainerParticulier">
 						<h4>{{ evenement.titre }}</h4>
 
 						<p>
@@ -86,7 +82,7 @@
 								<span class='bold'>Lieu :</span>
 								{{ evenement.lieu }}</p>
 						{% else %}
-							<a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a>
+							<p><a class="link" href="/recherchePrestataire?type=locationSalle&ville={{ utilisateur.ville }}">Rechercher un lieu pour fêter votre événement</a></p>
 						{% endif %}
 
 						{# Vérifier la présence de devis pour l'événement #}
@@ -132,9 +128,9 @@
 								{% endfor %}
 							</div>
 						{% else %}
-							<p>Aucun devis pour cet événement.
+							<p class='bold'>Aucun devis pour cet événement.
 								<br>
-								<a href="/">Générer des devis pour comparer les prestations</a>.
+								<a class='lien' href="/">Générer des devis pour comparer les prestations</a>.
 							</p>
 						{% endif %}
 					</div>

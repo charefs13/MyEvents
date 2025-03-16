@@ -124,7 +124,7 @@ evenementRouter.post('/updateEvent/:id', authguard, async (req, res) => {
             include: { evenements: true }
 
         })
-        const { typeEvenement, title, description, startDate, endDate, startTime, endTime } = req.body
+        const { typeEvenement, title, description, lieu, startDate, endDate, startTime, endTime } = req.body
 
         const evenement = await prisma.evenement.findFirst({
             where: {
@@ -165,6 +165,7 @@ evenementRouter.post('/updateEvent/:id', authguard, async (req, res) => {
                 type: typeEvenement,
                 titre: title,
                 description: description,
+                lieu: lieu,
                 dateDebut: startDateTime,
                 dateFin: endDateTime,
                 utilisateurId: req.session.utilisateur.id

@@ -6,7 +6,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 {% endblock %}
 
-{% block tile %}MyEvents - Dashboard{% endblock %}
+{% block tile %}MyEvents - Dashboard
+{% endblock %}
 
 {% block main %}
 	<div>
@@ -19,79 +20,104 @@
 		{% endif %}
 
 	</div>
-	
+
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	<h2>Bienvenue {{ entreprise.raisonSociale }}</h2>
+	<h2>Bienvenue
+		{{ entreprise.raisonSociale }}</h2>
 
-<section class='mainSection'>
+	<section class='mainSection'>
 
 		{% if devisEntreprise | length > 0 %}
-			<h3 style='text-align: center; margin: 50px 0;'>Vos Devis</h3>
 			<div class='evenementContainer'>
-			<div class="allDevisContainer" style='margin-top: 50px;'>
-				{% for devis in devisEntreprise %}
-					<div class="devisContainer">
-						<p>
-							<span class='bold'>Devis N° :</span> {{ devis.id }}
-						</p>
-						<p>
-							<span class='bold'>Client :</span>
-							{% if devis.genre == "homme" or devis.genre == "Homme" %}
-								Mr {{ devis.clientNom }} {{ devis.clientPrenom }}
-							{% elseif devis.genre == "femme" or devis.genre == "Femme" %}
-								Mme/Mlle {{ devis.clientNom }} {{ devis.clientPrenom }}
-							{% else %}
-								{{ devis.clientNom }} {{ devis.clientPrenom }}
-							{% endif %}
-						</p>
+				<h3 style='text-align: center; margin: auto;'>Vos Devis</h3>
 
-						<p>
-							<span class='bold'>Email :</span> {{ devis.clientMail }}
-						</p>
-
-						<p>
-							<span class='bold'>Type d'Événement :</span> {{ devis.typeEvenement }}
-						</p>
-
-						<p>
-							Du <strong>{{ devis.dateDebut|date("d/m/Y H:i") }}h</strong>
-							au <strong>{{ devis.dateFin|date("d/m/Y H:i") }}h</strong>
-							<br>
-							<span style='font-size: 13px;'>⚠️ Pensez à vérifier vos disponibilités avant de valider le devis</span>
-						</p>
-
-						<p>
-							<span class='bold'>Total :</span> {{ devis.total }}€
-						</p>
-
-						<p>
-							<a class='dowloadDevis' href="/devis/{{devis.id}}">Télécharger le devis</a>
-						</p>
-
-						{% if devis.isDecline %}
-							<p>Devis Refusé.
-								<br>
-								Motif : {{ devis.declineMsg }}
-								<br>
-								En attente de suppression par le client
+				<div class="allDevisContainer" style='margin-top: 50px;'>
+					{% for devis in devisEntreprise %}
+						<div class="devisContainer">
+							<p>
+								<span class='bold'>Devis N° :</span>
+								{{ devis.id }}
 							</p>
-						{% elseif devis.isValidate == false %}
-							<div class='flex' style='justify-content: center;'>
-								<a href="/validate/{{ devis.id }}" class='btnValidate'>Valider le devis</a>
-								<a class='isDecline' href="/confirmDeclineDevis/{{ devis.id }}" class='btnDecline'>Refuser le devis</a>
-							</div> {# ✅ Fermeture correcte du div ici #}
-						{% elseif devis.payed == false %}
-							<p class="notPayed">En attente de paiement ⏳</p>
-						{% else %}
-							<p class='payed'>Devis Payé</p>
-						{% endif %}
-					</div>
-				{% endfor %}
-			</div>
+							<p>
+								<span class='bold'>Client :</span>
+								{% if devis.genre == "homme" or devis.genre == "Homme" %}
+									Mr
+									{{ devis.clientNom }}
+									{{ devis.clientPrenom }}
+								{% elseif devis.genre == "femme" or devis.genre == "Femme" %}
+									Mme/Mlle
+									{{ devis.clientNom }}
+									{{ devis.clientPrenom }}
+								{% else %}
+									{{ devis.clientNom }}
+									{{ devis.clientPrenom }}
+								{% endif %}
+							</p>
+
+							<p>
+								<span class='bold'>Email :</span>
+								{{ devis.clientMail }}
+							</p>
+
+							<p>
+								<span class='bold'>Type d'Événement :</span>
+								{{ devis.typeEvenement }}
+							</p>
+
+							<p>
+								Du
+								<strong>{{ devis.dateDebut|date("d/m/Y H:i") }}h</strong>
+								au
+								<strong>{{ devis.dateFin|date("d/m/Y H:i") }}h</strong>
+								<br>
+								<span style='font-size: 13px;'>⚠️ Pensez à vérifier vos disponibilités avant de valider le devis</span>
+							</p>
+
+							<p>
+								<span class='bold'>Total :</span>
+								{{ devis.total }}€
+							</p>
+
+							<p>
+								<a class='dowloadDevis' href="/devis/{{devis.id}}">Télécharger le devis</a>
+							</p>
+
+							{% if devis.isDecline %}
+								<p>Devis Refusé.
+									<br>
+									Motif :
+									{{ devis.declineMsg }}
+									<br>
+									En attente de suppression par le client
+								</p>
+							{% elseif devis.isValidate == false %}
+								<div class='flex' style='justify-content: center;'>
+									<a href="/validate/{{ devis.id }}" class='btnValidate'>Valider le devis</a>
+									<a class='isDecline' href="/confirmDeclineDevis/{{ devis.id }}" class='btnDecline'>Refuser le devis</a>
+								</div>
+								{# ✅ Fermeture correcte du div ici #}
+							{% elseif devis.payed == false %}
+								<p class="validate">Devis validé
+								</p>
+								<p class="notPayed">En attente de paiement ⏳</p>
+							{% else %}
+								<p class='payed'>Devis Payé</p>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
 			</div>
 		{% else %}
 			<h3>Patience, vous aurez bientôt des devis ⏳</h3>
+
+			{% if entreprise.prestations|length <= 0 %}
+
+				<p>
+					<a class='lien' href="/prestation">Commencer par ajouter des prestations</a>
+				</p>
+			{% endif %}
+
 		{% endif %}
 	</section>
 {% endblock %}

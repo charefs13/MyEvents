@@ -17,8 +17,7 @@ prestationRouter.get('/prestation', authguard, async (req, res) => {
         },
         include: { prestations: true }
     })
-    console.log(req.session.utilisateur)
-    console.log(req.session.entreprise)
+ 
 
     res.render('pages/prestation.twig', {
        utilisateur: req.session.utilisateur,

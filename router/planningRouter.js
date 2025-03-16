@@ -59,37 +59,55 @@ planningRouter.get('/api/tasks', authguard, async (req, res) => {
             description: task.description
         }));
         res.json(formattedTasks);
-        console.log(taches)
-        console.log(formattedTasks)
+      
     } catch (error) {
         console.error("Erreur lors de la récupération des tâches :", error);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-  
 
-// Route pour ajouter une tâche (rendez-vous) dans le calendrier
-planningRouter.post('/planning/createTask', async (req, res) => {
-    const { titre, description, debut, fin } = req.body;
-
+planningRouter.post('/tasks/delete/:id', authguard, async (req, res) => {
     try {
-        // Enregistrer la tâche dans la base de données
-        const newTask = await prisma.tache.create({
-            data: {
-                titre: titre,
-                description: description,
-                debut: debut,
-                fin: fin,
-                utilisateurId: req.session.utilisateur.id
-            },
+        // Supprimer la tâche dans la base de données
+        const deleteTask = await prisma.tache.delete({
+            where: {
+                id: parseInt(req.params.id)
+            }
         });
 
-        // Renvoie l'événement ajouté en réponse
-        res.json(newTask);
+        // Réponse JSON indiquant que la tâche a été supprimée
+        res.json({ message: 'Tâche supprimée avec succès', taskId: deleteTask.id });
     } catch (error) {
-        console.error('Erreur lors de l\'ajout de la tâche:', error);
-        res.status(500).send('Erreur serveur');
+        console.log(error);
+        // Réponse d'erreur en cas de problème
+        res.status(500).json({ error: 'Erreur lors de la suppression de la tâche' });
     }
 });
+ 
+  
+
+// // Route pour ajouter une tâche (rendez-vous) dans le calendrier
+// planningRouter.post('/planning/createTask', async (req, res) => {
+//     const { titre, description, debut, fin } = req.body;
+
+//     try {
+//         // Enregistrer la tâche dans la base de données
+//         const newTask = await prisma.tache.create({
+//             data: {
+//                 titre: titre,
+//                 description: description,
+//                 debut: debut,
+//                 fin: fin,
+//                 utilisateurId: req.session.utilisateur.id
+//             },
+//         });
+
+//         // Renvoie l'événement ajouté en réponse
+//         res.json(newTask);
+//     } catch (error) {
+//         console.error('Erreur lors de l\'ajout de la tâche:', error);
+//         res.status(500).send('Erreur serveur');
+//     }
+// });
 
 module.exports = planningRouter;

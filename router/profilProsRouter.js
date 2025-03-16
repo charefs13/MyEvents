@@ -54,40 +54,5 @@ profilProsRouter.get('/confirmDeleteEntreprise', authguard, (req, res) => {
     });
 });
 
-// Suppression de l'etreprise et de l'utilisateur rattaché
-profilProsRouter.post('/deleteEntreprise/:userId', authguard, async (req, res) => {
-    try {
-        const utilisateur = await prisma.utilisateur.findFirst({
-            where: {
-                id: parseInt(req.params.userId)
-            }
-        })
-
-        if (utilisateur.isEntreprise) {
-            await prisma.entreprise.delete({
-                where: {
-                    utilisateurId: parseInt(req.params.userId)
-                }
-            });
-        }
-        // Supprimer l'utilisateur
-        await prisma.utilisateur.delete({
-            where: {
-                id: parseInt(req.params.userId)
-            }
-        });
-
-        req.session.destroy()
-        res.redirect("/")
-    } catch (error) {
-        console.log(error)
-        res.render('pages/deleteEntreprise.twig', {
-            utilisateur: req.session.utilisateur
-        }
-        )
-    }
-})
-
-
 
 module.exports = profilProsRouter;

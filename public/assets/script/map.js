@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("Aucune entreprise trouvée.");
         return;
     } 
-
     // Utilisation de la ville de la première entreprise pour centrer la carte
     let centreVille = entreprises[0].ville || 'Paris'; // Si la ville est vide ou non définie, centrer sur Paris
     
@@ -15,7 +14,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Récupérer les coordonnées de la ville (si disponibles)
     let lat = 46.603354; // Latitude par défaut (centre de la France)
     let lon = 1.888334; // Longitude par défaut (centre de la France)
-
     if (data.length > 0) {
         lat = parseFloat(data[0].lat);
         lon = parseFloat(data[0].lon);

@@ -89,7 +89,7 @@ invitesRouter.get('/displayInvites', authguard, async (req, res) => {
             evenements: utilisateur.evenements, // Liste complète pour permettre de sélectionner un autre événement
         });
 
-    } catch (error) {
+    } catch (error) { 
         console.log(error);
         res.redirect('/invites')
     }
@@ -175,9 +175,6 @@ invitesRouter.post('/sendEmail/evenement/:evenementId', authguard, async (req, r
 invitesRouter.get('/selectInvite', authguard, async (req, res) => {
     try {
         const selectedInviteId = parseInt(req.query.selectedInvite);  // Utilisation de req.query pour récupérer les paramètres dans l'URL
-        console.log(selectedInviteId);
-
-
         const selectedInvite = await prisma.invite.findFirst({
             where: {
                 id: selectedInviteId,

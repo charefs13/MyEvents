@@ -21,7 +21,6 @@ recherchePrestataireRouter.get('/recherchePrestataire', authguard, async (req, r
                 prestations: true // Inclure les prestations de chaque entreprise
             }
         });
-
         // Récupération des informations de l'utilisateur connecté
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
@@ -97,13 +96,15 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
 recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
     try {
         const utilisateurId = req.session.utilisateur.id;
-         const prestationIds = req.query.prestations.split(",").map(id => parseInt(id));
+        const prestationIds = req.query.prestations.split(",").map(id => parseInt(id));
+
         // Récupération des données
         const event = await prisma.evenement.findUnique({ where: { id: parseInt(req.query.evenement) } });
         const entreprise = await prisma.entreprise.findUnique({ where: { id: parseInt(req.query.entreprise) } });
-        const entrepriseUser = await prisma.entreprise.findFirst({ where: { id: parseInt(req.query.entreprise) }, include: { utilisateur: true } })
+        const entrepriseUser = await prisma.entreprise.findFirst({ where: { id: parseInt(req.query.entreprise) }, include: { utilisateur: true } });
         const utilisateur = await prisma.utilisateur.findUnique({ where: { id: utilisateurId } });
         const selectedPrestations = await prisma.prestation.findMany({ where: { id: { in: prestationIds } } });
+
         // Calcul du total en additionnant tous les prix des prestations sélectionnées
         const total = selectedPrestations.reduce((acc, prestation) => acc + prestation.prix, 0);
 
@@ -133,7 +134,7 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
                 isDecline: false,
                 payed: false
             },
-            include: { prestations: true }  
+            include: { prestations: true }
         });
 
         // Génération du PDF
@@ -141,94 +142,106 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
         res.setHeader("Content-Type", "application/pdf");
         doc.pipe(res);
+
         // En-tête du devis avec l'image
         doc.image(__dirname + '/../public/assets/images/Titre-MyEvents.png', { align: 'center', width: 100 });
-        doc.moveDown();
-        doc.moveDown();
-        doc.moveDown();
-        doc.moveDown();
+        doc.moveDown(4);
+
         // Coordonnées de l'entreprise
         doc.fontSize(12).text("Coordonnées de l'entreprise :", { underline: true });
         doc.fontSize(10).text(`Raison Sociale : ${entreprise.raisonSociale}`);
-        doc.text(`Siret : ${entreprise.siret},`);
-        doc.text(`Adresse : ${entreprise.adresse},`);
+        doc.text(`Siret : ${entreprise.siret}`);
+        doc.text(`Adresse : ${entreprise.adresse}`);
         doc.text(`${entreprise.cp} ${entreprise.ville}`);
         doc.moveDown();
+
         // Coordonnées du client
         doc.fontSize(12).text("Coordonnées du client :", { underline: true, align: "right" });
         doc.fontSize(10).text(`Nom : ${utilisateur.nom} ${utilisateur.prenom}`, { align: "right" });
-        doc.text(`Adresse : ${utilisateur.adresse},`, { align: "right" });
+        doc.text(`Adresse : ${utilisateur.adresse}`, { align: "right" });
         doc.text(`${utilisateur.cp} ${utilisateur.ville}`, { align: "right" });
         doc.text(`Email : ${utilisateur.email}`, { align: "right" });
         doc.moveDown();
+
         doc.text(`Devis N°${devis.id}`, { align: "left" });
-        doc.moveDown();
-        doc.moveDown();
-        // Formatage des dates pour qu'elles soient lisibles
+        doc.moveDown(2);
+
+        // Formatage des dates et heures
         const dateDebutFormatted = new Date(event.dateDebut).toLocaleDateString('fr-FR', {
-            weekday: 'long', // Jour de la semaine
-            year: 'numeric', // Année complète
-            month: 'long',   // Mois complet
-            day: 'numeric'   // Jour du mois
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
-        //Formatage de la date
+        const heureDebutFormatted = new Date(event.dateDebut).toLocaleTimeString('fr-FR', {
+            hour: '2-digit', minute: '2-digit'
+        });
+
         const dateFinFormatted = new Date(event.dateFin).toLocaleDateString('fr-FR', {
-            weekday: 'long', // Jour de la semaine
-            year: 'numeric', // Année complète
-            month: 'long',   // Mois complet
-            day: 'numeric'   // Jour du mois
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
-        // Ajout du texte avec la date formatée
-        doc.fontSize(10).text(`Événement : ${event.type} du ${dateDebutFormatted} au ${dateFinFormatted}`);
+        const heureFinFormatted = new Date(event.dateFin).toLocaleTimeString('fr-FR', {
+            hour: '2-digit', minute: '2-digit'
+        });
+
+        doc.fontSize(10).text(`Événement : ${event.type}`);
+        doc.fontSize(10).text(`Date de début : ${dateDebutFormatted}`);
+        doc.fontSize(10).text(`Heure de début : ${heureDebutFormatted}`);
         doc.moveDown();
-        doc.moveDown();
+        doc.fontSize(10).text(`Date de fin : ${dateFinFormatted}`);
+        doc.fontSize(10).text(`Heure de fin : ${heureFinFormatted}`);
+        doc.moveDown(2);
+
         // Liste des prestations sélectionnées
         doc.fontSize(12).text("Prestations sélectionnées :", { underline: true, align: 'center' });
         selectedPrestations.forEach(prestation => {
             doc.fontSize(12).text(`${prestation.nom}:`, { align: "left" });
-            doc.fontSize(12).text(`  Description : ${prestation.description}`);
-            doc.fontSize(12).text(`  Prix : ${prestation.prix.toFixed(2)}€ TTC`, { align: "right" });
+            doc.fontSize(10).text(`  Description : ${prestation.description}`);
+            doc.fontSize(10).text(`  Prix : ${prestation.prix.toFixed(2)}€ TTC`, { align: "right" });
             doc.moveDown();
         });
+
         // Total HT, TVA et Total TTC
-        let totalTTC = selectedPrestations.reduce((sum, p) => sum + p.prix, 0);
         doc.moveDown();
-        doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
-        doc.moveDown(); 
+        doc.fontSize(14).text(`Total TTC: ${total.toFixed(2)} €`, { align: "right", underline: true });
+        doc.moveDown();
+
         // Date du devis
         const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('fr-FR'); // Utilisation du format français
+        const formattedDate = currentDate.toLocaleDateString('fr-FR');
         doc.fontSize(10).text(`Fait à ${entreprise.ville}, le ${formattedDate}`, { align: "left" });
         doc.moveDown();
-        // Informations  complémentaires en bas du devis       
+
+        // Informations complémentaires en bas du devis
         doc.fontSize(7).text(`Ce devis est valable 30 jours à compter de la date de création.`);
         doc.fontSize(7).text(`Devis réalisé par MyEvents pour le compte de ${entreprise.raisonSociale}. Pour toute information complémentaire, veuillez contacter ${entreprise.raisonSociale}.`);
         doc.fontSize(7).text(`Sous réserve de validation par ${entreprise.raisonSociale}. Une fois validé, vous pourrez procéder au paiement.`);
         doc.moveDown();
+
         doc.end();
 
+        // Envoi de l'email de notification
         const objet = "Nouveau devis reçu sur MyEvents !";
         const message = `Bonjour ${entreprise.raisonSociale},
 
 Bonne nouvelle ! 🎉 Un particulier vient de vous envoyer une demande de devis.
 
- 
-💰 Montant estimé : ${totalTTC.toFixed(2)} €  
-📅 Événement :  ${event.type} du ${dateDebutFormatted} au ${dateFinFormatted}
+💰 Montant estimé : ${total.toFixed(2)} €  
+📅 Événement :  ${event.type}  
+📅 Date de début : ${dateDebutFormatted} à ${heureDebutFormatted}  
+📅 Date de fin : ${dateFinFormatted} à ${heureFinFormatted}  
 
 👉 Connectez-vous dès maintenant pour consulter les détails et y répondre rapidement !
-
-
 
 L’équipe MyEvents  
 📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
 
         notificationEmail(entrepriseUser.utilisateur.email, message, objet);
-        // notificationEmail(req.session.entrepriseUser.email, message, objet);
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        res.status(500).send("Erreur lors de la génération du devis.");
     }
 });
+
+
 
 
 

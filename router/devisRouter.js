@@ -7,11 +7,11 @@ const path = require('path');
 const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 const { scriptInjectionRegex } = require('../services/regex');
 
-
+// Téléchargement du devis côté pro
 devisRouter.get('/devis/:id', authguard, async (req, res) => {
     try {
         const devisId = parseInt(req.params.id);
-         const devis = await prisma.devis.findUnique({
+        const devis = await prisma.devis.findUnique({
             where: { id: devisId },
             include: {
                 prestations: { include: { prestation: true } },
@@ -23,15 +23,7 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
                 evenement: true,           // événement du user particulier
                 utilisateur: true         // utilisateur particulier qui génère le devis
             }
-        });
-
-        const entreprise = await prisma.entreprise.findFirst({
-            where: {
-                id: parseInt(devisId)
-            },
-            include: { utilisateur: true }
         })
-
         const doc = new PDFDocument();
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
         res.setHeader("Content-Type", "application/pdf");
@@ -55,11 +47,23 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
         const dateDebutFormatted = new Date(devis.evenement.dateDebut).toLocaleDateString('fr-FR', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
+        const heureDebutFormatted = new Date(devis.evenement.dateDebut).toLocaleTimeString('fr-FR', {
+            hour: '2-digit', minute: '2-digit'
+        });
+
         const dateFinFormatted = new Date(devis.evenement.dateFin).toLocaleDateString('fr-FR', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
+        const heureFinFormatted = new Date(devis.evenement.dateFin).toLocaleTimeString('fr-FR', {
+            hour: '2-digit', minute: '2-digit'
+        });
 
-        doc.fontSize(10).text(`Événement : ${devis.typeEvenement} du ${dateDebutFormatted} au ${dateFinFormatted}`);
+        doc.fontSize(10).text(`Événement : ${devis.typeEvenement}`);
+        doc.fontSize(10).text(`Date de début : ${dateDebutFormatted}`);
+        doc.fontSize(10).text(`Heure de début : ${heureDebutFormatted}`);
+        doc.moveDown();
+        doc.fontSize(10).text(`Date de fin : ${dateFinFormatted}`);
+        doc.fontSize(10).text(`Heure de fin : ${heureFinFormatted}`);
         doc.moveDown(2);
 
         doc.fontSize(12).text("Prestations sélectionnées :", { underline: true, align: 'center' });
@@ -68,7 +72,7 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
             doc.fontSize(10).text(`  Description : ${prestation.description}`);
             doc.fontSize(10).text(`  Prix : ${prestation.prix.toFixed(2)}€ TTC`, { align: "right" });
             doc.moveDown();
-        }); 
+        });
 
         let totalHT = devis.prestations.reduce((sum, p) => sum + p.prestation.prix, 0);
         const tva = totalHT * 0.2;
@@ -93,57 +97,73 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
 });
 
 
+
 devisRouter.get('/validate/:id', authguard, async (req, res) => {
     try {
-        const devis = await prisma.devis.findFirst({
-            where: { id: parseInt(req.params.id) },
-            include: { prestations: { include: { prestation: true } }, entreprise: true, evenement: true, utilisateur: true }
+        const devisId = parseInt(req.params.id);
+           const devis = await prisma.devis.findUnique({
+            where: { id: devisId },
+            include: {
+                prestations: { include: { prestation: true } },
+                entreprise: {
+                    include: {
+                        utilisateur: true  // Inclure l'utilisateur lié à l'entreprise (pour récupérer son email)
+                    }
+                },
+                evenement: true,           // événement du user particulier
+                utilisateur: true         // utilisateur particulier qui génère le devis
+            }
+        })
+
+    
+
+        // Mise à jour du devis pour le valider
+        await prisma.devis.update({
+            where: { id: devis.id },
+            data: { isValidate: true }
         });
-        const updateDevis = await prisma.devis.update({
-            where: {
-                id: parseInt(req.params.id)
-            },
-            data: {
-                isValidate: true
-            }
-        })
-           // Création de la tâche
-           const tache = await prisma.tache.create({
-            data: {
-                titre: devis.evenement.titre, 
-                description: devis.typeEvenement, 
-                debut: devis.dateDebut, 
-                fin: devis.dateFin, 
-                utilisateurId: devis.utilisateurId, 
-                evenementId: devis.evenement.id 
-            }
-        })
-        res.redirect('/dashboardPros')
 
+        // Création de la tâche avec les bonnes dates et heures
+        await prisma.tache.create({
+            data: {
+                titre: devis.evenement.titre,
+                description: `Devis validé pour l'événement : ${devis.typeEvenement}`,
+                debut: devis.evenement.dateDebut, // Garde la date et l'heure de début
+                fin: devis.evenement.dateFin, // Garde la date et l'heure de fin
+                utilisateurId: devis.entreprise.utilisateur.id,
+                evenementId: devis.evenement.id
+            }
+        });
 
+      const  successMessage= " ✅ Devis accepté. Votre planning a été mis à jour 🗓️"
+      req.session.successMessage = successMessage  
+
+        res.redirect('dashboardPros')
+
+        // Notification par e-mail
         const objet = "Votre devis a été accepté ! 🎉";
-
         const message = `Bonjour,
 
 Bonne nouvelle ! ✅ Un devis a été accepté par ${devis.entreprise.raisonSociale}.
 
-📄 Devis N° ${devis.id}
+📄 Devis N° ${devis.id}  
 💳 Montant validé : ${devis.total}€  
-📅 Événement : ${devis.evenement.titre} 
+📅 Événement : ${devis.evenement.titre}  
+📅 Date et heure : du ${new Date(devis.evenement.dateDebut).toLocaleString('fr-FR')}  
+    au ${new Date(devis.evenement.dateFin).toLocaleString('fr-FR')}  
 
-👉  Connectez-vous à MyEvents pour procéder au paiement et valider la prestation .
+👉 Connectez-vous à MyEvents pour procéder au paiement et valider la prestation.
 
 L’équipe MyEvents  
 📧 auto.myevents@gmail.com | 🌐 www.myevents.com`;
 
         notificationEmail(devis.utilisateur.email, message, objet);
-
     } catch (error) {
-        console.log(error)
-        res.redirect('/dashboardPros')
-
+        console.error(error);
+        res.redirect('/dashboardPros');
     }
-})
+});
+
 
 devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
     try {
@@ -151,7 +171,6 @@ devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
             where: {
                 id: parseInt(req.params.id)
             }
-
         })
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
@@ -161,19 +180,14 @@ devisRouter.get('/confirmDeclineDevis/:id', authguard, async (req, res) => {
                 entreprise: true
             }
         })
-
-
         res.render('pages/confirmDeclineDevis.twig', {
             devis: devis,
             utilisateur: req.session.utilisateur,
             entreprise: utilisateur.entreprise
         })
-
-
-
     } catch (error) {
         console.log(error)
-        res.redirect('/dashboardPros')  
+        res.redirect('/dashboardPros')
     }
 })
 

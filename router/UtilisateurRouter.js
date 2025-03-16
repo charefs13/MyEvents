@@ -6,8 +6,8 @@ const hashPasswordExtension = require("../services/hashPasswordExtension");
 const prisma = new PrismaClient().$extends(hashPasswordExtension);
 const crypto = require('crypto');
 const { sendResetEmail, sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
-const { scriptInjectionRegex } = require('../services/regex');
-
+// Importation des regex depuis le fichier regex.js
+const { scriptInjectionRegex, nameRegex, emailRegex, siretRegex } = require('../services/regex');
 
 
 // Affiche la page principale du dashboard utilisateur
@@ -67,24 +67,37 @@ utilisateurRouter.get('/', async (req, res) => {
     res.render('pages/main.twig', {
         successMessage: req.session.successMessage,
         errorMessage: req.session.errorMessage
-    }
-    );
+    });
 });
-
-
 
 
 // affiche la page qui sommes nous
 utilisateurRouter.get('/quiSommesNous', (req, res) => {
-    res.render('pages/quiSommesNous.twig')
+    if (req.session.successMessage) {
+        delete req.session.successMessage;
+    }
+    
+    if (req.session.errorMessage) {
+        delete req.session.errorMessage;
+    }
+    
+    res.render('pages/quiSommesNous.twig'
+       
+    )
 })
 
 
 // affiche la page pour les professionnels
 utilisateurRouter.get('/pros', (req, res) => {
+      if (req.session.successMessage) {
+        delete req.session.successMessage;
+    }
+    
+    if (req.session.errorMessage) {
+        delete req.session.errorMessage;
+    }
     res.render('pages/pros.twig')
 })
-
 
 
 // affiche ma page Inscription
@@ -99,10 +112,8 @@ utilisateurRouter.get('/signIn', (req, res) => {
 // envoie mon formulaire Inscription à ma BDD et redirige vers Connexion
 utilisateurRouter.post('/signIn', async (req, res) => {
     try {
-        // Expressions régulières pour valider les champs
-        const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/; // Lettres, espaces, apostrophes et tirets
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Format de base pour une adresse email
-
+        // Utilisation des regex importées depuis regex.js pour valider les champs
+        // nameRegex et emailRegex sont désormais importées
         errorMessage = ""
 
         const utilisateurCheck = await prisma.utilisateur.findFirst(
@@ -165,7 +176,8 @@ utilisateurRouter.post('/signIn', async (req, res) => {
             📧 auto.myevents@gmail.com | 🌐 www.myevents.com`
 
                 notificationEmail(req.body.email, message, objet)
-                res.redirect('/login')
+                req.session.successMessage = " ✅ Votre inscription a été réalisée avec succès. Vous pouvez maintenant vous connecter.";
+                 res.redirect('/login')
             }
             else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
         } catch (error) {
@@ -179,7 +191,9 @@ utilisateurRouter.post('/signIn', async (req, res) => {
 
 // affiche ma page Connexion
 utilisateurRouter.get('/login', (req, res) => {
-    res.render('pages/login.twig')
+    res.render('pages/login.twig',
+       {successMessage: req.session.successMessage} 
+    )
 })
 
 
@@ -410,29 +424,22 @@ utilisateurRouter.post('/contact', (req, res) => {
     try {
         const { nom, prenom, email, message } = req.body;
 
-        // 1. Validation du nom (doit être alphabétique, avec espaces et tirets autorisés)
-        const nameRegex = /^[a-zA-ZàâéèêîïôùüçÀÂÉÈÊÎÏÔÙÜÇ\s\-]+$/;
+        // 1. Validation du nom avec la regex importée (lettres, espaces et tirets autorisés)
         if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
             errorMessage = "Le nom et le prénom doivent être valides (lettres uniquement, espaces et tirets autorisés)."
             req.session.errorMessage = errorMessage
             return res.redirect("/")
         }
 
-        // 2. Validation de l'email (doit être sous le format d'une adresse email valide)
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        // 2. Validation de l'email avec la regex importée
         if (!emailRegex.test(email)) {
             errorMessage = "L'email n'est pas valide."
             req.session.errorMessage = errorMessage
             return res.redirect("/")
         }
 
-        // 3. Protection contre les injections de code dans le message
-        // Ce regex filtre les caractères susceptibles de permettre l'injection HTML ou JS.
-        const messageRegex = /<[^>]*>/g; // Cherche toute balise HTML (injection de balises)
-        const scriptRegex = /<script[^>]*>.*<\/script>/g; // Cherche des scripts ou des balises script
-
-        // Si le message contient des balises HTML ou des scripts, on le nettoie
-        if (messageRegex.test(message) || scriptRegex.test(message)) {
+        // 3. Protection contre les injections de code dans le message en utilisant la regex importée
+        if (scriptInjectionRegex.test(message)) {
             errorMessage = "Le message contient des caractères non autorisés (HTML, script)."
             req.session.errorMessage = errorMessage
             return res.redirect("/")
@@ -461,8 +468,4 @@ utilisateurRouter.post('/contact', (req, res) => {
 });
 
 
-
 module.exports = utilisateurRouter;
-
-
-

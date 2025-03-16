@@ -1,8 +1,6 @@
 {# Recherche Prestatire avec map #}
 
 {% extends "../layouts/base.twig" %}
-
-
 {% block style %}
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,7 +8,6 @@
 	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 {% endblock %}
-
 {% block tile %}MyEvents- Votre Recherche de Prestataire
 {% endblock %}
 
@@ -23,31 +20,26 @@
 		{% if successMessage %}
 			<p class='message'>{{ successMessage }}</p>
 		{% endif %}
-
 	</div>
-	
+
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
 
-	
-
 	<section class='mainSection'>
-		
-	
 
 		{% if entreprises|length > 0 %}
-		<h2>Résultats de votre recherche</h2>
-		<div id="map"></div>
+			<h2>Résultats de votre recherche</h2>
+			<div id="map"></div>
+
 			<script>
 				// Conversion de la variable Twig "entreprises" en JSON pour utilisation en JavaScript
 let entreprises = {{ entreprises | json_encode | raw }};
 // On récupère la ville de la première entreprise, si elle existe
-let centreVille = entreprises[0] ? entreprises[0].ville : 'Paris'; // Si aucune entreprise, centrer sur Paris
+let centreVille = entreprises[0].ville 
 			</script>
 		{% else %}
 			<!-- Message affiché si aucune entreprise n'est trouvée -->
 			<h2 style="
-    margin-bottom: 100vh;"
->Aucun Résultat</h3>
+				    margin-bottom: 100vh;">Aucun Résultat</h3>
 		{% endif %}
 	</section>
 {% endblock %}
@@ -56,7 +48,6 @@ let centreVille = entreprises[0] ? entreprises[0].ville : 'Paris'; // Si aucune 
 	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 	<script src="/assets/script/map.js"></script>
 {% endblock %}
-
 
 
 {# <section class='mainSection'>

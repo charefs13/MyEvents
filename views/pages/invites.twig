@@ -21,32 +21,43 @@
 		{% endif %}
 
 	</div>
-	
+
 	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+	{% if evenement is defined %}
+		<h2>Gérer les invités de
+			{{evenement.titre}}</h2>
+	{% else %}
+		<h2>Gérer vos invités
+		</h2>
+	{% endif %}
 
-	<h2>Ajouter et modifier
-	</h2>
 
+	{# <div class:'intro'>
+								<p>Sur cette page vous pourrez ajouter un invité et l'assigner à événement.</p>
+								<p>
+									En sélectionnant un événement vous pourez voir la liste des invités et vous pourrez modifier ou supprimer un invité.
+								</p>
+								<p>Enfin
+									<span class='firstFont'>My</span>
+									<span class='secondFont'>E</span>
+									<span class='firstFont'>vents</span>
+									Vous permet d'envoyer un mail à un ou plusieurs invité en même temps</p>
+							</div> #}
 
-	<section class="mainSection">
-		<h3 class='InviteH3'>Ajouter un invité à votre événement</h3>
+	<section class="mainSection firstSection" {% if evenement is defined %} style="display: none;" {% endif %}>
+		<h3 class='InviteH3'>Ajouter un nouvel invité à votre événement</h3>
 
 		<div class="addInviteForm">
 			<form action="/addInvite" method="POST">
 
 				<div class="inputRow">
-					<div class='flex'>
-						<label for="nom">Nom</label>
-						<input type="text" id="nom" name="nom" required>
-					</div>
-					<div class='flex'>
-						<label for="prenom">Prénom</label>
-						<input type="text" id="prenom" name="prenom" required>
-					</div>
-					<div class='flex'>
-						<label for="email">Email</label>
-						<input type="text" id="email" name="email">
-					</div>
+
+					<input type="text" id="nom" name="nom" placeholder='Nom' required>
+
+					<input type="text" id="prenom" name="prenom" placeholder='Prénom' required>
+
+					<input type="text" id="email" name="email" placeholder='Email'>
+
 				</div>
 
 
@@ -65,39 +76,42 @@
 				</div>
 			</form>
 		</div>
-	</section>
-
-	<section class="mainSection">
 
 
 		<form class='selectEventForm' action="/displayInvites" method="GET">
-			<h3>Afficher la liste des invités de l'événement selectionné, vous pourrez modifier ou supprimer l'invité depuis cette section</h3>
+			<h3>Modifier ou Supprimer un invité</h3>
 
 			<select class="evenementSelect" id="evenement" name="evenementId" required>
-				<option value="" disabled selected>Sélectionnez un événement</option>
+				<option value="" disabled selected>Selectionner un événement</option>
 				{% for evenement in evenements %}
 					<option value="{{ evenement.id }}" {% if evenement.id == selectedEvenementId %} selected {% endif %}>
 						{{ evenement.titre }}
 					</option>
 				{% endfor %}
 			</select>
-			<button style='background-color: white;' type="submit">Afficher</button>
+			<button id='displayInvite' style='background-color: white;' type="submit">Afficher</button>
 		</form>
+	</section>
+
+	<section class="mainSection secondSection" {% if evenement is defined %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+
+		<a id='retour' href="/invites"><img src="/assets/images/retour.png" alt="Icone d'une flèche qui indique le retour à la page précédente">Retour</a>
 
 		{% if evenement is defined %}
 
 			<div class="evenementInvite">
 
 				{% if selectedInvite is defined%}
-					<div>
 
-						<h4 style='font-size: 13px;'>Modifier les informations de
-							{{selectedInvite.nom}}
-							{{selectedInvite.prenom}}</h4>
 
-						<div class="updateInvite">
-							<form action="/updateInvite/{{selectedInvite.id}}" method="POST">
-								<label for="nom">Nom</label>
+					<h3 style='font-size: 15px;'>Modifier les informations de
+						{{selectedInvite.nom}}
+						{{selectedInvite.prenom}}</h3>
+
+					<div class="updateInvite">
+						<form action="/updateInvite/{{selectedInvite.id}}" method="POST">
+							<div class="inputRow">
+								<label for="prenom">Prénom</label>
 								<input type="text" id="nom" name="nom" value="{{selectedInvite.nom}}" required>
 
 								<label for="prenom">Prénom</label>
@@ -105,99 +119,87 @@
 
 								<label for="email">Email</label>
 								<input type="text" id="email" name="email" value="{{selectedInvite.email}}">
+
+							</div>
+							<div>
 								<button class='btn' type="submit">Modifier</button>
 
 								<a class="delete" href="/deleteInvite/{{selectedInvite.id}}">Supprimer</a>
-
-							</form>
-						</div>
-
-
-					{% elseif invites and invites|length > 0 %}
-						<div class='invites'>
-							<h4>Invités pour l'événement :
-								{{ evenement.titre }}</h4>
-							{% for invite in invites %}
-								<div class="inviteContainer">
-									<div>
-										<p>{{ invite.nom }}
-											{{ invite.prenom }}
-										</p>
-									</div>
-
-
-								</div>
-							{% endfor %}
-
-
-						</div>
-						<div>
-							<form class='selectInviteForm' action="/selectInvite" method='GET'>
-								<label for="selectedInvite">Choisir un invité pour le contacter, modifier ses informations ou le supprimer de votre événement</label>
-								<select id="selectedInvite" name="selectedInvite" required>
-									{% for invite in invites %}
-										<option value="{{invite.id}}">{{ invite.nom }}
-											{{ invite.prenom }}</option>
-									{% endfor %}
-								</select>
-								<button type='submit'>Selectionner</button>
-							</form>
-						</div>
+							</div>
+						</form>
 					</div>
 
-				</div>
-				<div class="evenementInvite">
-					<h4>Un changement de dernière minute ? Prévenez facilement vos invités par email 📩 !</h4>
-					<form class='sendEmailForm' action="/sendEmail/evenement/{{evenement.id}}" method="POST">
 
-						<label style='font-weight: 100;' for="invitesEmail">Choisir parmis la liste (seulement si une adresse mail a été renseignée) :</label>
-						<select id="invitesEmail" name="invites[]" multiple>
-							{% for invite in invites if invite.email is not empty %}
-								<option value="{{ invite.id }}">{{ invite.nom }}
-									{{ invite.prenom }}</option>
-							{% endfor %}
-						</select>
+				{% elseif invites and invites|length > 0 %}
 
-						<label>
-							<input type="checkbox" id="all" name="all">
-							Tout sélectionner
-						</label>
+					<div>
 
-						<label for="emailText">Modèle de l'Email</label>
-						<textarea name="emailText" id="emailText" placeholder='Tapez votre email
-							
-																																																																																																																																																											Par exemple :
-							
-																																																																																																																																																											Cher Prénom,
-							
-																																																																																																																																																											Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
-							
-																																																																																																																																																											Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
-							
-																																																																																																																																																											Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
-							
-																																																																																																																																																											Amicalement,
-							
-																																																																																																																																																											Votre Signature.
-							
-																																																																																																																																																											'></textarea>
+						<h3 style='text-align: center; margin-top: 0;'>Selectionner pour modifier ou supprimer</h3>
+						<form class='selectInviteForm' action="/selectInvite" method='GET'>
 
-						<p>PS : Les noms et prénoms des invités seront ajustés dynamiquement. Par exemple ici Prénom sera remplacé par le prénom de l'invité.</p>
-
-						<button type="submit">Envoyer l'email</button>
-					</form>
+							<select id="selectedInvite" name="selectedInvite" required>
+								{% for invite in invites %}
+									<option value="{{invite.id}}">{{ invite.nom }}
+										{{ invite.prenom }}</option>
+								{% endfor %}
+							</select>
+							<button type='submit'>Selectionner</button>
+						</form>
+					</div>
 				</div>
 
+		
+			<div class="evenementInvite">
+				<h3 style='text-align: center; margin-top: 0;'>Un changement de dernière minute ? Prévenez vos invités par email 📩 !</h3>
+				<form class='sendEmailForm' action="/sendEmail/evenement/{{evenement.id}}" method="POST">
 
-			{% else %}
-				<p style='text-align: center;'><span class='bold'>Aucun invité pour cet événement.</span></p>
-			{% endif %}
+					<label style='font-weight: 100;' for="invitesEmail">Choisir parmis la liste (seulement si une adresse mail a été renseignée) :</label>
+					<select id="invitesEmail" name="invites[]" multiple>
+						{% for invite in invites if invite.email is not empty %}
+							<option value="{{ invite.id }}">{{ invite.nom }}
+								{{ invite.prenom }}</option>
+						{% endfor %}
+					</select>
 
+					<label>
+						<input type="checkbox" id="all" name="all">
+						Tout sélectionner
+					</label>
+
+					<label for="emailText">Modèle de l'Email</label>
+					<textarea name="emailText" id="emailText" placeholder='Tapez votre email
+						
+																																																																																																																																																																																																																																															Par exemple :
+						
+																																																																																																																																																																																																																																															Cher Prénom,
+						
+																																																																																																																																																																																																																																															Nous te rappelons que la cérémonie de notre mariage débutera le 27 Octobre 2024 à 13h à la Mairie du 8ème.
+						
+																																																																																																																																																																																																																																															Le programme de journée est disponnible sur le faire part que tu as reçu en main propre ou par courrier.
+						
+																																																																																																																																																																																																																																															Nous te rappelons que le dress-code est le beige pour les femmes et costume bleu marine pour les hommes.
+						
+																																																																																																																																																																																																																																															Amicalement,
+						
+																																																																																																																																																																																																																																															Votre Signature.
+						
+																																																																																																																																																																																																																																															'></textarea>
+
+					<p>PS : Les noms et prénoms des invités seront ajustés dynamiquement. Par exemple ici Prénom sera remplacé par le prénom de l'invité.</p>
+
+					<button type="submit">Envoyer l'email</button>
+				</form>
+			</div>
+
+
+		{% else %}
+			<p style='text-align: center;'>
+				<span class='bold'>Aucun invité pour cet événement.</span>
+			</p>
 		{% endif %}
-	</section>
-{% endblock %}
-{% block script %}
-	<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-	<script src="/assets/script/invites.js"></script>
-{% endblock %}
+	{% endif %}
+</section>{% endblock %}{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script src="/assets/script/invites.js"></script>{% endblock %}

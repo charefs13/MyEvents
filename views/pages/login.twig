@@ -30,51 +30,45 @@
 	<section class='mainSection'>
 		<h2>Connectez vous à votre compte personnel</h2>
 
-<div>
-			{% if errorMessage %}
-				<p class='error message'>{{ errorMessage }}</p>
-			{% endif %}
-
-			{% if successMessage %}
-				<p class='message'>{{ successMessage }}</p>
-			{% endif %}
-
-		</div>
 		<div class='formSignIn'>
 			<form action="/login" method='POST'>
-			<a href=""></a>
+
+				<p style='text-align: center; margin-bottom:5px;'>Pas encore de compte ?
+				</p>
+				<p style='text-align: center'>
+					<a class='link bold' href="/signIn">
+						Inscrivez vous</a>
+				</p>
+
 				<div class="form-group">
-			<p>Pas encore de compte ? <a class='link bold' href="/signIn"> Inscrivez vous</a></p>
+					<input id='email' type="email" name="email" placeholder='Email'>
+				</div>
 
-					<div class="form-group">
-						<input id='email' type="email" name="email" placeholder='Email'>
-					</div>
+				<div class="form-group">
+					<input id='password' type="password" name="password" placeholder='Mot de passe'>
 
-					<div class="form-group">
-						<input id='password' type="password" name="password" placeholder='Mot de passe'>
+					<a href="/mdpOublie">Cliquer pour réinitialiser le mot de passe</a>
+				</div>
+				{% if error.email %}
 
-						<a href="/mdpOublie">Cliquer pour réinitialiser le mot de passe</a>
-					</div>
-					{% if error.email %}
-
-						<p class='error'>{{ error.email }}</p>
-					{% endif %}
-
-					{% if error.password %}
-						<p class='error'>{{ error.password }}</p>
-					{% endif %}
-
-					<div class='form-group'>
-						<button type="submit">Connexion</button>
-					</div>
-				</form>
-  
-				{% if message %}
-				<p>{{message}}</p>
+					<p class='error'>{{ error.email }}</p>
 				{% endif %}
-			</div>
+
+				{% if error.password %}
+					<p class='error'>{{ error.password }}</p>
+				{% endif %}
+
+				<div class='form-group'>
+					<button type="submit">Connexion</button>
+				</div>
+			</form>
+
+			{% if message %}
+				<p>{{message}}</p>
+			{% endif %}
+		</div>
 
 
-		</section>
+	</section>
 
-	{% endblock %}
+{% endblock %}

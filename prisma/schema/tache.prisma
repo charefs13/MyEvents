@@ -1,5 +1,5 @@
 model Tache {
-    id            String      @id @default(uuid()) // ID unique
+    id            Int      @id @default(autoincrement()) // ID unique
     titre         String      @db.VarChar(255) // Nom de la tâche
     description   String?     @db.Text // Description facultative
     debut         DateTime // Date et heure de début

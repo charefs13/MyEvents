@@ -10,3 +10,6 @@ const selectedInvite = new Choices('#selectedInvite', {
     removeItemButton: true,
     placeholderValue: "Selectionner un invité..."
 });
+
+
+                  
