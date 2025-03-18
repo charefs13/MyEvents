@@ -1,0 +1,28 @@
+{# Page en construction #}
+
+{% extends "../layouts/base.twig" %}
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Convergence&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block tile %}MyEvents - Dashboard
+{% endblock %}
+
+{% block main %}
+
+	<h1><img src="/assets/images/Titre-MyEvents.png" alt="titre principal MyEvents"></h1>
+{% if errorMessage or successMessage %}
+	<div>
+			<p class='error'>{{ errorMessage }}</p>
+			<p class='message'>{{ successMessage }}</p>
+	</div>
+{% else %}
+	<div class='inProcess'>
+		<h2>Fonctionnalité bientot disponible</h2>
+		<img src="/assets/images/travaux.png" alt="icone de travaux">
+	</div>
+	{% endif %}
+{% endblock %}

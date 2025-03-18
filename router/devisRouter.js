@@ -74,12 +74,8 @@ devisRouter.get('/devis/:id', authguard, async (req, res) => {
             doc.moveDown();
         });
 
-        let totalHT = devis.prestations.reduce((sum, p) => sum + p.prestation.prix, 0);
-        const tva = totalHT * 0.2;
-        const totalTTC = totalHT + tva;
+        const totalTTC =          devis.prestations.reduce((sum, p) => sum + p.prestation.prix, 0);
         doc.moveDown();
-        doc.fontSize(10).text(`Total HT: ${totalHT.toFixed(2)} €`, { align: "right" });
-        doc.text(`TVA (20%): ${tva.toFixed(2)} €`, { align: "right" });
         doc.fontSize(14).text(`Total TTC: ${totalTTC.toFixed(2)} €`, { align: "right", underline: true });
 
         const formattedDate = new Date(devis.createdAt).toLocaleDateString('fr-FR');

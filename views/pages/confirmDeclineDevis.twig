@@ -33,7 +33,7 @@
 		<div class='confirmDecline formSignIn'>
 			<p>Vous êtes sur le point de refuser le Devis N°{{devis.id}}, veuillez en informer le client :</p>
 			<form action="/decline/{{devis.id}}" method="post">
-				<label for="declineMsg">Motif du refus</label>
+				<label style='font-size:15px;' for="declineMsg">Motif du refus</label>
 				<textarea name="declineMsg" id="declineMsg" placeholder='Par ex: Indisponible à ces dates'></textarea>
 				<div class='flex'>
 					<button class='delete'>Confirmer</button>

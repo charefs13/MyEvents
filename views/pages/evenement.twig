@@ -33,7 +33,7 @@
 				<form action="/createEvent" method='POST'>
 					<div class='form-group'>
 						<p class='close'><img src="assets/images/fermer.png" alt="icone en forme de croix pour fermer la fenetre"></p>
-						<label for="typeEvenement">Type d'événement</label>
+						<label for="typeEvenement">Type d'événement*</label>
 						<select id="typeEvenement" name="typeEvenement" required>
 							<option value="babyShower">Baby Shower</option>
 							<option value="genderReveal">Gender Reveal</option>
@@ -45,7 +45,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="title">Titre</label>
+						<label for="title">Titre*</label>
 						<input id='title' type="text" name="title" placeholder="Titre de l'événement" required>
 					</div>
 					<div class="form-group">
@@ -53,25 +53,26 @@
 						<textarea id='description' name="description"></textarea>
 					</div>
 					<div class="form-group">
-						<label for="lieu">Titre</label>
+						<label for="lieu">Lieu</label>
 						<input id='lieu' type="text" name="lieu" placeholder="Lieu l'événement">
 					</div>
 					<div class="form-group">
-						<label for="startDate">Date de début</label>
+						<label for="startDate">Date de début*</label>
 						<input id='startDate' type="date" name="startDate">
 					</div>
 					<div class="form-group">
-						<label for="startTime">Heure de début</label>
+						<label for="startTime">Heure de début*</label>
 						<input id='startTime' type="time" name="startTime">
 					</div>
 					<div class="form-group">
-						<label for="endDate">Date de fin</label>
+						<label for="endDate">Date de fin*</label>
 						<input id='endDate' type="date" name="endDate">
 					</div>
 					<div class="form-group">
-						<label for="endTime">Heure de fin</label>
+						<label for="endTime">Heure de fin*</label>
 						<input id='endTime' type="time" name="endTime">
 					</div>
+					<p style='font-size:12px;'>Les champs marqués d'un astérisque (*) sont obligatoires.</p>
 					<div class='form-group'>
 						<button class="createEventBtn" type="submit">Créer l'événement</button>
 					</div>
@@ -180,5 +181,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="/assets/script/script.js"></script>
+	<script src="/assets/script/script.js"></script>
 {% endblock %}

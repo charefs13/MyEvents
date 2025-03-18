@@ -15,11 +15,21 @@ prosRouter.get('/signInPros', (req, res) => {
     });
 });
 
-// Envoi du formulaire d'inscription à la BDD
+// Envoie du formulaire d'inscription à ma BDD
 prosRouter.post('/signInPros', async (req, res) => {
     try {
-        const { nom, prenom, email, password, confirmPassword } = req.body;
+        const utilisateurCheck = await prisma.utilisateur.findFirst(
+            {
+                where: { email: req.body.email }
+            })
+        if (utilisateurCheck) {
+            req.session.errorMessage = "Utilisateur déja inscrit. Veuillez vous connecter à votre compte"
+            res.render("pages/signIn.twig", {
+                errorMessage: req.session.errorMessage
+            })
 
+        }
+        const { nom, prenom, email } = req.body
         // Validation des entrées avec les regex
         if (scriptInjectionRegex.test(nom) || scriptInjectionRegex.test(prenom)) {
             req.session.errorMessage = "Caractères invalides détectés.";
@@ -36,8 +46,9 @@ prosRouter.post('/signInPros', async (req, res) => {
             req.session.errorMessage = "Adresse email invalide.";
             return res.render('pages/signInPros.twig', { errorMessage: req.session.errorMessage });
         }
-        else if (req.body.password == req.body.confirmPassword) {
-            const utilisateur = await prisma.utilisateur.create({
+
+        if (req.body.password === req.body.confirmPassword) {
+            const pros = await prisma.utilisateur.create({
                 data: {
                     nom: req.body.nom,
                     prenom: req.body.prenom,
@@ -45,27 +56,46 @@ prosRouter.post('/signInPros', async (req, res) => {
                     password: req.body.password,
                     isEntreprise: true
                 }
+
             })
-        }
+            const objet = "Bienvenue sur MyEvents – Développez votre activité événementielle !"
 
-            // Envoi d'un email de bienvenue
-            const objet = "Bienvenue sur MyEvents – Développez votre activité événementielle !";
-            const message = `Bonjour ${nom} ${prenom},
+            const message = `Bonjour ${req.body.nom} ${req.body.prenom},
 
-        Bienvenue sur MyEvents ! 🎉
-        ...`;
+            Bienvenue sur MyEvents ! 🎉
+            
+            En rejoignant notre plateforme, vous bénéficiez d’un outil puissant pour développer votre activité événementielle.
 
-            notificationEmail(email, message, objet);
+            Avec MyEvents, vous pouvez :
+            ✅ Recevoir des demandes de particuliers à la recherche de prestataires
+            ✅ Présenter vos services et offres directement sur votre espace
+            ✅ Gérer vos prestations et communiquer avec vos clients facilement
 
-            // Message de succès après l'inscription
+            ✨ Optimisez votre visibilité et trouvez de nouveaux clients dès maintenant !
+            
+            Complétez votre profil et ajoutez vos prestations pour être visible auprès des particuliers en quête de services événementiels.
+
+            
+            Une question ? Notre équipe est à votre disposition pour vous aider à tirer le meilleur parti de MyEvents.
+
+            À très bientôt ! 🚀
+
+            L’équipe MyEvents 
+            
+            📧 auto.myevents@gmail.com | 🌐 www.myevents.com`
+
+            notificationEmail(req.body.email, message, objet)
             req.session.successMessage = " ✅ Votre inscription a été réalisée avec succès. Vous pouvez maintenant vous connecter.";
-            res.redirect('/login');
-        } catch (error) {
-            console.log(error);
-            req.session.errorMessage = "Une erreur est survenue. Veuillez réessayer plus tard.";
-            res.render('pages/signInPros.twig', { errorMessage: req.session.errorMessage });
+            res.redirect('/login')
         }
-    });
+        else throw ({ confirmMdp: "Vos mots de passe ne correspondent pas" })
+    } catch (error) {
+        console.log(error)
+        res.render('pages/signInPros.twig', {
+            error: error
+        })
+    }
+})
 
 // Affichage de la page d'ajout de profil pour une Entreprise
 prosRouter.get('/addProfilPros', async (req, res) => {
@@ -82,61 +112,75 @@ prosRouter.get('/addProfilPros', async (req, res) => {
     }
 });
 
-// Envoi du formulaire pour créer une Entreprise
+
+
+// Envoie de mon formulaire ajout profil pour créer une Entreprise
 prosRouter.post('/addProfilPros/:id', authguard, async (req, res) => {
     try {
-        const { raisonSociale, siret, type, adresse, cp, ville } = req.body;
 
         // Vérifications avec regex
-        if (scriptInjectionRegex.test(raisonSociale) || scriptInjectionRegex.test(adresse)) {
+        if (scriptInjectionRegex.test(req.body.raisonSociale) || scriptInjectionRegex.test(req.body.adresse)) {
             req.session.errorMessage = "Caractères invalides détectés.";
-            return res.render('pages/addProfilPros.twig', { errorMessage: req.session.errorMessage });
+            return res.render('pages/addProfilPros.twig', { 
+                errorMessage: req.session.errorMessage,
+                utilisateur: req.session.utilisateur
+                
+             });
         }
-        if (!siretRegex.test(siret)) {
+        if (!siretRegex.test(req.body.siret)) {
             req.session.errorMessage = "Numéro de SIRET invalide. Un SIRET doit comporter 14 chiffres";
-            return res.render('pages/addProfilPros.twig', { errorMessage: req.session.errorMessage });
-        }
-        if (!postalCodeRegex.test(cp)) {
+            return res.render('pages/addProfilPros.twig', { 
+                errorMessage: req.session.errorMessage,
+                utilisateur: req.session.utilisateur
+                
+             });        }
+        if (!postalCodeRegex.test(req.body.cp)) {
             req.session.errorMessage = "Code postal invalide.";
-            return res.render('pages/addProfilPros.twig', { errorMessage: req.session.errorMessage });
-        }
-        if (!cityRegex.test(ville)) {
+            return res.render('pages/addProfilPros.twig', { 
+                errorMessage: req.session.errorMessage,
+                utilisateur: req.session.utilisateur
+                
+             });        }
+        if (!cityRegex.test(req.body.ville)) {
             req.session.errorMessage = "Nom de ville invalide.";
-            return res.render('pages/addProfilPros.twig', { errorMessage: req.session.errorMessage });
-        }
-
-        // Création de l'entreprise
+            return res.render('pages/addProfilPros.twig', { 
+                errorMessage: req.session.errorMessage,
+                utilisateur: req.session.utilisateur
+                
+             });        }
         const entreprise = await prisma.entreprise.create({
             data: {
-                raisonSociale,
-                siret,
-                type,
-                adresse,
-                cp: parseInt(cp),
-                ville,
+                raisonSociale: req.body.raisonSociale,
+                siret: req.body.siret,
+                type: req.body.type,
+                adresse: req.body.adresse,
+                cp: parseInt(req.body.cp),
+                ville: req.body.ville,
                 utilisateurId: parseInt(req.session.utilisateur.id)
             }
-        });
+        })
 
-        // Mise à jour de l'utilisateur
         const updatedUtilisateur = await prisma.utilisateur.update({
-            where: { id: parseInt(req.params.id) },
-            data: { adresse, cp: parseInt(cp), ville }
-        });
-
-        req.session.entreprise = entreprise;
-        req.session.utilisateur = updatedUtilisateur;
-
-        // Message de succès après la création de l'entreprise
-        req.session.successMessage = "";
-        req.session.errorMessage = ""
-        res.redirect('/dashboardPros');
+            where: {
+                id: parseInt(req.params.id)
+            },
+            data: {
+                adresse: req.body.adresse,
+                cp: parseInt(req.body.cp),
+                ville: req.body.ville
+            }
+        })
+        req.session.entreprise = entreprise
+        req.session.utilisateur = updatedUtilisateur
+        res.redirect('/dashboardPros')
     } catch (error) {
-        console.log(error);
-        req.session.errorMessage = "Une erreur est survenue lors de la création de l'entreprise.";
-        res.render('pages/addProfilPros.twig', { errorMessage: req.session.errorMessage });
-    }
-});
+        console.log(error)
+        res.render('pages/addProfilPros.twig', {
+            error: { error: "une erreur est survenue" }
+        })
+    } 
+})
+
 
 
 // Affichage du tableau de bord des professionnels

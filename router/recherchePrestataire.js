@@ -8,7 +8,7 @@ const { scriptInjectionRegex } = require('../services/regex');
 const { sendContactEmail, notificationEmail } = require('../services/sendResetEmail.js');
 
 
-// Route de recherche des prestataires
+// Route de recherche des prestataires, Récupérations des entreprises et de leurs infos
 recherchePrestataireRouter.get('/recherchePrestataire', authguard, async (req, res) => {
     try {
         // Recherche des entreprises correspondant aux critères (ville et type d'entreprise)
@@ -20,7 +20,7 @@ recherchePrestataireRouter.get('/recherchePrestataire', authguard, async (req, r
             include: {
                 prestations: true // Inclure les prestations de chaque entreprise
             }
-        });
+        }); 
         // Récupération des informations de l'utilisateur connecté
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
@@ -61,7 +61,7 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
             },
             include: { prestations: true, utilisateur: true }
         });
-        // Récupération des informations de l'utilisateur
+        // Récupération des informations de l'utilisateur qui génère le devis
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
                 id: req.session.utilisateur.id
@@ -71,7 +71,6 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
             }
         });
         const entrepriseUser = entreprise.utilisateur
-
         req.session.entreprise = entreprise;
         req.session.entrepriseUser = entrepriseUser
         req.session.utilisateur = utilisateur;
@@ -96,6 +95,10 @@ recherchePrestataireRouter.get('/entreprise/:id/prestations', authguard, async (
 recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
     try {
         const utilisateurId = req.session.utilisateur.id;
+
+        // Récupère la liste des identifiants des prestations depuis les paramètres de l'URL,
+        // les sépare en un tableau en utilisant la virgule comme délimiteur,
+        // puis convertit chaque élément en un nombre entier.
         const prestationIds = req.query.prestations.split(",").map(id => parseInt(id));
 
         // Récupération des données
@@ -138,9 +141,17 @@ recherchePrestataireRouter.get('/devis/pdf', authguard, async (req, res) => {
         });
 
         // Génération du PDF
+
+        // Création d'une nouvelle instance de PDFDocument pour générer un fichier PDF
         const doc = new PDFDocument();
+
+        // Définit l'en-tête HTTP "Content-Disposition"  indiquer que le fichier à télécharger, avec un nom  basé sur l'ID
         res.setHeader("Content-Disposition", `attachment; filename=devis_${devis.id}.pdf`);
+
+        // Définit l'en-tête HTTP "Content-Type" pour préciser que le fichier retourné est un PDF
         res.setHeader("Content-Type", "application/pdf");
+
+        // Connecte le flux de sortie du document PDF à la réponse HTTP pour transmettre directement le PDF au client
         doc.pipe(res);
 
         // En-tête du devis avec l'image

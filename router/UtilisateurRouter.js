@@ -200,6 +200,14 @@ utilisateurRouter.get('/login', (req, res) => {
 // affiche ma main page après une connexion
 utilisateurRouter.post('/login', async (req, res) => {
     try {
+         // Vérifier si un message de succès existe et le supprimer
+    if (req.session.successMessage) {
+        delete req.session.successMessage; // Supprime le message de succès de la session
+    }
+    // Vérifier si un message d'erreur existe et le supprimer
+    else if (req.session.errorMessage) {
+        delete req.session.errorMessage; // Supprime le message d'erreur de la session
+    }
         const utilisateur = await prisma.utilisateur.findFirst({
             where: {
                 email: req.body.email
@@ -260,6 +268,14 @@ utilisateurRouter.get('/addProfil', (req, res) => {
 // ajout du profil pour un utilisateur particulier, envoie du profil à la BDD
 utilisateurRouter.post('/addProfil/:id', authguard, async (req, res) => {
     try {
+         // Vérifier si un message de succès existe et le supprimer
+    if (req.session.successMessage) {
+        delete req.session.successMessage; // Supprime le message de succès de la session
+    }
+    // Vérifier si un message d'erreur existe et le supprimer
+    else if (req.session.errorMessage) {
+        delete req.session.errorMessage; // Supprime le message d'erreur de la session
+    }
         const updateUtilisateur = await prisma.utilisateur.update({
             where: {
                 id: parseInt(req.params.id)
@@ -274,6 +290,14 @@ utilisateurRouter.post('/addProfil/:id', authguard, async (req, res) => {
         })
 
         req.session.utilisateur = updateUtilisateur
+         // Vérifier si un message de succès existe et le supprimer
+    if (req.session.successMessage) {
+        delete req.session.successMessage; // Supprime le message de succès de la session
+    }
+    // Vérifier si un message d'erreur existe et le supprimer
+    else if (req.session.errorMessage) {
+        delete req.session.errorMessage; // Supprime le message d'erreur de la session
+    }
         res.redirect('/')
 
     } catch (error) {
@@ -296,7 +320,7 @@ utilisateurRouter.get('/mdpOublie', (req, res) => {
     res.render('pages/mdpOublie.twig')
 
 })
-
+ 
 
 // envoie le lien de réinitialisation du mdp à l'adresse mail 
 utilisateurRouter.post('/forgot-password', async (req, res) => {
@@ -428,21 +452,21 @@ utilisateurRouter.post('/contact', (req, res) => {
         if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
             errorMessage = "Le nom et le prénom doivent être valides (lettres uniquement, espaces et tirets autorisés)."
             req.session.errorMessage = errorMessage
-            return res.redirect("/")
+            return res.redirect("/inProcess")
         }
 
         // 2. Validation de l'email avec la regex importée
         if (!emailRegex.test(email)) {
             errorMessage = "L'email n'est pas valide."
             req.session.errorMessage = errorMessage
-            return res.redirect("/")
+            return res.redirect("/inProcess")
         }
 
         // 3. Protection contre les injections de code dans le message en utilisant la regex importée
         if (scriptInjectionRegex.test(message)) {
             errorMessage = "Le message contient des caractères non autorisés (HTML, script)."
             req.session.errorMessage = errorMessage
-            return res.redirect("/")
+            return res.redirect("/inProcess")
         }
 
         // Si toutes les validations sont passées, on envoie l'email
@@ -453,7 +477,7 @@ utilisateurRouter.post('/contact', (req, res) => {
         req.session.successMessage = successMessage; // Sauvegarde du message de succès dans la session
 
         // Redirige l'utilisateur vers la page d'accueil avec le message de succès
-        res.redirect('/');
+        res.redirect('/inProcess');
 
     } catch (error) {
         console.log(error);  // En cas d'erreur, affiche l'erreur dans la console pour déboguer
@@ -463,9 +487,25 @@ utilisateurRouter.post('/contact', (req, res) => {
         req.session.errorMessage = errorMessage; // Sauvegarde du message d'erreur dans la session
 
         // Redirige l'utilisateur vers la page d'accueil avec le message d'erreur
-        res.redirect('/');
+        res.redirect('/inProvess');
     }
 });
 
+//routes vers page en travaux
+utilisateurRouter.get('/paiement/:id', authguard, (req,res)=>
 
+    res.render('pages/inProcess.twig',{
+        utilisateur: req.session.utilisateur,
+        errorMessage : req.session.errorMessage,
+        successMessage: req.session.successMessage
+    })
+)
+
+utilisateurRouter.get('/inProcess', (req,res)=>
+    res.render('pages/inProcess.twig',{
+        utilisateur: req.session.utilisateur,
+        errorMessage : req.session.errorMessage,
+        successMessage: req.session.successMessage
+    })
+)
 module.exports = utilisateurRouter;

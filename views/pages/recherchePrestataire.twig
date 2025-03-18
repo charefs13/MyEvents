@@ -30,16 +30,17 @@
 			<h2>Résultats de votre recherche</h2>
 			<div id="map"></div>
 
+
 			<script>
 				// Conversion de la variable Twig "entreprises" en JSON pour utilisation en JavaScript
 let entreprises = {{ entreprises | json_encode | raw }};
 // On récupère la ville de la première entreprise, si elle existe
-let centreVille = entreprises[0].ville 
+let centreVille = entreprises[0].ville
 			</script>
 		{% else %}
 			<!-- Message affiché si aucune entreprise n'est trouvée -->
 			<h2 style="
-				    margin-bottom: 100vh;">Aucun Résultat</h3>
+								    margin-bottom: 100vh;">Aucun Résultat</h3>
 		{% endif %}
 	</section>
 {% endblock %}
@@ -48,35 +49,3 @@ let centreVille = entreprises[0].ville
 	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 	<script src="/assets/script/map.js"></script>
 {% endblock %}
-
-
-{# <section class='mainSection'>
-				{% if entreprises is defined %}
-		
-					{% for entreprise in entreprises %}
-						<div class='evenementContainer' style='overflow: auto; height: 500px'>
-							<h4>{{entreprise.raisonSociale}}</h4>
-							<p>
-								Adresse :
-								{{entreprise.adresse}} {{entreprise.cp }} {{entreprise.ville}}
-							</p>
-		                    
-		
-							{% for prestation in entreprise.prestations %}
-								<div class='prestationContainer'>
-									<p>Titre :
-										{{prestation.nom}}</p>
-									<p>Description :
-										{{prestation.description}}</p>
-									<p>Prix :
-										{{prestation.prix}}$ TTC</p>
-								</div>
-							{% endfor %}
-		
-						</div>
-					{% endfor %}
-		
-				{% else %}
-					<h3>Aucun Résultat</h3>
-				{% endif %}
-			</section> #}

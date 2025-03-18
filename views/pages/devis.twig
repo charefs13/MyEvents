@@ -84,75 +84,79 @@ let entrepriseId = {{ entreprise.id }};
 	</section>
 
 		<script>
-			document.addEventListener("DOMContentLoaded", function () {
-const checkboxes = document.querySelectorAll(".prestation-checkbox");
-const totalSpan = document.getElementById("total");
-let total = 0;
+document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll(".prestation-checkbox"); // Sélectionne toutes les cases à cocher des prestations
+    const totalSpan = document.getElementById("total"); // Sélectionne l'élément où afficher le total
+    let total = 0;
+    // Fonction pour mettre à jour le prix total des prestations sélectionnées
+    function updateTotal() {
+        total = Array.from(checkboxes) // Convertit la NodeList en tableau
+            .filter(checkbox => checkbox.checked) // Filtre les cases cochées
+            .reduce((sum, checkbox) => sum + parseFloat(checkbox.getAttribute("data-prix")), 0); // Additionne leurs prix
+        totalSpan.textContent = total.toFixed(2); // Affiche le total avec deux décimales
+    }
+	
+    // Fonction pour mettre à jour l'apparence du conteneur en fonction de la sélection
+    function updateContainerStyle(checkbox) {
+        const container = checkbox.closest(".prestationContainer"); // Récupère le conteneur parent de la case à cocher
+        if (checkbox.checked) {
+            container.classList.add("selected"); // Ajoute la classe "selected" si coché
+        } else {
+            container.classList.remove("selected"); // Retire la classe "selected" sinon
+        }
+    }
+    // Ajout d'un écouteur d'événement sur chaque prestationContainer pour détecter les clics
+    document.querySelectorAll(".prestationContainer").forEach(container => {
+        container.addEventListener("click", function (event) {
+            // Vérifie si l'utilisateur clique directement sur l'input checkbox (évite un double déclenchement)
+            if (event.target.tagName === "INPUT") 
+                return;
 
-// Fonction pour mettre à jour le total
-function updateTotal() {
-total = Array.from(checkboxes).filter(checkbox => checkbox.checked).reduce((sum, checkbox) => sum + parseFloat(checkbox.getAttribute("data-prix")), 0);
-totalSpan.textContent = total.toFixed(2);
-}
+            const checkbox = this.querySelector(".prestation-checkbox"); // Récupère la case à cocher à l'intérieur du conteneur
+            checkbox.checked = !checkbox.checked; // Bascule l'état de la case cochée
+            updateContainerStyle(checkbox); // Met à jour le style du conteneur
+            updateTotal(); // Met à jour le prix total
+        });
+    });
 
-// Fonction pour mettre à jour l'apparence du conteneur
-function updateContainerStyle(checkbox) {
-const container = checkbox.closest(".prestationContainer");
-if (checkbox.checked) {
-container.classList.add("selected");
-} else {
-container.classList.remove("selected");
-}
-}
+    // Ajout d'un écouteur sur chaque case à cocher pour gérer les changements manuels
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            updateContainerStyle(this); // Met à jour le style du conteneur
+            updateTotal(); // Met à jour le total
+        });
+    });
 
-// Ajout de l'écouteur d'événement sur chaque prestationContainer
-document.querySelectorAll(".prestationContainer").forEach(container => {
-container.addEventListener("click", function (event) { // Si on clique sur l'input directement, ne pas annuler son fonctionnement par défaut
-if (event.target.tagName === "INPUT") 
-return;
+    // Gestion de la génération du devis
+    document.getElementById("genererDevis").addEventListener("click", function () {
+        const selectedEvenement = document.getElementById("evenement").value; // Récupère l'événement sélectionné
+        const selectedPrestations = Array.from(document.querySelectorAll(".prestation-checkbox:checked")) // Récupère toutes les prestations cochées
+            .map(cb => cb.id.split("-")[1]); // Extrait les IDs des prestations
+        const messageContainer = document.querySelector('.messageContainer'); // Conteneur pour afficher les messages d'erreur
 
+        // Vérification si un événement est sélectionné
+        if (!selectedEvenement) {
+            let errorMessage = document.createElement("p"); // Crée un élément <p> pour afficher le message
+            errorMessage.innerHTML = "Veuillez sélectionner un événement. Si vous n'avez pas encore d'événement, veuillez d'abord en ajouter un depuis l'onglet Événement du menu.";
+            errorMessage.classList.add('error'); // Ajoute une classe pour le style du message d'erreur
+            messageContainer.appendChild(errorMessage); // Ajoute le message d'erreur dans le conteneur
+            return;
+        }
 
-const checkbox = this.querySelector(".prestation-checkbox");
-checkbox.checked = ! checkbox.checked; // Bascule l'état de la case
-updateContainerStyle(checkbox); // Met à jour le style du conteneur
-updateTotal(); // Met à jour le prix total
+        // Vérification si au moins une prestation est sélectionnée
+        if (selectedPrestations.length === 0) {
+let errorMessage = document.createElement("p"); // Crée un élément <p> pour afficher le message
+            errorMessage.innerHTML = "Veuillez sélectionner au moins une prestation";
+            errorMessage.classList.add('error'); // Ajoute une classe pour le style du message d'erreur
+            messageContainer.appendChild(errorMessage); // Ajoute le message d'erreur dans le conteneur            
+			return;
+        }
+
+        // Génération de l'URL pour la génération du devis en PDF
+        window.location.href = `/devis/pdf?evenement=${selectedEvenement}&prestations=${selectedPrestations.join(",")}&entreprise=${entrepriseId}`;
+    });
 });
-});
 
-// Ajout d'un écouteur sur les checkboxes pour gérer les clics directs
-checkboxes.forEach(checkbox => {
-checkbox.addEventListener("change", function () {
-updateContainerStyle(this);
-updateTotal();
-});
-});
-
-// Gestion de la génération du devis
-document.getElementById("genererDevis").addEventListener("click", function () {
-const selectedEvenement = document.getElementById("evenement").value;
-const selectedPrestations = Array.from(document.querySelectorAll(".prestation-checkbox:checked")).map(cb => cb.id.split("-")[1]);
-const messageContainer = document.querySelector('.messageContainer');
-
-// Vérification si un événement et des prestations sont sélectionnés
-if (! selectedEvenement) {
-let errorMessage = document.createElement("p");
-errorMessage.innerHTML = "Veuillez sélectionner un événement. Si vous n'avez pas encore d'événement, veuillez d'abord en ajouter un depuis l'onglet Événement du menu.";
-errorMessage.classList.add('error');
-messageContainer.appendChild(errorMessage);
-return;
-}
-
-if (selectedPrestations.length === 0) {
-alert("Veuillez sélectionner au moins une prestation.");
-return;
-}
-
-// Génération de l'URL pour la génération du devis en PDF
-window.location.href = `/devis/pdf?evenement=${selectedEvenement}&prestations=${
-selectedPrestations.join(",")
-}&entreprise=${entrepriseId}`;
-});
-});
 		</script>
 
 
